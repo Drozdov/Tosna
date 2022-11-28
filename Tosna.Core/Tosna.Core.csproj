@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+        <ProjectGuid>{59D2F963-550C-40B1-9B8A-165B34AD80B9}</ProjectGuid>
+        <OutputType>Library</OutputType>
+        <AppDesignerFolder>Properties</AppDesignerFolder>
+        <RootNamespace>Tosna.Core</RootNamespace>
+        <AssemblyName>Tosna.Core</AssemblyName>
+        <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+        <FileAlignment>512</FileAlignment>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <OutputPath>bin\Debug\</OutputPath>
+        <DefineConstants>DEBUG;TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <DebugType>pdbonly</DebugType>
+        <Optimize>true</Optimize>
+        <OutputPath>bin\Release\</OutputPath>
+        <DefineConstants>TRACE</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="System" />
+        <Reference Include="System.Core" />
+        <Reference Include="System.Data" />
+        <Reference Include="System.Xml" />
+        <Reference Include="System.Xml.Linq" />
+        <Reference Include="System.Xml.Serialization" />
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="Common\Attributes\ControllerDescriptorAttribute.cs" />
+        <Compile Include="Common\Attributes\SerializableAsAttribute.cs" />
+        <Compile Include="Common\IInfoLogger.cs" />
+        <Compile Include="Common\ImprintsSerializer.cs" />
+        <Compile Include="Common\Imprints\Generation\IObjectResolver.cs" />
+        <Compile Include="Common\Imprints\Generation\ObjectFactory.cs" />
+        <Compile Include="Common\Imprints\Imprint.cs" />
+        <Compile Include="Common\Imprints\ImprintIdentifier.cs" />
+        <Compile Include="Common\Imprints\ImprintsExtensions.cs" />
+        <Compile Include="Common\Imprints\ImprintsResolver.cs" />
+        <Compile Include="Common\Problems\CommonProblem.cs" />
+        <Compile Include="Common\Problems\ComplexSerializerProblemsExtensions.cs" />
+        <Compile Include="Common\Problems\ComplexSerializerSolution.cs" />
+        <Compile Include="Common\Problems\IComplexSerializerProblem.cs" />
+        <Compile Include="Common\Problems\InvalidCastProblem.cs" />
+        <Compile Include="Common\Problems\MissingMembersProblem.cs" />
+        <Compile Include="Common\Problems\ObsoleteNameProblem.cs" />
+        <Compile Include="Common\SignaturesSerializingTypeResolver.cs" />
+        <Compile Include="Common\Stamps\Stamp.cs" />
+        <Compile Include="Common\Stamps\StampIdentifier.cs" />
+        <Compile Include="Common\Stamps\StampImprint.cs" />
+        <Compile Include="Common\Stamps\StampImprintsFactory.cs" />
+        <Compile Include="Common\Stamps\StampsCollectionConstructor.cs" />
+        <Compile Include="Common\Stamps\StampsDependenciesGetter.cs" />
+        <Compile Include="SerializationIterfaces\ISerializingElementsManager.cs" />
+        <Compile Include="SerializationIterfaces\ISerializingTypesResolver.cs" />
+        <Compile Include="SerializationIterfaces\SerializingElement.cs" />
+        <Compile Include="SerializationIterfaces\SerializingElementsManager.cs" />
+        <Compile Include="Helpers\DependenciesResolver.cs" />
+        <Compile Include="Helpers\PathUtils.cs" />
+        <Compile Include="Helpers\Xml\XmlCompletor.cs" />
+        <Compile Include="Helpers\Xml\XmlFormatter.cs" />
+        <Compile Include="Helpers\Xml\XmlUtils.cs" />
+        <Compile Include="IO\ImprintsEnvironment.cs" />
+        <Compile Include="IO\ImprintsEnvironmentReader.cs" />
+        <Compile Include="IO\StampsEnvironment.cs" />
+        <Compile Include="IO\StampsEnvironmentWriter.cs" />
+        <Compile Include="Properties\AssemblyInfo.cs" />
+    </ItemGroup>
+    <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+    <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+         Other similar extension points exist, see Microsoft.Common.targets.
+    <Target Name="BeforeBuild">
+    </Target>
+    <Target Name="AfterBuild">
+    </Target>
+    -->
+
+</Project>

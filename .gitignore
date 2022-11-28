@@ -1,0 +1,7 @@
+/packages/*
+/Tosna.Core/bin/
+/Tosna.Core/obj/
+/Tosna.Editor.Wpf/bin/
+/Tosna.Editor.Wpf/obj/
+/Tosna.Editor/obj/
+/Tosna.Editor/bin/

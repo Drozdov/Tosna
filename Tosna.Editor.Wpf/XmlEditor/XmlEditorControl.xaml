@@ -1,0 +1,73 @@
+﻿<avalonedit:TextEditor x:Class="Tosna.Editor.Wpf.XmlEditor.XmlEditorControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
+             xmlns:converters="clr-namespace:Tosna.Editor.Wpf"
+             xmlns:converters1="clr-namespace:Tosna.Editor.Wpf.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             FontFamily="Consolas"
+             FontSize="10pt"
+             SyntaxHighlighting="XML"
+             d:DataContext="{d:DesignInstance d:Type=vm1:XmlEditorVm, d:IsDesignTimeCreatable=false}"
+             ShowLineNumbers="True">
+
+    <avalonedit:TextEditor.ContextMenu>
+        <ContextMenu>
+            
+            <MenuItem
+                Command="{Binding SaveCommand}"
+                InputGestureText="Ctrl+S"
+                Header="Сохранить"
+                />
+            
+            <MenuItem
+                Command="{Binding ReloadCommand}"
+                InputGestureText="Ctrl+R"
+                Header="Обновить с диска"
+                />
+
+            <MenuItem
+                Header="{Binding SelectedImprintInfoVm.TypeName}"
+                Visibility="{Binding RefactorCommandsVisible, Converter={x:Static converters1:BoolToVisibilityConverter.Instance}}">
+
+                <MenuItem
+                    Command="{Binding RefactorMoveToTopCommand}"
+                    Header="Поднять на верхний уровень"
+                    />
+
+                <MenuItem
+                    Command="{Binding RefactorRenameCommand}"
+                    Header="Задать/изменить ID"
+                    InputGestureText="F2"
+                />
+
+                <MenuItem
+                    Command="{Binding RefactorMoveToFileCommand}"
+                    Header="Переместить в файл"
+                />
+
+                <MenuItem
+                    Command="{Binding RefactorInlineCommand}"
+                    Header="Встроить"
+                />
+
+                <MenuItem
+                    Command="{Binding GoToDefinitionCommand}"
+                    Header="Перейти к определению"
+                />
+
+            </MenuItem>
+            
+        </ContextMenu>
+    </avalonedit:TextEditor.ContextMenu>
+
+    <avalonedit:TextEditor.InputBindings>
+        <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}"/>
+        <KeyBinding Key="R" Modifiers="Control" Command="{Binding ReloadCommand}"/>
+        <KeyBinding Key="F2" Command="{Binding RefactorRenameCommand}"/>
+    </avalonedit:TextEditor.InputBindings>
+
+</avalonedit:TextEditor>

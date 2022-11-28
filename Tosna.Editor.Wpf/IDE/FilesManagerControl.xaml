@@ -1,0 +1,100 @@
+﻿<TreeView x:Class="Tosna.Editor.Wpf.IDE.FilesManagerControl"
+          xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+          xmlns:properties="clr-namespace:Tosna.Editor.Wpf.Properties"
+          xmlns:converters="clr-namespace:Tosna.Editor.Wpf"
+          xmlns:vm="clr-namespace:Tosna.Editor.IDE.Vm;assembly=Tosna.Editor"
+          xmlns:converters1="clr-namespace:Tosna.Editor.Wpf.Converters"
+          mc:Ignorable="d"
+          ItemsSource="{Binding TopDirectoryItemVm.Items}"
+          d:DesignHeight="300" d:DesignWidth="300"
+          d:DataContext="{d:DesignInstance d:Type=vm:FilesHierarchyVm, d:IsDesignTimeCreatable=false}">
+    
+    <TreeView.ContextMenu>
+        <ContextMenu>
+            <MenuItem
+                Header="{x:Static properties:Resources.AddExistingFiles}"
+                Command="{Binding AddExistingFilesCommand}"
+                />
+            <MenuItem
+                Header="{x:Static properties:Resources.AddExistingFilesWithDependencies}"
+                Command="{Binding AddExistingFilesWithDependenciesCommand}"
+            />
+            <MenuItem
+                Header="{x:Static properties:Resources.CreateNewFile}"
+                Command="{Binding CreateNewFileCommand}"
+            />
+            <MenuItem
+                Header="{x:Static properties:Resources.ExcludeFiles}"
+                Command="{Binding ExcludeFilesCommand}"
+            />
+            <MenuItem
+                Header="{x:Static properties:Resources.ExcludeAll}"
+                Command="{Binding ExcludeAllFilesCommand}"
+            />
+        </ContextMenu>
+    </TreeView.ContextMenu>
+
+    <TreeView.ItemContainerStyle>
+        <Style TargetType="{x:Type TreeViewItem}">
+            <Setter Property="IsExpanded" Value="True" />
+        </Style>
+    </TreeView.ItemContainerStyle>
+
+    <TreeView.Resources>
+
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Geolocation.CommonGui;component/CommonResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <HierarchicalDataTemplate DataType="{x:Type vm:DirectoryItemVm}" ItemsSource="{Binding Items}">
+                <StackPanel Orientation="Horizontal">
+
+                    <Image
+                        Width="12"
+                        Height="12"
+                        Margin="{StaticResource AllMargin}"
+                        Source="{Binding Image, Converter={x:Static converters1:BytesToImageSourceConverter.Instance}}"/>
+
+                    <TextBlock Text="{Binding DirectoryShortName}" ToolTip="{Binding DirectoryPath}" VerticalAlignment="Center"/>
+                    
+                </StackPanel>
+            </HierarchicalDataTemplate>
+
+            <HierarchicalDataTemplate DataType="{x:Type vm:FileItemVm}" ItemsSource="{Binding DescriptedChildren}">
+                <StackPanel Orientation="Horizontal">
+                    
+                    <Image
+                        Width="12"
+                        Height="12"
+                        Margin="{StaticResource AllMargin}"
+                        Source="{Binding Image, Converter={x:Static converters1:BytesToImageSourceConverter.Instance}}"/>
+
+                    <TextBlock Text="{Binding Name}" ToolTip="{Binding FullPath}" VerticalAlignment="Center"/>
+                    
+                </StackPanel>
+            </HierarchicalDataTemplate>
+
+            <HierarchicalDataTemplate DataType="{x:Type vm:DescriptedItemVm}">
+                <StackPanel Orientation="Horizontal">
+
+                    <Image
+                        Width="12"
+                        Height="12"
+                        Margin="{StaticResource AllMargin}"
+                        Source="{Binding Image, Converter={x:Static converters1:BytesToImageSourceConverter.Instance}}"/>
+
+                    <TextBlock Text="{Binding Name}" ToolTip="{Binding FileName}" VerticalAlignment="Center"/>
+
+                </StackPanel>
+            </HierarchicalDataTemplate>
+
+        </ResourceDictionary>
+
+   </TreeView.Resources>
+
+</TreeView>
+
