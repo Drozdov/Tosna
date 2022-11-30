@@ -43,5 +43,26 @@ namespace Tosna.Core.Common
 		{
 			logger.LogMessage(LogMessageType.Error, message, e);
 		}
+
+		public static string GetMessageTypeStr(this LogMessageType messageType)
+		{
+			switch (messageType)
+			{
+				case LogMessageType.Debug:
+					return "D";
+
+				case LogMessageType.Info:
+					return "I";
+				
+				case LogMessageType.Warning:
+					return "W";
+				
+				case LogMessageType.Error:
+					return "E";
+				
+				default:
+					throw new ArgumentOutOfRangeException(nameof(messageType), messageType, null);
+			}
+		}
 	}
 }

@@ -21,7 +21,7 @@ namespace Tosna.Editor.Wpf.Properties {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -35,7 +35,7 @@ namespace Tosna.Editor.Wpf.Properties {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Tosna.Editor.Wpf.Properties.Resources", typeof(Resources).Assembly);
@@ -50,7 +50,7 @@ namespace Tosna.Editor.Wpf.Properties {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -62,7 +62,7 @@ namespace Tosna.Editor.Wpf.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Добавить существующие файлы.
         /// </summary>
-        internal static string AddExistingFiles {
+        public static string AddExistingFiles {
             get {
                 return ResourceManager.GetString("AddExistingFiles", resourceCulture);
             }
@@ -71,7 +71,7 @@ namespace Tosna.Editor.Wpf.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Добавить существующие файлы (с зависимостями).
         /// </summary>
-        internal static string AddExistingFilesWithDependencies {
+        public static string AddExistingFilesWithDependencies {
             get {
                 return ResourceManager.GetString("AddExistingFilesWithDependencies", resourceCulture);
             }
@@ -80,7 +80,7 @@ namespace Tosna.Editor.Wpf.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Создать новый файл.
         /// </summary>
-        internal static string CreateNewFile {
+        public static string CreateNewFile {
             get {
                 return ResourceManager.GetString("CreateNewFile", resourceCulture);
             }
@@ -89,7 +89,7 @@ namespace Tosna.Editor.Wpf.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Очистить.
         /// </summary>
-        internal static string ExcludeAll {
+        public static string ExcludeAll {
             get {
                 return ResourceManager.GetString("ExcludeAll", resourceCulture);
             }
@@ -98,7 +98,7 @@ namespace Tosna.Editor.Wpf.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Исключить выбранные.
         /// </summary>
-        internal static string ExcludeFiles {
+        public static string ExcludeFiles {
             get {
                 return ResourceManager.GetString("ExcludeFiles", resourceCulture);
             }

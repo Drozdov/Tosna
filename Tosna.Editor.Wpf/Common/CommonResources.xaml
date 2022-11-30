@@ -1,0 +1,12 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <Thickness x:Key="AllMargin" Left="4" Right="4" Bottom="4" Top="4"/>
+    <Thickness x:Key="TopBottomMargin" Left="0" Right="0" Bottom="4" Top="4"/>
+    <Thickness x:Key="LeftTopBottomMargin" Left="4" Right="0" Bottom="4" Top="4"/>
+    
+    <system:Double x:Key="SmallMarginStep">2</system:Double>
+    
+</ResourceDictionary>

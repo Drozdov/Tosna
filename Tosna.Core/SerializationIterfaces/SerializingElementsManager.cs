@@ -1,17 +1,29 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace Tosna.Core.SerializationIterfaces
 {
 	public class SerializingElementsManager : ISerializingElementsManager
 	{
+		private Regex backingFieldRegex = new Regex("<(.*)>k__BackingField");
+		
 		public IEnumerable<SerializingElement> GetAllElements(Type type)
 		{
-			var fields = type.GetFields();
-			// TODO: backing fields
+			var fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+			
 			foreach (var field in fields)
 			{
-				yield return new SerializingElement(field.SetValue, field.GetValue, field.FieldType, field.Name, true,
+				var fieldName = field.Name;
+
+				var match = backingFieldRegex.Match(fieldName);
+				if (match.Success)
+				{
+					fieldName = match.Groups[1].Value;
+				}
+
+				yield return new SerializingElement(field.SetValue, field.GetValue, field.FieldType, fieldName, true,
 					GetDefault(field.FieldType));
 			}
 		}

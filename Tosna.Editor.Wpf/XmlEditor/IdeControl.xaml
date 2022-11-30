@@ -3,10 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:xcad="http://schemas.xceed.com/wpf/xaml/avalondock"
              xmlns:vm="clr-namespace:Tosna.Editor.IDE.Vm;assembly=Tosna.Editor"
              xmlns:xmlEditor="clr-namespace:Tosna.Editor.Wpf.XmlEditor"
              xmlns:ide="clr-namespace:Tosna.Editor.Wpf.IDE"
+             xmlns:system="clr-namespace:System;assembly=mscorlib" xmlns:xcad="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance d:Type=vm:XmlIdeVm, d:IsDesignTimeCreatable=false}"
              d:DesignHeight="450" d:DesignWidth="800">
@@ -14,7 +14,16 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Geolocation.CommonGui;component/CommonResources.xaml" />
+                <!--<ResourceDictionary Source="Tosna.Editor.Wpf;component/Common/CommonResources.xaml" />-->
+                
+                <ResourceDictionary>
+                    <Thickness x:Key="AllMargin" Left="4" Right="4" Bottom="4" Top="4"/>
+                    <Thickness x:Key="TopBottomMargin" Left="0" Right="0" Bottom="4" Top="4"/>
+                    <Thickness x:Key="LeftTopBottomMargin" Left="4" Right="0" Bottom="4" Top="4"/>
+                    
+                    <system:Double x:Key="SmallMarginStep">2</system:Double>
+    
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
 
             <DataTemplate DataType="{x:Type vm:FileViewerItemVm}">

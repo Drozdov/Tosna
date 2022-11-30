@@ -7,6 +7,7 @@
           xmlns:converters="clr-namespace:Tosna.Editor.Wpf"
           xmlns:vm="clr-namespace:Tosna.Editor.IDE.Vm;assembly=Tosna.Editor"
           xmlns:converters1="clr-namespace:Tosna.Editor.Wpf.Converters"
+          xmlns:system="clr-namespace:System;assembly=mscorlib"
           mc:Ignorable="d"
           ItemsSource="{Binding TopDirectoryItemVm.Items}"
           d:DesignHeight="300" d:DesignWidth="300"
@@ -47,7 +48,15 @@
 
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Geolocation.CommonGui;component/CommonResources.xaml" />
+                <ResourceDictionary>
+                    
+                    <Thickness x:Key="AllMargin" Left="4" Right="4" Bottom="4" Top="4"/>
+                    <Thickness x:Key="TopBottomMargin" Left="0" Right="0" Bottom="4" Top="4"/>
+                    <Thickness x:Key="LeftTopBottomMargin" Left="4" Right="0" Bottom="4" Top="4"/>
+                    
+                    <system:Double x:Key="SmallMarginStep">2</system:Double>
+    
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
 
             <HierarchicalDataTemplate DataType="{x:Type vm:DirectoryItemVm}" ItemsSource="{Binding Items}">

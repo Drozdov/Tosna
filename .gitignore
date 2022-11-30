@@ -5,3 +5,6 @@
 /Tosna.Editor.Wpf/obj/
 /Tosna.Editor/obj/
 /Tosna.Editor/bin/
+/.vs/Tosna/*
+/Tosna.Editor.Wpf.Demo/bin/
+/Tosna.Editor.Wpf.Demo/obj/
