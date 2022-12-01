@@ -13,24 +13,12 @@
              d:DataContext="{d:DesignInstance d:Type=propertyEditors:DescriptedImprintEditorVm, d:IsDesignTimeCreatable=false}">
 
     <UserControl.Resources>
-        <!--<ResourceDictionary Source="/Common/CommonResources.xaml" />-->
-        
-        <ResourceDictionary>
-            
-            <Thickness x:Key="AllMargin" Left="4" Right="4" Bottom="4" Top="4"/>
-            <Thickness x:Key="TopBottomMargin" Left="0" Right="0" Bottom="4" Top="4"/>
-            <Thickness x:Key="LeftTopBottomMargin" Left="4" Right="0" Bottom="4" Top="4"/>
-    
-            <system:Double x:Key="SmallMarginStep">2</system:Double>
-
-        </ResourceDictionary>
+        <ResourceDictionary Source="/Tosna.Editor.Wpf;component/Common/CommonResources.xaml" />
     </UserControl.Resources>
-    
-    
     
     <ScrollViewer>
 
-        <xctk:Grid Margin="{StaticResource AllMargin}">
+        <Grid Margin="{StaticResource AllMargin}">
 
             <ItemsControl ItemsSource="{Binding Properties}">
 
@@ -96,7 +84,7 @@
             </ItemsControl>
 
 
-        </xctk:Grid>
+        </Grid>
 
     </ScrollViewer>
 

@@ -60,7 +60,7 @@ namespace Tosna.Editor.Wpf.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Добавить существующие файлы.
+        ///   Looks up a localized string similar to Add existing files.
         /// </summary>
         public static string AddExistingFiles {
             get {
@@ -69,7 +69,7 @@ namespace Tosna.Editor.Wpf.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Добавить существующие файлы (с зависимостями).
+        ///   Looks up a localized string similar to Add existing files with dependencies.
         /// </summary>
         public static string AddExistingFilesWithDependencies {
             get {
@@ -78,7 +78,7 @@ namespace Tosna.Editor.Wpf.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Создать новый файл.
+        ///   Looks up a localized string similar to Create new file.
         /// </summary>
         public static string CreateNewFile {
             get {
@@ -87,7 +87,7 @@ namespace Tosna.Editor.Wpf.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Очистить.
+        ///   Looks up a localized string similar to Exclude all.
         /// </summary>
         public static string ExcludeAll {
             get {
@@ -96,11 +96,74 @@ namespace Tosna.Editor.Wpf.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Исключить выбранные.
+        ///   Looks up a localized string similar to Exclude selected.
         /// </summary>
         public static string ExcludeFiles {
             get {
                 return ResourceManager.GetString("ExcludeFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Go to definition.
+        /// </summary>
+        public static string GeoToDefinition {
+            get {
+                return ResourceManager.GetString("GeoToDefinition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inline.
+        /// </summary>
+        public static string Inline {
+            get {
+                return ResourceManager.GetString("Inline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move to file.
+        /// </summary>
+        public static string MoveToFile {
+            get {
+                return ResourceManager.GetString("MoveToFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Move up.
+        /// </summary>
+        public static string MoveUp {
+            get {
+                return ResourceManager.GetString("MoveUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reload.
+        /// </summary>
+        public static string Reload {
+            get {
+                return ResourceManager.GetString("Reload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        public static string Save {
+            get {
+                return ResourceManager.GetString("Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set/change id.
+        /// </summary>
+        public static string SetId {
+            get {
+                return ResourceManager.GetString("SetId", resourceCulture);
             }
         }
     }

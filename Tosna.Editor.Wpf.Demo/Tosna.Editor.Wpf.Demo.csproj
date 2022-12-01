@@ -101,7 +101,7 @@
         <Name>Tosna.Core</Name>
       </ProjectReference>
       <ProjectReference Include="..\Tosna.Editor.Wpf\Tosna.Editor.Wpf.csproj">
-        <Project>{9d2d254b-762a-4461-a47b-84b9160908a7}</Project>
+        <Project>{8e884b48-a681-4fc3-92bd-035f02d12675}</Project>
         <Name>Tosna.Editor.Wpf</Name>
       </ProjectReference>
       <ProjectReference Include="..\Tosna.Editor\Tosna.Editor.csproj">

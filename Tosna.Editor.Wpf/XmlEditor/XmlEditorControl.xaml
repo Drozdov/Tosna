@@ -7,6 +7,7 @@
              xmlns:converters="clr-namespace:Tosna.Editor.Wpf"
              xmlns:converters1="clr-namespace:Tosna.Editor.Wpf.Converters"
              xmlns:vm="clr-namespace:Tosna.Editor.IDE.Vm;assembly=Tosna.Editor"
+             xmlns:properties="clr-namespace:Tosna.Editor.Wpf.Properties"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              FontFamily="Consolas"
@@ -21,13 +22,13 @@
             <MenuItem
                 Command="{Binding SaveCommand}"
                 InputGestureText="Ctrl+S"
-                Header="Сохранить"
+                Header="{x:Static properties:Resources.Save}"
                 />
             
             <MenuItem
                 Command="{Binding ReloadCommand}"
                 InputGestureText="Ctrl+R"
-                Header="Обновить с диска"
+                Header="{x:Static properties:Resources.Reload}"
                 />
 
             <MenuItem
@@ -36,28 +37,28 @@
 
                 <MenuItem
                     Command="{Binding RefactorMoveToTopCommand}"
-                    Header="Поднять на верхний уровень"
+                    Header="{x:Static properties:Resources.MoveUp}"
                     />
 
                 <MenuItem
                     Command="{Binding RefactorRenameCommand}"
-                    Header="Задать/изменить ID"
+                    Header="{x:Static properties:Resources.SetId}"
                     InputGestureText="F2"
                 />
 
                 <MenuItem
                     Command="{Binding RefactorMoveToFileCommand}"
-                    Header="Переместить в файл"
+                    Header="{x:Static properties:Resources.MoveToFile}"
                 />
 
                 <MenuItem
                     Command="{Binding RefactorInlineCommand}"
-                    Header="Встроить"
+                    Header="{x:Static properties:Resources.Inline}"
                 />
 
                 <MenuItem
                     Command="{Binding GoToDefinitionCommand}"
-                    Header="Перейти к определению"
+                    Header="{x:Static properties:Resources.GeoToDefinition}"
                 />
 
             </MenuItem>

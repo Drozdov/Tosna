@@ -1,36 +1,57 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <root>
-    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-        <xsd:element name="root" msdata:IsDataSet="true">
-            
-        </xsd:element>
-    </xsd:schema>
-    <resheader name="resmimetype">
-        <value>text/microsoft-resx</value>
-    </resheader>
-    <resheader name="version">
-        <value>1.3</value>
-    </resheader>
-    <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-    </resheader>
-    <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-    </resheader>
-    <data name="AddExistingFiles" xml:space="preserve">
-    <value>Добавить существующие файлы</value>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddExistingFiles" xml:space="preserve">
+    <value>Add existing files</value>
   </data>
   <data name="AddExistingFilesWithDependencies" xml:space="preserve">
-    <value>Добавить существующие файлы (с зависимостями)</value>
+    <value>Add existing files with dependencies</value>
   </data>
-    <data name="ExcludeFiles" xml:space="preserve">
-    <value>Исключить выбранные</value>
+  <data name="ExcludeFiles" xml:space="preserve">
+    <value>Exclude selected</value>
   </data>
-    <data name="ExcludeAll" xml:space="preserve">
-    <value>Очистить</value>
+  <data name="ExcludeAll" xml:space="preserve">
+    <value>Exclude all</value>
   </data>
-    <data name="CreateNewFile" xml:space="preserve">
-    <value>Создать новый файл</value>
+  <data name="CreateNewFile" xml:space="preserve">
+    <value>Create new file</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Reload" xml:space="preserve">
+    <value>Reload</value>
+  </data>
+  <data name="MoveUp" xml:space="preserve">
+    <value>Move up</value>
+  </data>
+  <data name="SetId" xml:space="preserve">
+    <value>Set/change id</value>
+  </data>
+  <data name="MoveToFile" xml:space="preserve">
+    <value>Move to file</value>
+  </data>
+  <data name="Inline" xml:space="preserve">
+    <value>Inline</value>
+  </data>
+  <data name="GeoToDefinition" xml:space="preserve">
+    <value>Go to definition</value>
   </data>
 </root>
