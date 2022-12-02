@@ -6,6 +6,7 @@ using System.Linq;
 using Tosna.Core.Common;
 using Tosna.Editor.Common;
 using Tosna.Editor.IDE.Interfaces;
+using Tosna.Editor.IDE.Vm.FileSystem;
 using PathUtils = Tosna.Core.Helpers.PathUtils;
 
 namespace Tosna.Editor.IDE.Vm
@@ -143,7 +144,7 @@ namespace Tosna.Editor.IDE.Vm
 					filesViewerVm.OpenDocument(fileItemVm.FileManager);
 					return;
 
-				case DescriptedItemVm descriptedFileItemVm:
+				case DescribedItemVm descriptedFileItemVm:
 					filesViewerVm.OpenDocument(descriptedFileItemVm.DescriptorFileManager);
 					return;
 			}
@@ -154,7 +155,7 @@ namespace Tosna.Editor.IDE.Vm
 			if (SelectedItems != null && SelectedItems.Length > 0)
 			{
 				var o = SelectedItems[0];
-				return o is FileItemVm || o is DescriptedItemVm;
+				return o is FileItemVm || o is DescribedItemVm;
 			}
 
 			return false;

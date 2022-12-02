@@ -80,6 +80,9 @@
         <Compile Include="IDE\FilesManagerControl.xaml.cs">
           <DependentUpon>FilesManagerControl.xaml</DependentUpon>
         </Compile>
+        <Compile Include="IDE\FileSystemItemControl.xaml.cs">
+          <DependentUpon>FileSystemItemControl.xaml</DependentUpon>
+        </Compile>
         <Compile Include="Properties\AssemblyInfo.cs">
             <SubType>Code</SubType>
         </Compile>
@@ -126,6 +129,7 @@
         <SubType>Designer</SubType>
         <Generator>MSBuild:Compile</Generator>
       </Page>
+      <Page Include="IDE\FileSystemItemControl.xaml" />
       <Page Include="XmlEditor\IdeControl.xaml">
         <SubType>Designer</SubType>
         <Generator>MSBuild:Compile</Generator>

@@ -8,6 +8,8 @@
           xmlns:vm="clr-namespace:Tosna.Editor.IDE.Vm;assembly=Tosna.Editor"
           xmlns:converters1="clr-namespace:Tosna.Editor.Wpf.Converters"
           xmlns:system="clr-namespace:System;assembly=mscorlib"
+          xmlns:ide="clr-namespace:Tosna.Editor.Wpf.IDE"
+          xmlns:fileSystem="clr-namespace:Tosna.Editor.IDE.Vm.FileSystem;assembly=Tosna.Editor"
           mc:Ignorable="d"
           ItemsSource="{Binding TopDirectoryItemVm.Items}"
           d:DesignHeight="300" d:DesignWidth="300"
@@ -48,57 +50,19 @@
 
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary>
-                    
-                    <Thickness x:Key="AllMargin" Left="4" Right="4" Bottom="4" Top="4"/>
-                    <Thickness x:Key="TopBottomMargin" Left="0" Right="0" Bottom="4" Top="4"/>
-                    <Thickness x:Key="LeftTopBottomMargin" Left="4" Right="0" Bottom="4" Top="4"/>
-                    
-                    <system:Double x:Key="SmallMarginStep">2</system:Double>
-    
-                </ResourceDictionary>
+                <ResourceDictionary Source="/Tosna.Editor.Wpf;component/Common/CommonResources.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
-            <HierarchicalDataTemplate DataType="{x:Type vm:DirectoryItemVm}" ItemsSource="{Binding Items}">
-                <StackPanel Orientation="Horizontal">
-
-                    <Image
-                        Width="12"
-                        Height="12"
-                        Margin="{StaticResource AllMargin}"
-                        Source="{Binding Image, Converter={x:Static converters1:BytesToImageSourceConverter.Instance}}"/>
-
-                    <TextBlock Text="{Binding DirectoryShortName}" ToolTip="{Binding DirectoryPath}" VerticalAlignment="Center"/>
-                    
-                </StackPanel>
+            <HierarchicalDataTemplate DataType="{x:Type fileSystem:DirectoryItemVm}" ItemsSource="{Binding Items}">
+                <ide:FileSystemItemControl/>
             </HierarchicalDataTemplate>
 
-            <HierarchicalDataTemplate DataType="{x:Type vm:FileItemVm}" ItemsSource="{Binding DescriptedChildren}">
-                <StackPanel Orientation="Horizontal">
-                    
-                    <Image
-                        Width="12"
-                        Height="12"
-                        Margin="{StaticResource AllMargin}"
-                        Source="{Binding Image, Converter={x:Static converters1:BytesToImageSourceConverter.Instance}}"/>
-
-                    <TextBlock Text="{Binding Name}" ToolTip="{Binding FullPath}" VerticalAlignment="Center"/>
-                    
-                </StackPanel>
+            <HierarchicalDataTemplate DataType="{x:Type fileSystem:FileItemVm}" ItemsSource="{Binding DescriptedChildren}">
+                <ide:FileSystemItemControl/>
             </HierarchicalDataTemplate>
 
-            <HierarchicalDataTemplate DataType="{x:Type vm:DescriptedItemVm}">
-                <StackPanel Orientation="Horizontal">
-
-                    <Image
-                        Width="12"
-                        Height="12"
-                        Margin="{StaticResource AllMargin}"
-                        Source="{Binding Image, Converter={x:Static converters1:BytesToImageSourceConverter.Instance}}"/>
-
-                    <TextBlock Text="{Binding Name}" ToolTip="{Binding FileName}" VerticalAlignment="Center"/>
-
-                </StackPanel>
+            <HierarchicalDataTemplate DataType="{x:Type fileSystem:DescribedItemVm}">
+                <ide:FileSystemItemControl/>
             </HierarchicalDataTemplate>
 
         </ResourceDictionary>

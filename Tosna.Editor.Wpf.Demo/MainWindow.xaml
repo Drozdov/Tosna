@@ -6,6 +6,11 @@
         xmlns:xmlEditor="clr-namespace:Tosna.Editor.Wpf.XmlEditor;assembly=Tosna.Editor.Wpf"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
+    
+    <Window.Resources>
+        <ResourceDictionary Source="/Tosna.Editor.Wpf;component/Common/CommonResources.xaml"/>
+    </Window.Resources>
+    
     <Grid>
         
         <Grid.RowDefinitions>
@@ -18,8 +23,11 @@
                 <MenuItem Header="Create new environment" Click="MenuItemOnClick"></MenuItem>
             </MenuItem>
         </Menu>
-        
-        <xmlEditor:IdeControl Grid.Row="1"/>
+
+        <xmlEditor:IdeControl
+            Grid.Row="1"
+            Margin="{StaticResource TopBottomMargin}"
+            />
         
     </Grid>
 </Window>

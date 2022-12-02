@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Input;
 using Tosna.Editor.IDE.Vm;
+using Tosna.Editor.IDE.Vm.FileSystem;
 
 namespace Tosna.Editor.Wpf.IDE
 {

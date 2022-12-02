@@ -40,6 +40,7 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Common\ActionCommand.cs" />
+        <Compile Include="Common\Vm\CollectionEditorVm.cs" />
         <Compile Include="Common\ItemEventArgs.cs" />
         <Compile Include="Common\NotifyPropertyChanged.cs" />
         <Compile Include="Common\OrderedObservableCollection.cs" />
@@ -58,11 +59,15 @@
         <Compile Include="IDE\Verification\VerificationNotification.cs" />
         <Compile Include="IDE\Verification\VerificationService.cs" />
         <Compile Include="IDE\Verification\VerificationWarning.cs" />
-        <Compile Include="IDE\Vm\CollectionsEditing\CollectionEditorVm.cs" />
         <Compile Include="IDE\Vm\FilesHierarchyVm.cs" />
         <Compile Include="IDE\Vm\FilesManagerInteractionVm.cs" />
         <Compile Include="IDE\Vm\FilesViewerVm.cs" />
-        <Compile Include="IDE\Vm\IFileSystemItemVm.cs" />
+        <Compile Include="IDE\Vm\FileSystem\DescribedItemVm.cs" />
+        <Compile Include="IDE\Vm\FileSystem\DirectoryItemVm.cs" />
+        <Compile Include="IDE\Vm\FileSystem\FileItemVm.cs" />
+        <Compile Include="IDE\Vm\FileSystem\FileSystemItemVmExtensions.cs" />
+        <Compile Include="IDE\Vm\FileSystem\IFileSystemItemVm.cs" />
+        <Compile Include="IDE\Vm\FileSystem\ImageType.cs" />
         <Compile Include="IDE\Vm\ImprintInfoVm.cs" />
         <Compile Include="IDE\Vm\IPropertyEditorVm.cs" />
         <Compile Include="IDE\Vm\PropertyEditors\ArrayImprintPropertyEditorVm.cs" />

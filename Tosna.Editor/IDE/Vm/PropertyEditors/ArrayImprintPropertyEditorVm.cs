@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Tosna.Editor.IDE.Vm.CollectionsEditing;
+using Tosna.Editor.Common.Vm;
 
 namespace Tosna.Editor.IDE.Vm.PropertyEditors
 {

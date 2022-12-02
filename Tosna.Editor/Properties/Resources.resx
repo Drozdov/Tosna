@@ -18,22 +18,4 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="Folder" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>..\Resources\Folder.svg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-    </data>
-    <data name="TextFile" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>..\Resources\TextFile.svg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-    </data>
-    <data name="TextFileError" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>..\Resources\TextFileError.svg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-    </data>
-    <data name="TextFileMissing" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>..\Resources\TextFileMissing.svg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-    </data>
-    <data name="TextFileWarning" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>..\Resources\TextFileWarning.svg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-    </data>
-    <data name="DescriptedItem" type="System.Resources.ResXFileRef, System.Windows.Forms">
-        <value>..\Resources\DescriptedItem.svg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-    </data>
 </root>

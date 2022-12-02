@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Tosna.Core.Common;
 using Tosna.Core.Common.Imprints;
-using Tosna.Editor.IDE.Vm.CollectionsEditing;
+using Tosna.Editor.Common.Vm;
 
 namespace Tosna.Editor.IDE.Vm.PropertyEditors
 {

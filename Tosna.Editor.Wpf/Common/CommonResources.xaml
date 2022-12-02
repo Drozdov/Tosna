@@ -3,10 +3,133 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
+    <!-- Margins -->
+    
     <Thickness x:Key="AllMargin" Left="4" Right="4" Bottom="4" Top="4"/>
     <Thickness x:Key="TopBottomMargin" Left="0" Right="0" Bottom="4" Top="4"/>
     <Thickness x:Key="LeftTopBottomMargin" Left="4" Right="0" Bottom="4" Top="4"/>
     
     <system:Double x:Key="SmallMarginStep">2</system:Double>
+    
+    <!-- Images -->
+    
+    <DrawingImage x:Key="DescribedItemDrawingImage">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V512 H512 V0 H0 Z">
+                <DrawingGroup Opacity="1">
+                    <DrawingGroup Opacity="1">
+                        <GeometryDrawing Brush="#FF000000" Geometry="F1 M512,512z M0,0z M455.68,212.48C450.56,189.44,440.32,166.4,427.52,145.92L453.12,92.16 417.28,56.32 363.52,81.92C343.04,69.12,322.56,61.44,299.52,56.32L281.6,0 230.4,0 209.92,56.32C186.88,61.44,166.4,71.68,145.92,84.48L92.1600000000001,58.88 56.32,92.16 81.92,145.92C69.12,166.4,61.44,186.88,56.32,209.92L0,230.4 0,281.6 56.32,302.08C61.44,325.12,71.68,348.16,81.92,366.08L56.32,419.84 92.16,455.68 145.92,430.08C166.4,442.88,186.88,453.12,209.92,458.24L230.4,512 281.6,512 302.08,455.68C309.76,453.12,320,450.56,327.68,448L286.72,407.04C189.44,424.96 102.4,353.28 102.4,256 102.4,171.52 171.52,102.4 256,102.4 350.72,102.4 422.4,186.88 407.04,276.48L450.56,320C453.12,312.32,455.68,307.2,455.68,299.52L512,281.6 512,230.4 455.68,212.48z" />
+                    </DrawingGroup>
+                </DrawingGroup>
+                <DrawingGroup Opacity="1">
+                    <DrawingGroup Opacity="1">
+                        <GeometryDrawing Brush="#FF000000" Geometry="F1 M512,512z M0,0z M501.76,445.44L350.72,294.4C386.56,215.04,312.32,130.56,230.4,153.6L276.48,199.68C296.96,220.16 296.96,253.44 276.48,271.36 258.56,291.84 222.72,291.84 204.8,271.36L158.72,227.84C135.68,299.52,209.92,381.44,294.4,348.16L445.44,499.2C460.8,514.56 483.84,514.56 499.2,499.2 514.56,486.4 514.56,460.8 501.76,445.44z" />
+                    </DrawingGroup>
+                </DrawingGroup>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+    
+    <DrawingImage x:Key="FolderDrawingImage">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V60.001 H64 V0 H0 Z">
+                <DrawingGroup Opacity="1">
+                    <DrawingGroup Opacity="1">
+                        <GeometryDrawing Brush="#FFCCA352" Geometry="F0 M64,60.001z M0,0z M60,4.001L24,4.001C24,1.792,22.209,0,20,0L4,0C1.791,0,0,1.792,0,4.001L0,8 0,14.001 0,16.001C0,18.21,1.791,20.001,4,20.001L60,20.001C62.209,20.001,64,18.21,64,16.001L64,8C64,5.791,62.209,4.001,60,4.001z" />
+                    </DrawingGroup>
+                </DrawingGroup>
+                <DrawingGroup Opacity="1">
+                    <DrawingGroup Opacity="1">
+                        <GeometryDrawing Brush="#FFFFFFFF" Geometry="F1 M64,60.001z M0,0z M56,8L8,8C5.791,8,4,9.791,4,12.001L4,16.001C4,18.21,5.791,20.001,8,20.001L56,20.001C58.209,20.001,60,18.21,60,16.001L60,12.001C60,9.791,58.209,8,56,8z" />
+                    </DrawingGroup>
+                </DrawingGroup>
+                <DrawingGroup Opacity="1">
+                    <DrawingGroup Opacity="1">
+                        <GeometryDrawing Brush="#FFFFCC66" Geometry="F1 M64,60.001z M0,0z M60,12.001L4,12.001C1.791,12.001,0,13.792,0,16.001L0,56.001C0,58.21,1.791,60.001,4,60.001L60,60.001C62.209,60.001,64,58.21,64,56.001L64,16.001C64,13.792,62.209,12.001,60,12.001z" />
+                    </DrawingGroup>
+                </DrawingGroup>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+    
+    <DrawingImage x:Key="TextFileDrawingImage">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V1024 H768 V0 H0 Z">
+                <GeometryDrawing Brush="#FF000000" Geometry="F1 M768,1024z M0,0z M448,256L128,256 128,320 448,320 448,256z M576,64L0,64 0,960 768,960 768,256 576,64z M704,896L64,896 64,128 512,128 704,320 704,896z M128,768L640,768 640,704 128,704 128,768z M128,640L640,640 640,576 128,576 128,640z M128,512L640,512 640,448 128,448 128,512z" />
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+    
+    <DrawingImage x:Key="TextFileErrorDrawingImage">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V1024 H768 V0 H0 Z">
+                <GeometryDrawing Brush="#FF000000" Geometry="F1 M768,1024z M0,0z M448,256L128,256 128,320 448,320 448,256z M576,64L0,64 0,960 768,960 768,256 576,64z M704,896L64,896 64,128 512,128 704,320 704,896z M128,768L640,768 640,704 128,704 128,768z M128,640L640,640 640,576 128,576 128,640z M128,512L640,512 640,448 128,448 128,512z" />
+                <DrawingGroup Opacity="1" Transform="15.625,0,0,15.625,264.94913,455.38982">
+                    <DrawingGroup Opacity="1">
+                        <DrawingGroup Opacity="1">
+                            <GeometryDrawing Brush="#FFFF0000">
+                                <GeometryDrawing.Geometry>
+                                    <EllipseGeometry RadiusX="16" RadiusY="16" Center="16,16" />
+                                </GeometryDrawing.Geometry>
+                            </GeometryDrawing>
+                            <GeometryDrawing Brush="#FFE6E6E6" Geometry="F1 M768,1024z M0,0z M14.5,25L17.5,25 17.5,22 14.5,22z M14.5,6L14.5,19 17.5,19 17.5,6z" />
+                        </DrawingGroup>
+                    </DrawingGroup>
+                </DrawingGroup>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+    
+    <DrawingImage x:Key="TextFileMissingDrawingImage">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V1024 H768 V0 H0 Z">
+                <GeometryDrawing Brush="#FF000000" Geometry="F1 M768,1024z M0,0z M448,256L128,256 128,320 448,320 448,256z M576,64L0,64 0,960 768,960 768,256 576,64z M704,896L64,896 64,128 512,128 704,320 704,896z M128,768L640,768 640,704 128,704 128,768z M128,640L640,640 640,576 128,576 128,640z M128,512L640,512 640,448 128,448 128,512z" />
+                <DrawingGroup Opacity="1" Transform="15.625,0,0,15.625,264.94913,455.38982">
+                    <DrawingGroup Opacity="1">
+                        <DrawingGroup Opacity="1">
+                            <GeometryDrawing Brush="#FF3333FF">
+                                <GeometryDrawing.Geometry>
+                                    <EllipseGeometry RadiusX="16" RadiusY="16" Center="16,16" />
+                                </GeometryDrawing.Geometry>
+                            </GeometryDrawing>
+                        </DrawingGroup>
+                    </DrawingGroup>
+                </DrawingGroup>
+                <DrawingGroup Transform="0.95140146,0,0,1.051081,0,0">
+                    <DrawingGroup>
+                        <GlyphRunDrawing ForegroundBrush="#FFE6E6E6">
+                            <GlyphRunDrawing.GlyphRun>
+                                <GlyphRun PixelsPerDip="1.5" BaselineOrigin="412.34903,826.65491" FontRenderingEmSize="409.57006836" BidiLevel="0" IsSideways="False" CaretStops="1 1" ClusterMap="0" Characters="?" GlyphIndices="34" AdvanceWidths="250.183333333333" GlyphOffsets="0,0" Language="en-us">
+                                    <GlyphRun.GlyphTypeface>
+                                        <GlyphTypeface FontUri="C:\WINDOWS\FONTS\ARIALBD.TTF" StyleSimulations="None" />
+                                    </GlyphRun.GlyphTypeface>
+                                </GlyphRun>
+                            </GlyphRunDrawing.GlyphRun>
+                        </GlyphRunDrawing>
+                    </DrawingGroup>
+                </DrawingGroup>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+    
+    <DrawingImage x:Key="TextFileWarningDrawingImage">
+        <DrawingImage.Drawing>
+            <DrawingGroup ClipGeometry="M0,0 V1024 H768 V0 H0 Z">
+                <GeometryDrawing Brush="#FF000000" Geometry="F1 M768,1024z M0,0z M448,256L128,256 128,320 448,320 448,256z M576,64L0,64 0,960 768,960 768,256 576,64z M704,896L64,896 64,128 512,128 704,320 704,896z M128,768L640,768 640,704 128,704 128,768z M128,640L640,640 640,576 128,576 128,640z M128,512L640,512 640,448 128,448 128,512z" />
+                <DrawingGroup Opacity="1" Transform="15.625,0,0,15.625,264.94913,455.38982">
+                    <DrawingGroup Opacity="1">
+                        <DrawingGroup Opacity="1">
+                            <GeometryDrawing Brush="#FFFFA500">
+                                <GeometryDrawing.Geometry>
+                                    <EllipseGeometry RadiusX="16" RadiusY="16" Center="16,16" />
+                                </GeometryDrawing.Geometry>
+                            </GeometryDrawing>
+                            <GeometryDrawing Brush="#FFE6E6E6" Geometry="F1 M768,1024z M0,0z M14.5,25L17.5,25 17.5,22 14.5,22z M14.5,6L14.5,19 17.5,19 17.5,6z" />
+                        </DrawingGroup>
+                    </DrawingGroup>
+                </DrawingGroup>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
     
 </ResourceDictionary>

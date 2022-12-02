@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Tosna.Editor.Common;
 
-namespace Tosna.Editor.IDE.Vm.CollectionsEditing
+namespace Tosna.Editor.Common.Vm
 {
 	public abstract class CollectionEditorVm
 	{
