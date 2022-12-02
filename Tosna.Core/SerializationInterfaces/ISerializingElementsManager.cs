@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Tosna.Core.SerializationIterfaces
+namespace Tosna.Core.SerializationInterfaces
 {
 	
 	public interface ISerializingElementsManager

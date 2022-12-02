@@ -16,9 +16,9 @@ namespace Tosna.Editor.IDE.Vm
 		private readonly FilesManager filesManager;
 		private readonly FilesViewerVm filesViewerVm;
 		private readonly IFilesSelector filesSelector;
-		private readonly IInfoLogger logger;
+		private readonly ILogger logger;
 
-		public FilesHierarchyVm(FilesManager filesManager, FilesViewerVm filesViewerVm, IFilesSelector filesSelector, IInfoLogger logger)
+		public FilesHierarchyVm(FilesManager filesManager, FilesViewerVm filesViewerVm, IFilesSelector filesSelector, ILogger logger)
 		{
 			Contract.Requires(filesManager != null);
 			Contract.Requires(filesViewerVm != null);
@@ -43,6 +43,11 @@ namespace Tosna.Editor.IDE.Vm
 		public void Dispose()
 		{
 			TopDirectoryItemVm?.Dispose();
+		}
+
+		public void RefreshAll()
+		{
+			UpdateTopDirectoryItem();
 		}
 
 		#region Properties

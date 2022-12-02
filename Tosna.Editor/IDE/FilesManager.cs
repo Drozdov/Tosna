@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Tosna.Core.Common;
 using Tosna.Core.Helpers.Xml;
-using Tosna.Core.SerializationIterfaces;
+using Tosna.Core.SerializationInterfaces;
 
 namespace Tosna.Editor.IDE
 {

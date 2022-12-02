@@ -10,7 +10,7 @@ namespace Tosna.Editor.IDE.Verification
 	public class VerificationService
 	{
 		private readonly FilesManager filesManager;
-		private readonly IInfoLogger logger;
+		private readonly ILogger logger;
 
 		private readonly HashSet<SingleFileManager> updatingQueue = new HashSet<SingleFileManager>();
 
@@ -18,7 +18,7 @@ namespace Tosna.Editor.IDE.Verification
 
 		private bool active;
 
-		public VerificationService(FilesManager filesManager, IInfoLogger logger)
+		public VerificationService(FilesManager filesManager, ILogger logger)
 		{
 			this.filesManager = filesManager;
 			this.logger = logger;

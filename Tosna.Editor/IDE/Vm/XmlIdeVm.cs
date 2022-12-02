@@ -11,7 +11,7 @@ namespace Tosna.Editor.IDE.Vm
 
 		public FilesViewerVm ViewerVm { get; }
 
-		public XmlIdeVm(FilesManager filesManager, IFilesSelector filesSelector, IConfirmationRequester confirmationRequester, IInfoLogger logger)
+		public XmlIdeVm(FilesManager filesManager, IFilesSelector filesSelector, IConfirmationRequester confirmationRequester, ILogger logger)
 		{
 			ViewerVm = new FilesViewerVm(new VerificationService(filesManager, logger), confirmationRequester, new FilesManagerInteractionService(filesManager), logger);
 			HierarchyVm = new FilesHierarchyVm(filesManager, ViewerVm, filesSelector, logger);

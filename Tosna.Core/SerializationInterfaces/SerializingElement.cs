@@ -1,6 +1,6 @@
 using System;
 
-namespace Tosna.Core.SerializationIterfaces
+namespace Tosna.Core.SerializationInterfaces
 {
 	public class SerializingElement
 	{

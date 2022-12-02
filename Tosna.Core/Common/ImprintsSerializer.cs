@@ -6,7 +6,7 @@ using System.Xml.Linq;
 using Tosna.Core.Common.Imprints;
 using Tosna.Core.Common.Problems;
 using Tosna.Core.Helpers.Xml;
-using Tosna.Core.SerializationIterfaces;
+using Tosna.Core.SerializationInterfaces;
 
 namespace Tosna.Core.Common
 {

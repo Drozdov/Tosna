@@ -3,7 +3,7 @@ using Tosna.Editor.Wpf.Demo.Domain.Common;
 
 namespace Tosna.Editor.Wpf.Demo.Domain.Devices;
 
-public class ModBusNetworkAnemometer : IAnemometer
+public class ModBusNetworkAnemometer : IAnemometer, IConnectable
 {
 	private readonly string ipAddress;
 	private readonly uint port;
@@ -30,8 +30,8 @@ public class ModBusNetworkAnemometer : IAnemometer
 	{
 		// Here goes complicated logics of requesting actual values of wind speed
 
-		windAzimuthDegrees = 0;
-		windSpeedMPerSecond = 0;
+		windAzimuthDegrees = 46;
+		windSpeedMPerSecond = 3;
 		return true;
 	}
 

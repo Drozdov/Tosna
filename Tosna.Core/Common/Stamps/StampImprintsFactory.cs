@@ -5,7 +5,7 @@ using System.Linq;
 using Tosna.Core.Common.Imprints;
 using Tosna.Core.Helpers;
 using Tosna.Core.IO;
-using Tosna.Core.SerializationIterfaces;
+using Tosna.Core.SerializationInterfaces;
 
 namespace Tosna.Core.Common.Stamps
 {

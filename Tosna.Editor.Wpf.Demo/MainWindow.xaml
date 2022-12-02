@@ -20,7 +20,8 @@
         
         <Menu Grid.Row="0">
             <MenuItem Header="File">
-                <MenuItem Header="Create new environment" Click="MenuItemOnClick"></MenuItem>
+                <MenuItem Header="Create new environment" Click="OnCreateNewEnvironmentRequest"></MenuItem>
+                <MenuItem Header="Get weather forecast" Click="OnWeatherForecastRequest"></MenuItem>
             </MenuItem>
         </Menu>
 

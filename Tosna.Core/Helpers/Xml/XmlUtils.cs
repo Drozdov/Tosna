@@ -1,7 +1,7 @@
 using System.IO;
 using System.Xml;
 using System.Xml.Linq;
-using Tosna.Core.SerializationIterfaces;
+using Tosna.Core.SerializationInterfaces;
 
 namespace Tosna.Core.Helpers.Xml
 {

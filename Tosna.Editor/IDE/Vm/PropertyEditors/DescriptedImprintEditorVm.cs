@@ -11,7 +11,7 @@ namespace Tosna.Editor.IDE.Vm.PropertyEditors
 	{
 		private readonly DescriptorFileManager descriptorFileManager;
 
-		public DescriptedImprintEditorVm(DescriptorFileManager descriptorFileManager, FilesManagerInteractionService filesManagerInteractionService, IInfoLogger logger)
+		public DescriptedImprintEditorVm(DescriptorFileManager descriptorFileManager, FilesManagerInteractionService filesManagerInteractionService, ILogger logger)
 		{
 			this.descriptorFileManager = descriptorFileManager;
 

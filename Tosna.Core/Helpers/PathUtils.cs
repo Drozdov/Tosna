@@ -4,8 +4,6 @@ using System.Linq;
 
 namespace Tosna.Core.Helpers
 {
-	// TODO: move to another location
-
 	public static class PathUtils
 	{
 		public static string GetRelativePath(DirectoryInfo destinationDirectory, DirectoryInfo currentDirectory)

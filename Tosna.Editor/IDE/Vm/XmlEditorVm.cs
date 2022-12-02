@@ -22,7 +22,7 @@ namespace Tosna.Editor.IDE.Vm
 
 		#region Ctor & Dispose
 
-		public XmlEditorVm(SingleFileManager singleFileManager, VerificationService verificationService, FilesManagerInteractionService filesManagerInteractionService, FilesViewerVm filesViewerVm, IInfoLogger logger)
+		public XmlEditorVm(SingleFileManager singleFileManager, VerificationService verificationService, FilesManagerInteractionService filesManagerInteractionService, FilesViewerVm filesViewerVm, ILogger logger)
 		{
 			this.singleFileManager = singleFileManager;
 			this.verificationService = verificationService;

@@ -16,6 +16,21 @@ public class WeatherStationsEnvironment
 		WeatherStations = weatherStations;
 		Name = name;
 	}
+
+	public void Init()
+	{
+		foreach (var weatherStation in WeatherStations)
+		{
+			var connectableDevices = new IConnectable[] { }
+				.Union(weatherStation.Anemometers.OfType<IConnectable>())
+				.Union(weatherStation.Barometers.OfType<IConnectable>())
+				.Union(weatherStation.Thermometers.OfType<IConnectable>());
+			foreach (var connectable in connectableDevices)
+			{
+				connectable.Connect();
+			}
+		}
+	}
 }
 
 [SerializableAs("WeatherStationsEnvironment")]

@@ -1,5 +1,5 @@
 using System;
-using Tosna.Core.SerializationIterfaces;
+using Tosna.Core.SerializationInterfaces;
 
 namespace Tosna.Editor.IDE.Verification
 {

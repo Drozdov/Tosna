@@ -7,7 +7,7 @@ using System.Xml.Linq;
 using Tosna.Core.Common;
 using Tosna.Core.Common.Imprints;
 using Tosna.Core.Common.Problems;
-using Tosna.Core.SerializationIterfaces;
+using Tosna.Core.SerializationInterfaces;
 using Tosna.Editor.IDE.Reserved;
 using Tosna.Editor.IDE.Verification;
 

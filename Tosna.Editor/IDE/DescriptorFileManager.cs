@@ -31,7 +31,7 @@ namespace Tosna.Editor.IDE
 
 		public string PublicName { get; }
 
-		public void Refresh(FilesManagerInteractionService filesManagerInteractionService, IInfoLogger logger)
+		public void Refresh(FilesManagerInteractionService filesManagerInteractionService, ILogger logger)
 		{
 			imprints = SingleFileManager.Imprints;
 

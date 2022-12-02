@@ -8,18 +8,18 @@ namespace Tosna.Editor.Common
 	{
 		private readonly Action executeAction;
 		private readonly Func<bool> canExecuteFunc;
-		private readonly IInfoLogger logger;
+		private readonly ILogger logger;
 		
 		public string PublicName { get; }
 
-		public ActionCommand(Action executeAction, Func<bool> canExecuteFunc, IInfoLogger logger = null)
+		public ActionCommand(Action executeAction, Func<bool> canExecuteFunc, ILogger logger = null)
 		{
 			this.executeAction = executeAction;
 			this.canExecuteFunc = canExecuteFunc;
 			this.logger = logger;
 		}
 		
-		public ActionCommand(Action executeAction, Func<bool> canExecuteFunc, string publicName, IInfoLogger logger = null)
+		public ActionCommand(Action executeAction, Func<bool> canExecuteFunc, string publicName, ILogger logger = null)
 		{
 			this.executeAction = executeAction;
 			this.canExecuteFunc = canExecuteFunc;

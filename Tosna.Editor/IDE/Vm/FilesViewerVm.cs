@@ -16,10 +16,10 @@ namespace Tosna.Editor.IDE.Vm
 		private readonly VerificationService verificationService;
 		private readonly IConfirmationRequester confirmationRequester;
 		private readonly FilesManagerInteractionService filesManagerInteractionService;
-		private readonly IInfoLogger logger;
+		private readonly ILogger logger;
 		private ViewerItemVm currentFileViewerItemVm;
 
-		public FilesViewerVm(VerificationService verificationService, IConfirmationRequester confirmationRequester, FilesManagerInteractionService filesManagerInteractionService, IInfoLogger logger)
+		public FilesViewerVm(VerificationService verificationService, IConfirmationRequester confirmationRequester, FilesManagerInteractionService filesManagerInteractionService, ILogger logger)
 		{
 			Contract.Requires(verificationService != null);
 			Contract.Requires(confirmationRequester != null);
@@ -217,7 +217,7 @@ namespace Tosna.Editor.IDE.Vm
 
 	public class FileViewerItemVm : ViewerItemVm
 	{
-		public FileViewerItemVm(SingleFileManager fileManager, FilesViewerVm parent, VerificationService verificationService, FilesManagerInteractionService filesManagerInteractionService, IInfoLogger logger) : base(fileManager, parent)
+		public FileViewerItemVm(SingleFileManager fileManager, FilesViewerVm parent, VerificationService verificationService, FilesManagerInteractionService filesManagerInteractionService, ILogger logger) : base(fileManager, parent)
 		{
 			XmlEditorVm = new XmlEditorVm(fileManager, verificationService, filesManagerInteractionService, parent, logger);
 		}
@@ -244,7 +244,7 @@ namespace Tosna.Editor.IDE.Vm
 	{
 		public DescriptorFileManager DescriptorFileManager { get; }
 
-		public DescriptedViewerItemVm(DescriptorFileManager fileManager, FilesViewerVm parent, FilesManagerInteractionService filesManagerInteractionService, IInfoLogger logger) : base(fileManager.SingleFileManager, parent)
+		public DescriptedViewerItemVm(DescriptorFileManager fileManager, FilesViewerVm parent, FilesManagerInteractionService filesManagerInteractionService, ILogger logger) : base(fileManager.SingleFileManager, parent)
 		{
 			DescriptorFileManager = fileManager;
 			EditorVm = new DescriptedImprintEditorVm(fileManager, filesManagerInteractionService, logger);

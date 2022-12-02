@@ -2,7 +2,7 @@ using System;
 
 namespace Tosna.Core.Common
 {
-	public interface IInfoLogger
+	public interface ILogger
 	{
 		void LogMessage(LogMessageType messageType, string message);
 		
@@ -19,27 +19,27 @@ namespace Tosna.Core.Common
 
 	public static class InfoLoggerExtensions
 	{
-		public static void LogDebug(this IInfoLogger logger, string message)
+		public static void LogDebug(this ILogger logger, string message)
 		{
 			logger.LogMessage(LogMessageType.Debug, message);
 		}
 		
-		public static void LogInfo(this IInfoLogger logger, string message)
+		public static void LogInfo(this ILogger logger, string message)
 		{
 			logger.LogMessage(LogMessageType.Info, message);
 		}
 		
-		public static void LogWarning(this IInfoLogger logger, string message)
+		public static void LogWarning(this ILogger logger, string message)
 		{
 			logger.LogMessage(LogMessageType.Warning, message);
 		}
 
-		public static void LogError(this IInfoLogger logger, string message)
+		public static void LogError(this ILogger logger, string message)
 		{
 			logger.LogMessage(LogMessageType.Error, message);
 		}
 		
-		public static void LogError(this IInfoLogger logger, string message, Exception e)
+		public static void LogError(this ILogger logger, string message, Exception e)
 		{
 			logger.LogMessage(LogMessageType.Error, message, e);
 		}

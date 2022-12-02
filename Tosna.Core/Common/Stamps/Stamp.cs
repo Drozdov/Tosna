@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
-using Tosna.Core.SerializationIterfaces;
+using Tosna.Core.SerializationInterfaces;
 
 namespace Tosna.Core.Common.Stamps
 {
@@ -26,11 +26,6 @@ namespace Tosna.Core.Common.Stamps
 			Type = type;
 			Properties = properties;
 			InlinePolicy = type.IsValueType ? StampInlinePolicy.Always : StampInlinePolicy.Dynamic;
-
-			foreach (var property in Properties)
-			{
-				property.Changed += (sender, args) => Changed(this, args);
-			}
 		}
 
 		public Stamp(object simpleTypeValue)
@@ -39,8 +34,6 @@ namespace Tosna.Core.Common.Stamps
 			SimpleTypeValue = simpleTypeValue;
 			Properties = new IStampProperty[0];
 		}
-
-		public event EventHandler Changed = delegate { };
 	}
 
 	public enum StampInlinePolicy
@@ -55,8 +48,6 @@ namespace Tosna.Core.Common.Stamps
 		SerializingElement SerializingElement { get; }
 
 		void Visit(IStampPropertyVisitor visitor);
-
-		event EventHandler Changed;
 	}
 
 	public interface IStampPropertyVisitor
@@ -70,19 +61,9 @@ namespace Tosna.Core.Common.Stamps
 
 	public class SimpleTypeProperty : IStampProperty
 	{
-		private object value;
-
 		public SerializingElement SerializingElement { get; }
 
-		public object Value
-		{
-			get => value;
-			set
-			{
-				this.value = value;
-				Changed(this, EventArgs.Empty);
-			}
-		}
+		public object Value { get; }
 
 		public SimpleTypeProperty(SerializingElement serializingElement, object value)
 		{
@@ -94,29 +75,13 @@ namespace Tosna.Core.Common.Stamps
 		{
 			visitor.Visit(this);
 		}
-
-		public event EventHandler Changed = delegate { };
 	}
 
 	public class StampProperty : IStampProperty
 	{
-		private Stamp value;
-
 		public SerializingElement SerializingElement { get; }
 
-		public Stamp Value
-		{
-			get => value;
-			set
-			{
-				if (this.value == value)
-				{
-					return;
-				}
-				this.value = value;
-				Changed(this, EventArgs.Empty);
-			}
-		}
+		public Stamp Value { get; }
 
 		public StampProperty(SerializingElement serializingElement, Stamp value)
 		{
@@ -128,29 +93,13 @@ namespace Tosna.Core.Common.Stamps
 		{
 			visitor.Visit(this);
 		}
-
-		public event EventHandler Changed = delegate { };
 	}
 
 	public class ArrayStampProperty : IStampProperty
 	{
-		private Stamp[] values;
 		public SerializingElement SerializingElement { get; }
 
-		public Stamp[] Values
-		{
-			get => values;
-			set
-			{
-				if (value != null && values != null && value.SequenceEqual(values))
-				{
-					return;
-				}
-
-				values = value; 
-				Changed(this, EventArgs.Empty);
-			}
-		}
+		public Stamp[] Values { get; }
 
 		public ArrayStampProperty(SerializingElement serializingElement, Stamp[] values)
 		{
@@ -163,6 +112,5 @@ namespace Tosna.Core.Common.Stamps
 			visitor.Visit(this);
 		}
 
-		public event EventHandler Changed = delegate { };
 	}
 }

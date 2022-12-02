@@ -1,7 +1,10 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Text;
 using System.Windows;
 using Microsoft.Win32;
 using Tosna.Core.Common;
+using Tosna.Core.SerializationInterfaces;
 using Tosna.Editor.IDE;
 using Tosna.Editor.IDE.Interfaces;
 using Tosna.Editor.IDE.Vm;
@@ -15,21 +18,91 @@ namespace Tosna.Editor.Wpf.Demo
 	public partial class MainWindow
 	{
 		private readonly IFilesSelector filesSelector = new FilesSelector();
-		
+		private readonly FilesManager filesManager;
+		private readonly XmlIdeVm xmlIdeVm;
+
 		public MainWindow()
 		{
 			InitializeComponent();
 
-			var filesManager = new FilesManager();
-			DataContext = new XmlIdeVm(filesManager, filesSelector, new ConfirmationRequester(), new Logger());
+			WindowState = WindowState.Maximized;
+
+			filesManager = new FilesManager();
+			xmlIdeVm = new XmlIdeVm(filesManager, filesSelector, new ConfirmationRequester(), new Logger());
+			DataContext = xmlIdeVm;
+		}
+		
+		protected override void OnClosing(CancelEventArgs e)
+		{
+			xmlIdeVm?.Dispose();
+			base.OnClosing(e);
 		}
 
-		private void MenuItemOnClick(object sender, RoutedEventArgs e)
+		private void OnCreateNewEnvironmentRequest(object sender, RoutedEventArgs e)
 		{
-			if (filesSelector.CreateFile(null, out var fileName))
+			if (!filesSelector.CreateFile(null, out var fileName)) return;
+			EnvironmentIo.CreateAndSaveDefaultEnvironment(fileName);
+			filesManager.AddFilesWithDependencies(new[] { fileName });
+			xmlIdeVm.HierarchyVm.RefreshAll();
+		}
+
+		private void OnWeatherForecastRequest(object sender, RoutedEventArgs e)
+		{
+			if (!filesSelector.SelectFiles(null, out var files) ||
+			    !EnvironmentIo.TryReadEnvironment(files, out var weatherEnvironment)) return;
+
+			var infoBuilder = new StringBuilder();
+			weatherEnvironment.Init();
+			
+			foreach (var station in weatherEnvironment.WeatherStations)
 			{
-				EnvironmentFactory.SaveEnvironment(fileName);
+				infoBuilder.Append(station.Name);
+				infoBuilder.Append(Environment.NewLine);
+
+				var temperatureInfo = "-";
+				foreach (var thermometer in station.Thermometers)
+				{
+					if (thermometer.TryGetTemperature(out var temperatureCelsius))
+					{
+						temperatureInfo = $"{temperatureCelsius:F1}°";
+						break;
+					}
+				}
+
+				infoBuilder.Append($"Temperature: {temperatureInfo}");
+				infoBuilder.Append(Environment.NewLine);
+				
+				var pressureInfo = "-";
+				foreach (var barometer in station.Barometers)
+				{
+					if (barometer.TryGetPressure(out var pressureHPa))
+					{
+						pressureInfo = $"{pressureHPa:F1} HPa";
+						break;
+					}
+				}
+
+				infoBuilder.Append($"Pressure: {pressureInfo}");
+				infoBuilder.Append(Environment.NewLine);
+				
+				var anemometerInfo = "-";
+				foreach (var barometer in station.Anemometers)
+				{
+					if (barometer.TryGetWindSpeed(out var windSpeedMPerSecond, out var azimuthDegrees))
+					{
+						anemometerInfo = $"{windSpeedMPerSecond:F1} m/s, {azimuthDegrees:F1}°";
+						break;
+					}
+				}
+
+				infoBuilder.Append($"Wind speed: {anemometerInfo}");
+				infoBuilder.Append(Environment.NewLine);
+				infoBuilder.Append(Environment.NewLine);
 			}
+
+			var weatherInfo = infoBuilder.ToString();
+
+			MessageBox.Show(weatherInfo, "Weather forecast");
 		}
 
 		#region Nested
@@ -87,7 +160,7 @@ namespace Tosna.Editor.Wpf.Demo
 			}
 		}
 
-		private class Logger : IInfoLogger
+		private class Logger : ILogger
 		{
 			public void LogMessage(LogMessageType messageType, string message)
 			{
@@ -106,5 +179,6 @@ namespace Tosna.Editor.Wpf.Demo
 		}
 
 		#endregion
+
 	}
 }

@@ -63,14 +63,17 @@
             <SubType>Code</SubType>
         </Compile>
         <Compile Include="Domain\Common\GeographicalCoordinates.cs" />
+        <Compile Include="Domain\Devices\ConstTemperatureThermometer.cs" />
         <Compile Include="Domain\Devices\DummyDevice.cs" />
         <Compile Include="Domain\Devices\IAnemometer.cs" />
         <Compile Include="Domain\Devices\IBarometer.cs" />
+        <Compile Include="Domain\Devices\IConnectable.cs" />
         <Compile Include="Domain\Devices\IThermometer.cs" />
         <Compile Include="Domain\Devices\ModBusNetworkAnemometer.cs" />
+        <Compile Include="Domain\Devices\RandomizedBarometer.cs" />
         <Compile Include="Domain\Devices\WeatherStation.cs" />
         <Compile Include="Domain\IDeviceSignature.cs" />
-        <Compile Include="Domain\EnvironmentFactory.cs" />
+        <Compile Include="Domain\EnvironmentIo.cs" />
         <Compile Include="Domain\WeatherStationsEnvironment.cs" />
         <Compile Include="MainWindow.xaml.cs">
             <DependentUpon>MainWindow.xaml</DependentUpon>

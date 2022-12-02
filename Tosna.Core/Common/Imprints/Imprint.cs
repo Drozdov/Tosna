@@ -4,7 +4,7 @@ using System.Diagnostics.Contracts;
 using System.IO;
 using Tosna.Core.Common.Problems;
 using Tosna.Core.Helpers;
-using Tosna.Core.SerializationIterfaces;
+using Tosna.Core.SerializationInterfaces;
 
 namespace Tosna.Core.Common.Imprints
 {

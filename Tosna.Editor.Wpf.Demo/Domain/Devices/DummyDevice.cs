@@ -32,6 +32,7 @@ public class DummyDevice : IThermometer, IBarometer, IAnemometer
 }
 
 [SerializableAs("DummyDevice")]
+[SerializableAs("OldDummyDevice", IsObsolete = true)]
 public class DummyDeviceSignature : IDeviceSignature<DummyDevice>
 {
 	public DummyDevice CreateDevice(IDeviceSignatureResolver resolver)

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace Tosna.Core.SerializationIterfaces
+namespace Tosna.Core.SerializationInterfaces
 {
 	public class SerializingElementsManager : ISerializingElementsManager
 	{
-		private Regex backingFieldRegex = new Regex("<(.*)>k__BackingField");
+		private readonly Regex backingFieldRegex = new Regex("<(.*)>k__BackingField");
 		
 		public IEnumerable<SerializingElement> GetAllElements(Type type)
 		{
