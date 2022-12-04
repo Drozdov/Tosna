@@ -65,6 +65,11 @@ namespace Tosna.Editor.IDE
 			var editedText = XmlFormatter.FormatText(editedDocument.ToString());
 			SingleFileManager.Edit(editedText);
 		}
+
+		public void SaveChanges()
+		{
+			SingleFileManager.SaveToDisk();
+		}
 	}
 
 	public abstract class DescriptedField

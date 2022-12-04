@@ -34,26 +34,24 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Список файлов -->
+        <!-- Files list -->
 
         <ide:FilesManagerControl
             Grid.Column="0"
             DataContext="{Binding HierarchyVm}"
-            Margin="{StaticResource AllMargin}"
             />
 
-        <!-- Вертикальный разделитель -->
+        <!-- Vertical splitter -->
 
         <GridSplitter Grid.Column="1"
                       VerticalAlignment="Stretch"
                       HorizontalAlignment="Center"
                       Width="{StaticResource SmallMarginStep}"/>
 
-        <!-- Область вывода -->
+        <!-- Editors -->
 
         <xcad:DockingManager Grid.Column="2"
                              DocumentsSource="{Binding ViewerVm.OpenDocuments}"
-                             Margin="{StaticResource LeftTopBottomMargin}"
                              >
 
             <xcad:DockingManager.LayoutItemContainerStyle>

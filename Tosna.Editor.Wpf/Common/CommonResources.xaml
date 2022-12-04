@@ -7,7 +7,11 @@
     
     <Thickness x:Key="AllMargin" Left="4" Right="4" Bottom="4" Top="4"/>
     <Thickness x:Key="TopBottomMargin" Left="0" Right="0" Bottom="4" Top="4"/>
+    <Thickness x:Key="TopMargin" Left="0" Right="0" Bottom="0" Top="4"/>
+    <Thickness x:Key="LeftMargin" Left="4" Right="0" Bottom="0" Top="0"/>
+    <Thickness x:Key="RightMargin" Left="0" Right="4" Bottom="0" Top="0"/>
     <Thickness x:Key="LeftTopBottomMargin" Left="4" Right="0" Bottom="4" Top="4"/>
+    <Thickness x:Key="LeftRightMargin" Left="4" Right="4" Bottom="0" Top="0"/>
     
     <system:Double x:Key="SmallMarginStep">2</system:Double>
     

@@ -188,6 +188,7 @@ namespace Tosna.Editor.IDE.Vm
 		public void Dispose()
 		{
 			Subscribe(false);
+			OnDisposed();
 		}
 
 		private void Subscribe(bool subscribe)

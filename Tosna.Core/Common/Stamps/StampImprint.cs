@@ -13,6 +13,8 @@ namespace Tosna.Core.Common.Stamps
 		public FileInfo FilePath => Parent != null ? Parent.FilePath : defaultFilePath;
 
 		public string Id { get; set; }
+		
+		public string PublicName { get; set; }
 
 		public bool Inlined { get; set; }
 
@@ -20,6 +22,7 @@ namespace Tosna.Core.Common.Stamps
 		{
 			Stamp = stamp;
 			Id = stamp.UserId;
+			PublicName = stamp.UserPublicName;
 			this.defaultFilePath = defaultFilePath;
 		}
 	}

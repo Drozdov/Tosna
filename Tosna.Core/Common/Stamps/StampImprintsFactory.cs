@@ -32,7 +32,7 @@ namespace Tosna.Core.Common.Stamps
 
 			if (owner == null || stampImprint.Inlined || stampImprint.Parent == map[owner])
 			{
-				return new AggregateImprint(stamp.Type, null, stampImprint.Id, null,
+				return new AggregateImprint(stamp.Type, stampImprint.PublicName, stampImprint.Id, null,
 					stamp.Properties.Select(p => ImprintFieldsFactory.GetField(stamp, p, p.SerializingElement, this)).ToArray());
 			}
 

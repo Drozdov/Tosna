@@ -16,6 +16,8 @@ namespace Tosna.Core.Common.Stamps
 		public StampInlinePolicy InlinePolicy { get; set; }
 
 		public string UserId { get; set; }
+		
+		public string UserPublicName { get; set; }
 
 		public FileInfo UserFilePath { get; set; }
 

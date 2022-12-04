@@ -123,12 +123,15 @@ public static class EnvironmentIo
 		constructor.GetStamp(randomizedBarometer).UserFilePath = devicesFilePath;
 		
 		constructor.GetStamp(yerevanStation).UserId = "WeatherStation";
+		constructor.GetStamp(yerevanStation).UserPublicName = "Yerevan weather station";
 		constructor.GetStamp(yerevanStation).UserFilePath = yerevanFilePath;
 
 		constructor.GetStamp(stPetersburgStation).UserId = "WeatherStation";
+		constructor.GetStamp(stPetersburgStation).UserPublicName = "St. Petersburg weather station";
 		constructor.GetStamp(stPetersburgStation).UserFilePath = stPetersburgFilePath;
 		
 		constructor.GetStamp(berlinStation).UserId = "WeatherStation";
+		constructor.GetStamp(berlinStation).UserPublicName = "Berlin weather station";
 		constructor.GetStamp(berlinStation).UserFilePath = berlinFilePath;
 		
 		var stampsEnvironment = new StampsEnvironment(constructor.GetCollection(), entryPointFilePath);

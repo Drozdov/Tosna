@@ -16,6 +16,10 @@
         <ResourceDictionary Source="/Tosna.Editor.Wpf;component/Common/CommonResources.xaml" />
     </UserControl.Resources>
     
+    <UserControl.InputBindings>
+        <KeyBinding Key="S" Modifiers="Control" Command="{Binding SaveCommand}"/>
+    </UserControl.InputBindings>
+    
     <ScrollViewer>
 
         <Grid Margin="{StaticResource AllMargin}">
@@ -26,44 +30,67 @@
 
                     <DataTemplate DataType="{x:Type propertyEditors:BoolPropertyEditorVm}">
                         <GroupBox Header="{Binding PublicName}" Margin="{StaticResource TopBottomMargin}">
-                                <CheckBox IsChecked="{Binding BoolValue}" Margin="{StaticResource TopBottomMargin}"/>
+                                <CheckBox
+                                    IsChecked="{Binding BoolValue}"
+                                    Margin="{StaticResource AllMargin}"
+                                    />
                         </GroupBox>
                     </DataTemplate>
 
                     <DataTemplate DataType="{x:Type propertyEditors:StringPropertyEditorVm}">
                         <GroupBox Header="{Binding PublicName}" Margin="{StaticResource TopBottomMargin}">
-                                <TextBox Text="{Binding StringValue}" Margin="{StaticResource TopBottomMargin}"/>
+                                <TextBox
+                                    Text="{Binding StringValue}"
+                                    Margin="{StaticResource AllMargin}"
+                                    />
                         </GroupBox>
                     </DataTemplate>
 
                     <DataTemplate DataType="{x:Type propertyEditors:IntPropertyEditorVm}">
                         <GroupBox Header="{Binding PublicName}" Margin="{StaticResource TopBottomMargin}">
-                                <xctk:IntegerUpDown Value="{Binding IntValue}" Margin="{StaticResource TopBottomMargin}"/>
+                                <xctk:IntegerUpDown
+                                    Value="{Binding IntValue}"
+                                    Margin="{StaticResource AllMargin}"
+                                    />
                         </GroupBox>
                     </DataTemplate>
 
                     <DataTemplate DataType="{x:Type propertyEditors:DoublePropertyEditorVm}">
                         <GroupBox Header="{Binding PublicName}" Margin="{StaticResource TopBottomMargin}">
-                                <xctk:DoubleUpDown Value="{Binding DoubleValue}" Margin="{StaticResource TopBottomMargin}"/>
+                                <xctk:DoubleUpDown
+                                    Value="{Binding DoubleValue}"
+                                    Margin="{StaticResource AllMargin}"
+                                    />
                         </GroupBox>
                     </DataTemplate>
 
                     <DataTemplate DataType="{x:Type propertyEditors:EnumPropertyEditorVm}">
                         <GroupBox Header="{Binding PublicName}" Margin="{StaticResource TopBottomMargin}">
-                                <ComboBox ItemsSource="{Binding Values}" SelectedItem="{Binding Value}" Margin="{StaticResource TopBottomMargin}"/>
+                                <ComboBox
+                                    ItemsSource="{Binding Values}"
+                                    SelectedItem="{Binding Value}"
+                                    Margin="{StaticResource AllMargin}"
+                                    />
                         </GroupBox>
                     </DataTemplate>
 
                     <DataTemplate DataType="{x:Type propertyEditors:ReadonlyPropertyEditorVm}">
                         <GroupBox Header="{Binding PublicName}" Margin="{StaticResource TopBottomMargin}">
-                                <TextBlock Text="{Binding Value}" Margin="{StaticResource TopBottomMargin}"/>
+                                <TextBlock
+                                    Text="{Binding Value}"
+                                    Margin="{StaticResource AllMargin}"
+                                    />
                         </GroupBox>
                     </DataTemplate>
 
                     <DataTemplate DataType="{x:Type propertyEditors:NestedImprintPropertyEditorVm}">
                         <GroupBox Header="{Binding PublicName}" Margin="{StaticResource TopBottomMargin}">
 
-                                <ComboBox SelectedItem="{Binding SelectedStamp}" ItemsSource="{Binding AvailableStamps}" Margin="{StaticResource TopBottomMargin}">
+                                <ComboBox
+                                    SelectedItem="{Binding SelectedStamp}"
+                                    ItemsSource="{Binding AvailableStamps}"
+                                    Margin="{StaticResource AllMargin}"
+                                    >
                                     <ComboBox.ItemTemplate>
                                         <DataTemplate>
                                             <TextBlock Text="{Binding PublicName}"></TextBlock>
@@ -75,12 +102,15 @@
 
                     <DataTemplate DataType="{x:Type propertyEditors:ArrayImprintPropertyEditorVm}">
                         <GroupBox Header="{Binding PublicName}" Margin="{StaticResource TopBottomMargin}">
-                                <common:CollectionEditorControl/>
-                            </GroupBox>
+                                <common:CollectionEditorControl
+                                    Height="100"
+                                    Margin="{StaticResource AllMargin}"
+                                    />
+                        </GroupBox>
                     </DataTemplate>
 
                 </ItemsControl.Resources>
-
+                
             </ItemsControl>
 
 

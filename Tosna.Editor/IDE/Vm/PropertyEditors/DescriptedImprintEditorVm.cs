@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Tosna.Core.Common;
 using Tosna.Core.Common.Imprints;
+using Tosna.Editor.Common;
 using Tosna.Editor.Common.Vm;
 
 namespace Tosna.Editor.IDE.Vm.PropertyEditors
@@ -17,6 +18,8 @@ namespace Tosna.Editor.IDE.Vm.PropertyEditors
 
 			descriptorFileManager.Refresh(filesManagerInteractionService, logger);
 
+			SaveCommand = new ActionCommand(descriptorFileManager.SaveChanges, () => true);
+
 			Refresh();
 		}
 
@@ -26,6 +29,8 @@ namespace Tosna.Editor.IDE.Vm.PropertyEditors
 		}
 
 		public IReadOnlyCollection<IPropertyEditorVm> Properties { get; private set; }
+		
+		public ActionCommand SaveCommand { get; }
 
 		private static IPropertyEditorVm GetEditorVm(DescriptedField field)
 		{

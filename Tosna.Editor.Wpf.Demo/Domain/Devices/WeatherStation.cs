@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Tosna.Core.Common.Attributes;
 using Tosna.Editor.Wpf.Demo.Domain.Common;
@@ -27,6 +28,7 @@ public class WeatherStation
 }
 
 [SerializableAs("WeatherStation")]
+[ControllerDescriptor(typeof(WeatherStationContext))]
 public class WeatherStationSignature : IDeviceSignature<WeatherStation>
 {
 	public IDeviceSignature<IThermometer>[] Thermometers { get; }
@@ -57,5 +59,19 @@ public class WeatherStationSignature : IDeviceSignature<WeatherStation>
 			AveragePosition,
 			Name
 		);
+	}
+}
+
+public class WeatherStationContext : ControllerDescriptorContext
+{
+	public WeatherStationContext() : base(new Dictionary<string, string>
+	{
+		{nameof(WeatherStationSignature.Name), "Name"},
+		{nameof(WeatherStationSignature.Anemometers), "Anemometers"},
+		{nameof(WeatherStationSignature.Barometers), "Barometers"},
+		{nameof(WeatherStationSignature.Thermometers), "Thermometers"},
+		{nameof(WeatherStationSignature.AveragePosition), "Average position"},
+	})
+	{
 	}
 }
