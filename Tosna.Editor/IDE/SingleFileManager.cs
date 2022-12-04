@@ -8,6 +8,7 @@ using Tosna.Core.Common;
 using Tosna.Core.Common.Attributes;
 using Tosna.Core.Common.Imprints;
 using Tosna.Core.Common.Problems;
+using Tosna.Editor.IDE.FieldsConfigurator;
 using Tosna.Editor.IDE.Verification;
 
 namespace Tosna.Editor.IDE
@@ -33,7 +34,7 @@ namespace Tosna.Editor.IDE
 
 		public IReadOnlyCollection<VerificationNotification> DependenciesErrors { get; private set; } = new VerificationNotification[] { };
 
-		public IReadOnlyCollection<DescriptorFileManager> DescriptorFileManagers { get; private set; } = new DescriptorFileManager[] { };
+		public IReadOnlyCollection<FieldsConfiguratorManager> DescriptorFileManagers { get; private set; } = new FieldsConfiguratorManager[] { };
 
 		public IReadOnlyCollection<VerificationNotification> AllErrors => Notifications.Union(DependenciesErrors).ToArray();
 
@@ -101,7 +102,7 @@ namespace Tosna.Editor.IDE
 				DependenciesFiles = new string[] { };
 				Imprints = new Imprint[] { };
 				State = SingleFileManagerState.FileInvalid;
-				DescriptorFileManagers = new DescriptorFileManager[] { };
+				DescriptorFileManagers = new FieldsConfiguratorManager[] { };
 			}
 		}
 
@@ -149,7 +150,7 @@ namespace Tosna.Editor.IDE
 			{
 				Notifications = CreateVerificationErrors(e).ToArray();
 				DependenciesFiles = new string[] { };
-				DescriptorFileManagers = new DescriptorFileManager[] { };
+				DescriptorFileManagers = new FieldsConfiguratorManager[] { };
 				return;
 			}
 			catch (Exception e)
@@ -157,7 +158,7 @@ namespace Tosna.Editor.IDE
 				Notifications = new[] {new VerificationError(FileName, new FullDocumentCoordinates(), e.Message)};
 				DependenciesFiles = new string[] { };
 				Imprints = new Imprint[] { };
-				DescriptorFileManagers = new DescriptorFileManager[] { };
+				DescriptorFileManagers = new FieldsConfiguratorManager[] { };
 				return;
 			}
 
@@ -263,13 +264,13 @@ namespace Tosna.Editor.IDE
 			}
 		}
 
-		private IEnumerable<DescriptorFileManager> GetDescriptedManagers(IEnumerable<Imprint> imprints)
+		private IEnumerable<FieldsConfiguratorManager> GetDescriptedManagers(IEnumerable<Imprint> imprints)
 		{
 			foreach (var imprint in imprints)
 			{
 				var descriptorAttribute =
-					imprint.Type.GetCustomAttributes(typeof(ControllerDescriptorAttribute), false).FirstOrDefault() as
-						ControllerDescriptorAttribute;
+					imprint.Type.GetCustomAttributes(typeof(FieldsConfiguratorAttribute), false).FirstOrDefault() as
+						FieldsConfiguratorAttribute;
 
 				if (descriptorAttribute == null)
 				{
@@ -278,10 +279,10 @@ namespace Tosna.Editor.IDE
 
 				var contextType = descriptorAttribute.ContextType;
 
-				var context = (ControllerDescriptorContext)Activator.CreateInstance(contextType);
+				var context = (FieldsConfiguratorContext)Activator.CreateInstance(contextType);
 
 				var publicName = imprint.GetCompactDescription();
-				yield return DescriptorFileManagers.FirstOrDefault(manager => Equals(manager.PublicName, publicName)) ?? new DescriptorFileManager(this, context, publicName, serializer);
+				yield return DescriptorFileManagers.FirstOrDefault(manager => Equals(manager.PublicName, publicName)) ?? new FieldsConfiguratorManager(this, context, publicName, serializer);
 			}
 		}
 

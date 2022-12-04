@@ -5,8 +5,6 @@ using System.Linq;
 
 namespace Tosna.Editor.Common
 {
-	// TODO: move to Geolocation.Common
-
 	public class OrderedObservableCollection<T> : ObservableCollection<T> where T : IComparable<T>
 	{
 		private bool suspendCollectionChangeNotification;

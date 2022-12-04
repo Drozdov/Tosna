@@ -45,7 +45,13 @@
         <Compile Include="Common\NotifyPropertyChanged.cs" />
         <Compile Include="Common\OrderedObservableCollection.cs" />
         <Compile Include="IDE\ComplexSerializerProviderFactory.cs" />
-        <Compile Include="IDE\DescriptorFileManager.cs" />
+        <Compile Include="IDE\FieldsConfigurator\ConfigurableField.cs" />
+        <Compile Include="IDE\FieldsConfigurator\ConfigurableFieldFactory.cs" />
+        <Compile Include="IDE\FieldsConfigurator\ConfigurableFields\ArrayImprintConfigurableField.cs" />
+        <Compile Include="IDE\FieldsConfigurator\ConfigurableFields\NestedImprintConfigurableField.cs" />
+        <Compile Include="IDE\FieldsConfigurator\ConfigurableFields\SimpleTypeConfigurableField.cs" />
+        <Compile Include="IDE\FieldsConfigurator\FieldsConfiguratorAttribute.cs" />
+        <Compile Include="IDE\FieldsConfigurator\FieldsConfiguratorManager.cs" />
         <Compile Include="IDE\EditImprintProcessor.cs" />
         <Compile Include="IDE\FilesManager.cs" />
         <Compile Include="IDE\FilesManagerInteractionService.cs" />

@@ -1,10 +1,13 @@
+using Tosna.Editor.IDE.FieldsConfigurator;
+using Tosna.Editor.IDE.FieldsConfigurator.ConfigurableFields;
+
 namespace Tosna.Editor.IDE.Vm.PropertyEditors
 {
 	public class StringPropertyEditorVm : IPropertyEditorVm
 	{
-		private readonly SimpleTypeDescriptedField property;
+		private readonly SimpleTypeConfigurableField property;
 
-		public StringPropertyEditorVm(SimpleTypeDescriptedField property, string publicName)
+		public StringPropertyEditorVm(SimpleTypeConfigurableField property, string publicName)
 		{
 			this.property = property;
 			PublicName = publicName;

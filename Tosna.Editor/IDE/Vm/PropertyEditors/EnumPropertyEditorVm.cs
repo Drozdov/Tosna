@@ -1,12 +1,14 @@
 using System;
+using Tosna.Editor.IDE.FieldsConfigurator;
+using Tosna.Editor.IDE.FieldsConfigurator.ConfigurableFields;
 
 namespace Tosna.Editor.IDE.Vm.PropertyEditors
 {
 	public class EnumPropertyEditorVm : IPropertyEditorVm
 	{
-		private readonly SimpleTypeDescriptedField property;
+		private readonly SimpleTypeConfigurableField property;
 
-		public EnumPropertyEditorVm(SimpleTypeDescriptedField property, string publicName)
+		public EnumPropertyEditorVm(SimpleTypeConfigurableField property, string publicName)
 		{
 			this.property = property;
 			PublicName = publicName;

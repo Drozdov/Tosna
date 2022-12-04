@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Tosna.Editor.Common;
+using Tosna.Editor.IDE.FieldsConfigurator;
 using Tosna.Editor.IDE.Verification;
 
 namespace Tosna.Editor.IDE.Vm.FileSystem
@@ -11,7 +12,7 @@ namespace Tosna.Editor.IDE.Vm.FileSystem
 	{
 		#region Fields
 
-		private IReadOnlyCollection<DescriptorFileManager> descriptedFileManagers = new DescriptorFileManager[] { };
+		private IReadOnlyCollection<FieldsConfiguratorManager> descriptedFileManagers = new FieldsConfiguratorManager[] { };
 
 		#endregion
 

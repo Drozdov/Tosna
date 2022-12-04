@@ -150,7 +150,7 @@ namespace Tosna.Editor.IDE.Vm
 					return;
 
 				case DescribedItemVm descriptedFileItemVm:
-					filesViewerVm.OpenDocument(descriptedFileItemVm.DescriptorFileManager);
+					filesViewerVm.OpenDocument(descriptedFileItemVm.FieldsConfiguratorManager);
 					return;
 			}
 		}

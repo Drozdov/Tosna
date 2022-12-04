@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using Tosna.Core.Common;
 using Tosna.Editor.Common;
+using Tosna.Editor.IDE.FieldsConfigurator;
 using Tosna.Editor.IDE.Interfaces;
 using Tosna.Editor.IDE.Verification;
 using Tosna.Editor.IDE.Vm.PropertyEditors;
@@ -53,14 +54,14 @@ namespace Tosna.Editor.IDE.Vm
 			return fileViewerItemVm.XmlEditorVm;
 		}
 
-		public DescriptedImprintEditorVm OpenDocument(DescriptorFileManager fileManager, bool autoSelect = true)
+		public DescriptedImprintEditorVm OpenDocument(FieldsConfiguratorManager fileManager, bool autoSelect = true)
 		{
 			if (currentFileViewerItemVm != null && autoSelect)
 			{
 				currentFileViewerItemVm.IsSelected = false;
 			}
 
-			var fileViewerItemVm = OpenDocuments.OfType<DescriptedViewerItemVm>().FirstOrDefault(document => document.DescriptorFileManager == fileManager);
+			var fileViewerItemVm = OpenDocuments.OfType<DescriptedViewerItemVm>().FirstOrDefault(document => document.FieldsConfiguratorManager == fileManager);
 			if (fileViewerItemVm == null)
 			{
 				OpenDocuments.Add(fileViewerItemVm = new DescriptedViewerItemVm(fileManager, this, filesManagerInteractionService, logger));
@@ -74,7 +75,7 @@ namespace Tosna.Editor.IDE.Vm
 			return fileViewerItemVm.EditorVm;
 		}
 
-		public void CloseDocument(DescriptorFileManager fileManager)
+		public void CloseDocument(FieldsConfiguratorManager fileManager)
 		{
 			if (fileManager.SingleFileManager.State == SingleFileManagerState.FileWithUnsavedChanges)
 			{
@@ -99,7 +100,7 @@ namespace Tosna.Editor.IDE.Vm
 				}
 			}
 
-			var fileViewerItemVm = OpenDocuments.OfType<DescriptedViewerItemVm>().FirstOrDefault(document => document.DescriptorFileManager == fileManager);
+			var fileViewerItemVm = OpenDocuments.OfType<DescriptedViewerItemVm>().FirstOrDefault(document => document.FieldsConfiguratorManager == fileManager);
 			if (fileViewerItemVm == null)
 			{
 				return;
@@ -243,11 +244,11 @@ namespace Tosna.Editor.IDE.Vm
 
 	public class DescriptedViewerItemVm : ViewerItemVm
 	{
-		public DescriptorFileManager DescriptorFileManager { get; }
+		public FieldsConfiguratorManager FieldsConfiguratorManager { get; }
 
-		public DescriptedViewerItemVm(DescriptorFileManager fileManager, FilesViewerVm parent, FilesManagerInteractionService filesManagerInteractionService, ILogger logger) : base(fileManager.SingleFileManager, parent)
+		public DescriptedViewerItemVm(FieldsConfiguratorManager fileManager, FilesViewerVm parent, FilesManagerInteractionService filesManagerInteractionService, ILogger logger) : base(fileManager.SingleFileManager, parent)
 		{
-			DescriptorFileManager = fileManager;
+			FieldsConfiguratorManager = fileManager;
 			EditorVm = new DescriptedImprintEditorVm(fileManager, filesManagerInteractionService, logger);
 		}
 		
@@ -260,12 +261,12 @@ namespace Tosna.Editor.IDE.Vm
 
 		protected override void OnClosed(FilesViewerVm parent)
 		{
-			parent.CloseDocument(DescriptorFileManager);
+			parent.CloseDocument(FieldsConfiguratorManager);
 		}
 
 		protected override string GetTitle()
 		{
-			return Path.GetFileName(DescriptorFileManager.PublicName);
+			return Path.GetFileName(FieldsConfiguratorManager.PublicName);
 		}
 	}
 }

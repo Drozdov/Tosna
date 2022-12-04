@@ -1,14 +1,15 @@
 using System;
+using Tosna.Editor.IDE.FieldsConfigurator;
 
 namespace Tosna.Editor.IDE.Vm.FileSystem
 {
 	public class DescribedItemVm : IFileSystemItemVm
 	{
-		public DescriptorFileManager DescriptorFileManager { get; }
+		public FieldsConfiguratorManager FieldsConfiguratorManager { get; }
 
-		public DescribedItemVm(DescriptorFileManager descriptorFileManager)
+		public DescribedItemVm(FieldsConfiguratorManager fieldsConfiguratorManager)
 		{
-			DescriptorFileManager = descriptorFileManager;
+			FieldsConfiguratorManager = fieldsConfiguratorManager;
 		}
 
 		public int CompareTo(IFileSystemItemVm other)
@@ -24,11 +25,11 @@ namespace Tosna.Editor.IDE.Vm.FileSystem
 
 		public ImageType ImageType => ImageType.Described;
 		
-		public string Name => DescriptorFileManager.PublicName;
+		public string Name => FieldsConfiguratorManager.PublicName;
 
 		public string Tooltip => Name;
 
-		public string FileName => DescriptorFileManager.FileName;
+		public string FileName => FieldsConfiguratorManager.FileName;
 
 		public void Dispose()
 		{

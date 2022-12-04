@@ -8,9 +8,6 @@ using Tosna.Core.SerializationInterfaces;
 namespace Tosna.Core.Common
 {
 
-
-
-
 	public class SignaturesSerializingTypeResolver : ISerializingTypesResolver
 	{
 		private readonly IDictionary<string, Type> typesByName = new Dictionary<string, Type>();

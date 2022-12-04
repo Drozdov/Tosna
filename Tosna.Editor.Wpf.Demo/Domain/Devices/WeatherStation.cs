@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Tosna.Core.Common.Attributes;
+using Tosna.Editor.IDE.FieldsConfigurator;
 using Tosna.Editor.Wpf.Demo.Domain.Common;
 
 namespace Tosna.Editor.Wpf.Demo.Domain.Devices;
@@ -28,7 +29,7 @@ public class WeatherStation
 }
 
 [SerializableAs("WeatherStation")]
-[ControllerDescriptor(typeof(WeatherStationContext))]
+[FieldsConfigurator(typeof(WeatherStationContext))]
 public class WeatherStationSignature : IDeviceSignature<WeatherStation>
 {
 	public IDeviceSignature<IThermometer>[] Thermometers { get; }
@@ -62,7 +63,7 @@ public class WeatherStationSignature : IDeviceSignature<WeatherStation>
 	}
 }
 
-public class WeatherStationContext : ControllerDescriptorContext
+public class WeatherStationContext : FieldsConfiguratorContext
 {
 	public WeatherStationContext() : base(new Dictionary<string, string>
 	{

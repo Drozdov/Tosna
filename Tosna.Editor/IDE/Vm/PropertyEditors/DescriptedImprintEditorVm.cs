@@ -5,38 +5,40 @@ using Tosna.Core.Common;
 using Tosna.Core.Common.Imprints;
 using Tosna.Editor.Common;
 using Tosna.Editor.Common.Vm;
+using Tosna.Editor.IDE.FieldsConfigurator;
+using Tosna.Editor.IDE.FieldsConfigurator.ConfigurableFields;
 
 namespace Tosna.Editor.IDE.Vm.PropertyEditors
 {
 	public class DescriptedImprintEditorVm : IDisposable
 	{
-		private readonly DescriptorFileManager descriptorFileManager;
+		private readonly FieldsConfiguratorManager fieldsConfiguratorManager;
 
-		public DescriptedImprintEditorVm(DescriptorFileManager descriptorFileManager, FilesManagerInteractionService filesManagerInteractionService, ILogger logger)
+		public DescriptedImprintEditorVm(FieldsConfiguratorManager fieldsConfiguratorManager, FilesManagerInteractionService filesManagerInteractionService, ILogger logger)
 		{
-			this.descriptorFileManager = descriptorFileManager;
+			this.fieldsConfiguratorManager = fieldsConfiguratorManager;
 
-			descriptorFileManager.Refresh(filesManagerInteractionService, logger);
+			fieldsConfiguratorManager.Refresh(filesManagerInteractionService, logger);
 
-			SaveCommand = new ActionCommand(descriptorFileManager.SaveChanges, () => true);
+			SaveCommand = new ActionCommand(fieldsConfiguratorManager.SaveChanges, () => true);
 
 			Refresh();
 		}
 
 		private void Refresh()
 		{
-			Properties = descriptorFileManager.Fields.Select(GetEditorVm).ToArray();
+			Properties = fieldsConfiguratorManager.Fields.Select(GetEditorVm).ToArray();
 		}
 
 		public IReadOnlyCollection<IPropertyEditorVm> Properties { get; private set; }
 		
 		public ActionCommand SaveCommand { get; }
 
-		private static IPropertyEditorVm GetEditorVm(DescriptedField field)
+		private static IPropertyEditorVm GetEditorVm(ConfigurableField field)
 		{
 			switch (field)
 			{
-				case SimpleTypeDescriptedField simpleTypeDescriptedField:
+				case SimpleTypeConfigurableField simpleTypeDescriptedField:
 					var type = simpleTypeDescriptedField.Value?.GetType();
 					var publicName = simpleTypeDescriptedField.PublicName;
 
@@ -69,10 +71,10 @@ namespace Tosna.Editor.IDE.Vm.PropertyEditors
 						return new ReadonlyPropertyEditorVm(publicName, simpleTypeDescriptedField.Value.ToString());
 					}
 
-				case NestedImprintDescriptedField nestedImprintDescriptedField:
+				case NestedImprintConfigurableField nestedImprintDescriptedField:
 					return new NestedImprintPropertyEditorVm(nestedImprintDescriptedField, nestedImprintDescriptedField.PublicName);
 
-				case ArrayImprintDescriptedField arrayImprintDescriptedField:
+				case ArrayImprintConfigurableField arrayImprintDescriptedField:
 					return new ArrayImprintPropertyEditorVm(arrayImprintDescriptedField, arrayImprintDescriptedField.PublicName);
 
 				default:

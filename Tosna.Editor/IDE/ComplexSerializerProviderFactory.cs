@@ -34,7 +34,7 @@ namespace Tosna.Editor.IDE
 			completionDataProvider = new NoneCompletionDataProvider();
 		}
 
-		public void Visit(ObsoleteNameProblem problem)
+		void IComplexSerializerProblemVisitor.Visit(ObsoleteNameProblem problem)
 		{
 			completionDataProvider = new NoneCompletionDataProvider();
 		}

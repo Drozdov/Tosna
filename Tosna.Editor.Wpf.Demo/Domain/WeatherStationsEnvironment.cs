@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Tosna.Core.Common.Attributes;
+using Tosna.Editor.IDE.FieldsConfigurator;
 using Tosna.Editor.Wpf.Demo.Domain.Devices;
 
 namespace Tosna.Editor.Wpf.Demo.Domain;
@@ -34,6 +35,7 @@ public class WeatherStationsEnvironment
 }
 
 [SerializableAs("WeatherStationsEnvironment")]
+[FieldsConfigurator(typeof(WeatherStationsEnvironmentContext))]
 public class WeatherStationsEnvironmentSignature : IDeviceSignature<WeatherStationsEnvironment>
 {
 	public IDeviceSignature<WeatherStation>[] WeatherStations { get; }
@@ -49,5 +51,16 @@ public class WeatherStationsEnvironmentSignature : IDeviceSignature<WeatherStati
 	public WeatherStationsEnvironment CreateDevice(IDeviceSignatureResolver resolver)
 	{
 		return new WeatherStationsEnvironment(WeatherStations.Select(resolver.GetDevice).ToArray(), Name);
+	}
+}
+
+public class WeatherStationsEnvironmentContext : FieldsConfiguratorContext
+{
+	public WeatherStationsEnvironmentContext() : base(new Dictionary<string, string>
+	{
+		{nameof(WeatherStationsEnvironmentSignature.Name), "Name"},
+		{nameof(WeatherStationsEnvironmentSignature.WeatherStations), "Weather stations"}
+	})
+	{
 	}
 }

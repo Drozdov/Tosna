@@ -40,7 +40,6 @@
         <Reference Include="System.Xml.Serialization" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="Common\Attributes\ControllerDescriptorAttribute.cs" />
         <Compile Include="Common\Attributes\SerializableAsAttribute.cs" />
         <Compile Include="Common\ILogger.cs" />
         <Compile Include="Common\ImprintsSerializer.cs" />
