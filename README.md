@@ -43,3 +43,23 @@ Here is a simple example of a simple XML item.
 ```
 
 For more examples, see Tosna.Wpf.Editor.Demo.
+
+# Getting started
+
+# Examples from Demo
+
+Here is an example of what your Tosna configurator might look like.
+
+<img width="895" alt="CommonView" src="https://user-images.githubusercontent.com/3025230/205515839-4f793630-2b34-4cc8-9047-98518bd7ff91.png">
+
+In case you want to define a new entity, hints for fast creating or referencing existing items will appear immediately when typing or on Alt+Enter keys combination.
+
+<img width="674" alt="EditorHints1" src="https://user-images.githubusercontent.com/3025230/205515840-649f151b-b875-40a9-9cbc-4803bafbe330.png">
+
+Special hints available for missing fields.
+
+<img width="671" alt="EditorHints2" src="https://user-images.githubusercontent.com/3025230/205515841-116781b4-b837-4cb7-9b14-056388336eea.png">
+
+Here is an example of simple user interface for configuring complicated entities with existing items.
+
+<img width="688" alt="Fields configurator" src="https://user-images.githubusercontent.com/3025230/205515843-a5984b80-c762-406a-b38e-01bc644b87cf.png">
