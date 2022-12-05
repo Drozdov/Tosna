@@ -8,22 +8,19 @@ using Tosna.Core.Common;
 using Tosna.Core.Common.Imprints;
 using Tosna.Core.Common.Problems;
 using Tosna.Core.SerializationInterfaces;
-using Tosna.Editor.IDE.Reserved;
 using Tosna.Editor.IDE.Verification;
 
-namespace Tosna.Editor.IDE
+namespace Tosna.Editor.IDE.ProblemsDetailing
 {
-	public class XmlProblemsDetailizer
+	public class XmlProblemsDetailsGetter
 	{
-		private readonly ImprintsSerializer serializer;
 		private readonly ISerializingElementsManager serializingElementsManager;
 		private readonly ISerializingTypesResolver serializingTypesResolver;
 
 		private readonly Regex unfinishedRegex = new Regex(@"^(.*)(<([\w\d\\.]*))(\s*(<.*)?)$");
 
-		public XmlProblemsDetailizer(ImprintsSerializer serializer, ISerializingElementsManager serializingElementsManager, ISerializingTypesResolver serializingTypesResolver)
+		public XmlProblemsDetailsGetter(ISerializingElementsManager serializingElementsManager, ISerializingTypesResolver serializingTypesResolver)
 		{
-			this.serializer = serializer;
 			this.serializingElementsManager = serializingElementsManager;
 			this.serializingTypesResolver = serializingTypesResolver;
 		}
@@ -32,12 +29,12 @@ namespace Tosna.Editor.IDE
 		{
 			var lines = Regex.Split(content, "\r\n|\r|\n");
 
-			// Пытаемся найти незавершенный тип вида <SomeUnfinishedType (без />) и собрать по нему информацию 
+			// Looking for unfinished types like <SomeUnfinishedType (without />) 
 
-			// Строки нумеруются с 1!
+			// Lines numbering starts from 1!
 			for (var lineNumber = e.LineNumber; lineNumber > 0; lineNumber--)
 			{
-				// Находим строчку, в которой не закрыт тег 
+				// Locating the line with unfinished tag 
 				var line = lines[lineNumber - 1];
 				var match = unfinishedRegex.Match(line);
 				if (!match.Success)
@@ -54,11 +51,15 @@ namespace Tosna.Editor.IDE
 				var suffix = suffixGroup.Value;
 				var replacement = $"{prefix}<{Empty.SerializationLabel}/>{suffix}";
 
-				// Чтобы убедиться, что, дописав правильный тип, проблема решится, а также определив, какой именно тип нам нужен,
-				// повтороно прогоняем весь цикл чтения, но вместо нечитаемого фрагмента подставляем заглушку для типа Empty
+				// To make sure, that this problem will be solved if a write type is written and to get the proper type
+				// we repeat all reading cycle but with <Empty> stub instead of unreadable fragment
+				// and with a patched serializing types resolver
 				var correctedContent = string.Join(Environment.NewLine,
 					lines.Select((l, index) => index == lineNumber - 1 ? replacement : l));
 				var xDocument = XDocument.Parse(correctedContent, LoadOptions.SetLineInfo);
+
+				var serializer = new ImprintsSerializer(serializingElementsManager,
+					new PatchedToReservedResolver(serializingTypesResolver));
 				var imprints = serializer.LoadRootImprints(xDocument, fileName).GetNestedImprintsRecursively();
 
 				var problems = GetAllProblems(imprints).ToArray();
@@ -72,8 +73,8 @@ namespace Tosna.Editor.IDE
 				}
 				var expectedType = invalidCastProblem != null ? invalidCastProblem.DestinationType : typeof(object);
 
-				// Информация о проблеме для дальнейших дествий: какой тег не закрыт, какие типы туда можно подставить, строки, столбцы,
-				// способы сериализации полей и типов
+				// Information about the problem: which tag is not completed, what types can be passed,
+				// column and line numbers
 				var provider = new UnfinishedTypeCompletionDataProvider(line: lineNumber,
 					columnStart: unfinishedPatternGroup.Index + 1,
 					columnEnd: unfinishedPatternGroup.Index + unfinishedPatternGroup.Length + 1,

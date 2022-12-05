@@ -3,13 +3,14 @@ using System.Linq;
 using Tosna.Core.Common;
 using Tosna.Core.Helpers.Xml;
 using Tosna.Core.SerializationInterfaces;
+using Tosna.Editor.IDE.ProblemsDetailing;
 
 namespace Tosna.Editor.IDE
 {
 	public class FilesManager
 	{
 		private readonly IDictionary<string, SingleFileManager> fileManagers = new Dictionary<string, SingleFileManager>();
-		private readonly XmlProblemsDetailizer xmlProblemsDetailizer;
+		private readonly XmlProblemsDetailsGetter xmlProblemsDetailsGetter;
 
 		public IReadOnlyCollection<SingleFileManager> FileManagers => fileManagers.Values.ToArray();
 
@@ -21,7 +22,7 @@ namespace Tosna.Editor.IDE
 			var signaturesSerializingTypeResolver = new SignaturesSerializingTypeResolver(serializingAllFieldsManager);
 
 			Serializer = new ImprintsSerializer(serializingAllFieldsManager, signaturesSerializingTypeResolver);
-			xmlProblemsDetailizer = new XmlProblemsDetailizer(Serializer, serializingAllFieldsManager, signaturesSerializingTypeResolver);
+			xmlProblemsDetailsGetter = new XmlProblemsDetailsGetter(serializingAllFieldsManager, signaturesSerializingTypeResolver);
 		}
 
 		public IReadOnlyCollection<SingleFileManager> AddFiles(IEnumerable<string> files)
@@ -34,7 +35,7 @@ namespace Tosna.Editor.IDE
 					continue;
 				}
 
-				var singleFileManager = new SingleFileManager(file, Serializer, xmlProblemsDetailizer);
+				var singleFileManager = new SingleFileManager(file, Serializer, xmlProblemsDetailsGetter);
 				fileManagers[file] = singleFileManager;
 				result.Add(singleFileManager);
 			}
@@ -60,7 +61,7 @@ namespace Tosna.Editor.IDE
 					}
 
 					presentFiles.Add(file);
-					var singleFileManager = new SingleFileManager(file, Serializer, xmlProblemsDetailizer);
+					var singleFileManager = new SingleFileManager(file, Serializer, xmlProblemsDetailsGetter);
 					fileManagers[file] = singleFileManager;
 					result.Add(singleFileManager);
 

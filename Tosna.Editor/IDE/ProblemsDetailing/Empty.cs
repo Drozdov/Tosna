@@ -1,8 +1,5 @@
-using Tosna.Core.Common.Attributes;
-
-namespace Tosna.Editor.IDE.Reserved
+namespace Tosna.Editor.IDE.ProblemsDetailing
 {
-	[SerializableAs(SerializationLabel)]
 	// ReSharper disable once ConvertToStaticClass
 	public sealed class Empty
 	{

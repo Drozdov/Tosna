@@ -9,6 +9,7 @@ using Tosna.Core.Common.Attributes;
 using Tosna.Core.Common.Imprints;
 using Tosna.Core.Common.Problems;
 using Tosna.Editor.IDE.FieldsConfigurator;
+using Tosna.Editor.IDE.ProblemsDetailing;
 using Tosna.Editor.IDE.Verification;
 
 namespace Tosna.Editor.IDE
@@ -18,7 +19,7 @@ namespace Tosna.Editor.IDE
 		#region Fields & Properties
 
 		private readonly ImprintsSerializer serializer;
-		private readonly XmlProblemsDetailizer xmlProblemsDetailizer;
+		private readonly XmlProblemsDetailsGetter xmlProblemsDetailsGetter;
 
 		private SingleFileManagerState state;
 
@@ -74,10 +75,10 @@ namespace Tosna.Editor.IDE
 
 		#region Ctor
 
-		public SingleFileManager(string fileName, ImprintsSerializer serializer, XmlProblemsDetailizer xmlProblemsDetailizer)
+		public SingleFileManager(string fileName, ImprintsSerializer serializer, XmlProblemsDetailsGetter xmlProblemsDetailsGetter)
 		{
 			this.serializer = serializer;
-			this.xmlProblemsDetailizer = xmlProblemsDetailizer;
+			this.xmlProblemsDetailsGetter = xmlProblemsDetailsGetter;
 			FileName = fileName;
 
 			ReloadFromDisk();
@@ -236,7 +237,7 @@ namespace Tosna.Editor.IDE
 					: new FullDocumentCoordinates(), e.Message);
 
 
-			if (xmlProblemsDetailizer.TryCreateVerificationError(Content, FileName, e, out var verificationError))
+			if (xmlProblemsDetailsGetter.TryCreateVerificationError(Content, FileName, e, out var verificationError))
 			{
 				yield return verificationError;
 			}
