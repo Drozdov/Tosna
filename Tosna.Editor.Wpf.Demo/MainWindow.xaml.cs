@@ -46,10 +46,34 @@ namespace Tosna.Editor.Wpf.Demo
 			xmlIdeVm.HierarchyVm.RefreshAll();
 		}
 
-		private void OnWeatherForecastRequest(object sender, RoutedEventArgs e)
+		private void OnWeatherForecastRequest(object sender, RoutedEventArgs args)
 		{
-			if (!filesSelector.SelectFiles(null, out var files) ||
-			    !EnvironmentIo.TryReadEnvironment(files, out var weatherEnvironment)) return;
+			WeatherStationsEnvironment weatherEnvironment;
+			
+			if (!filesSelector.SelectFiles(null, out var files)) return;
+
+			try
+			{
+				if (!EnvironmentIo.TryReadEnvironment(files, out weatherEnvironment))
+				{
+					MessageBox.Show(
+						"Weather environment not found",
+						"Could not load configuration",
+						MessageBoxButton.OK,
+						MessageBoxImage.Error);
+					return;
+				}
+			}
+			catch (Exception e)
+			{
+				MessageBox.Show(
+					e.Message,
+					"Could not load configuration",
+					MessageBoxButton.OK,
+					MessageBoxImage.Error);
+				return;
+			}
+
 
 			var infoBuilder = new StringBuilder();
 			weatherEnvironment.Init();
