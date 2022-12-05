@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using Tosna.Core.Common.Attributes;
 using Tosna.Editor.IDE.FieldsConfigurator;
 using Tosna.Editor.Wpf.Demo.Domain.Devices;
+using Tosna.Extensions;
+using Tosna.Extensions.Serialization;
 
 namespace Tosna.Editor.Wpf.Demo.Domain;
 

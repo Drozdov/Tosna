@@ -40,7 +40,6 @@
         <Reference Include="System.Xml.Serialization" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="Common\Attributes\SerializableAsAttribute.cs" />
         <Compile Include="Common\ILogger.cs" />
         <Compile Include="Common\ImprintsSerializer.cs" />
         <Compile Include="Common\Imprints\Generation\IObjectResolver.cs" />
@@ -56,7 +55,6 @@
         <Compile Include="Common\Problems\InvalidCastProblem.cs" />
         <Compile Include="Common\Problems\MissingMembersProblem.cs" />
         <Compile Include="Common\Problems\ObsoleteNameProblem.cs" />
-        <Compile Include="Common\SignaturesSerializingTypeResolver.cs" />
         <Compile Include="Common\Stamps\Stamp.cs" />
         <Compile Include="Common\Stamps\StampIdentifier.cs" />
         <Compile Include="Common\Stamps\StampImprint.cs" />
@@ -69,7 +67,6 @@
         <Compile Include="SerializationInterfaces\ISerializingElementsManager.cs" />
         <Compile Include="SerializationInterfaces\ISerializingTypesResolver.cs" />
         <Compile Include="SerializationInterfaces\SerializingElement.cs" />
-        <Compile Include="SerializationInterfaces\SerializingElementsManager.cs" />
         <Compile Include="Helpers\DependenciesResolver.cs" />
         <Compile Include="Helpers\PathUtils.cs" />
         <Compile Include="IO\ImprintsEnvironment.cs" />

@@ -5,11 +5,11 @@ using Tosna.Core.SerializationInterfaces;
 
 namespace Tosna.Editor.IDE.ProblemsDetailing
 {
-	public class PatchedToReservedResolver : ISerializingTypesResolver
+	internal class PatchedToReservedResolver : ISerializingTypesResolver
 	{
 		private readonly ISerializingTypesResolver resolver;
 
-		public PatchedToReservedResolver(ISerializingTypesResolver resolver)
+		internal PatchedToReservedResolver(ISerializingTypesResolver resolver)
 		{
 			this.resolver = resolver;
 		}

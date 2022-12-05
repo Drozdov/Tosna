@@ -1,5 +1,6 @@
-using Tosna.Core.Common.Attributes;
 using Tosna.Editor.Wpf.Demo.Domain.Common;
+using Tosna.Extensions;
+using Tosna.Extensions.Serialization;
 
 namespace Tosna.Editor.Wpf.Demo.Domain.Devices;
 

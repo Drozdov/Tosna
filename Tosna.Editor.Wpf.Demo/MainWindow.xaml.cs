@@ -9,6 +9,8 @@ using Tosna.Editor.IDE;
 using Tosna.Editor.IDE.Interfaces;
 using Tosna.Editor.IDE.Vm;
 using Tosna.Editor.Wpf.Demo.Domain;
+using Tosna.Extensions;
+using Tosna.Extensions.Serialization;
 
 namespace Tosna.Editor.Wpf.Demo
 {
@@ -27,7 +29,9 @@ namespace Tosna.Editor.Wpf.Demo
 
 			WindowState = WindowState.Maximized;
 
-			filesManager = new FilesManager();
+			var serializingElementsManager = new SerializingElementsManager();
+			var serializingTypesResolver = new SerializingTypesResolver(serializingElementsManager);
+			filesManager = new FilesManager(serializingElementsManager, serializingTypesResolver);
 			xmlIdeVm = new XmlIdeVm(filesManager, filesSelector, new ConfirmationRequester(), new Logger());
 			DataContext = xmlIdeVm;
 		}

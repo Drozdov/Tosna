@@ -2,30 +2,32 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Tosna.Core.Common.Attributes;
+using System.Reflection;
 using Tosna.Core.SerializationInterfaces;
 
-namespace Tosna.Core.Common
+namespace Tosna.Extensions.Serialization
 {
-
-	public class SignaturesSerializingTypeResolver : ISerializingTypesResolver
+	/// <summary>
+	/// This implementation of <see cref="ISerializingTypesResolver"/> works with types that are either
+	/// marked with <see cref="SerializableAsAttribute"/> or represent simple dependency types
+	/// (like Enums, Strings, Guids, primitive types, etc)
+	/// </summary>
+	public class SerializingTypesResolver : ISerializingTypesResolver
 	{
 		private readonly IDictionary<string, Type> typesByName = new Dictionary<string, Type>();
 
 		/// <summary>
-		/// Регистрирует типы у которых есть атрибут <see cref="SerializableAsAttribute"/> или которые
-		/// являются простыми типами-зависимостями (Enum, String, Guid, примитивные типы, т.п.)
-		/// Если простой тип помечен атрибутом <see cref="SerializableAsAttribute"/>, то его имя будет
-		/// браться из атрибута (позволяет избегать коллизий на enum'ы с одинаковыми названиями).
+		/// Looks through the assemblies for serializable classes and registers them.
 		/// </summary>
-		/// <param name="serializingElementsManager">Менеджер сериализации для поиска зависимых простых типов</param>
-		/// <exception cref="Exception">Исключение возникает в случае коллизии (два и более типа сериализуются
-		/// по одинаковому названию)</exception>
-		public SignaturesSerializingTypeResolver(ISerializingElementsManager serializingElementsManager)
+		/// <param name="serializingElementsManager">Serializing elements manager</param>
+		/// <param name="assemblies">Assemblies to load serializable types from</param>
+		/// <exception cref="Exception">Exception will be thrown if collision occurs
+		/// (multiple types serialized with the same alias)</exception>
+		public SerializingTypesResolver(ISerializingElementsManager serializingElementsManager, IEnumerable<Assembly> assemblies)
 		{
 			var simpleTypesDependencies = new HashSet<Type>();
 
-			foreach (var type in AppDomain.CurrentDomain.GetAssemblies().SelectMany(assembly => assembly.GetTypes())
+			foreach (var type in assemblies.SelectMany(assembly => assembly.GetTypes())
 				.Where(IsTypeSerializable))
 			{
 				RegisterType(type);
@@ -42,16 +44,19 @@ namespace Tosna.Core.Common
 			}
 		}
 
-		private static bool IsTypeSerializable(Type type)
+		/// <summary>
+		/// Looks through the assemblies for serializable classes and registers them.
+		/// </summary>
+		/// <param name="serializingElementsManager">Serializing elements manager</param>
+		/// <exception cref="Exception">Exception will be thrown if collision occurs
+		/// (multiple types serialized with the same alias)</exception>
+		public SerializingTypesResolver(ISerializingElementsManager serializingElementsManager) : this(
+			serializingElementsManager, AppDomain.CurrentDomain.GetAssemblies())
 		{
-			return type.GetCustomAttributes(typeof(SerializableAsAttribute), false).Any();
 		}
 
-		private IEnumerable<Type> GetSimpleTypeDependencies(ISerializingElementsManager serializingElementsManager, Type type)
-		{
-			return serializingElementsManager.GetAllElements(type).Select(element => element.Type).Where(IsSimpleType);
-		}
-
+		#region Registering types
+		
 		private void RegisterType(Type type)
 		{
 			var isSerializable = false;
@@ -83,6 +88,20 @@ namespace Tosna.Core.Common
 			}
 			typesByName[name] = type;
 		}
+		
+		private static bool IsTypeSerializable(Type type)
+		{
+			return type.GetCustomAttributes(typeof(SerializableAsAttribute), false).Any();
+		}
+
+		private IEnumerable<Type> GetSimpleTypeDependencies(ISerializingElementsManager serializingElementsManager, Type type)
+		{
+			return serializingElementsManager.GetAllElements(type).Select(element => element.Type).Where(IsSimpleType);
+		}
+		
+		#endregion
+		
+		#region ISerializingTypesResolver
 
 		public IEnumerable<Type> GetAllTypes()
 		{
@@ -144,5 +163,7 @@ namespace Tosna.Core.Common
 
 			return Convert.ChangeType(value, type, CultureInfo.InvariantCulture);
 		}
+		
+		#endregion
 	}
 }

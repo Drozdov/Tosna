@@ -1,7 +1,11 @@
 using System;
 
-namespace Tosna.Core.Common.Attributes
+namespace Tosna.Extensions.Serialization
 {
+	/// <summary>
+	/// Marks class, structure or enum as a valid type for <see cref="SerializingTypesResolver"/>.
+	/// Should be applied to classes with no behavior only.
+	/// </summary>
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum, AllowMultiple = true)]
 	public class SerializableAsAttribute : Attribute
 	{

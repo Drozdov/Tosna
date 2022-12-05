@@ -8,3 +8,5 @@
 /.vs/Tosna/*
 /Tosna.Editor.Wpf.Demo/bin/
 /Tosna.Editor.Wpf.Demo/obj/
+/Tosna.Extensions/bin/
+/Tosna.Extensions/obj/

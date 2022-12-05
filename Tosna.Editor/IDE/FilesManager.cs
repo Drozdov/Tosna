@@ -16,13 +16,11 @@ namespace Tosna.Editor.IDE
 
 		public ImprintsSerializer Serializer { get; }
 
-		public FilesManager()
+		public FilesManager(ISerializingElementsManager serializingElementsManager,
+			ISerializingTypesResolver serializingTypesResolver)
 		{
-			var serializingAllFieldsManager = new SerializingElementsManager();
-			var signaturesSerializingTypeResolver = new SignaturesSerializingTypeResolver(serializingAllFieldsManager);
-
-			Serializer = new ImprintsSerializer(serializingAllFieldsManager, signaturesSerializingTypeResolver);
-			xmlProblemsDetailsGetter = new XmlProblemsDetailsGetter(serializingAllFieldsManager, signaturesSerializingTypeResolver);
+			Serializer = new ImprintsSerializer(serializingElementsManager, serializingTypesResolver);
+			xmlProblemsDetailsGetter = new XmlProblemsDetailsGetter(serializingElementsManager, serializingTypesResolver);
 		}
 
 		public IReadOnlyCollection<SingleFileManager> AddFiles(IEnumerable<string> files)

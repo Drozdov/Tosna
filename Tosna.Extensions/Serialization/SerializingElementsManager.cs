@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Tosna.Core.SerializationInterfaces;
 
-namespace Tosna.Core.SerializationInterfaces
+namespace Tosna.Extensions.Serialization
 {
 	public class SerializingElementsManager : ISerializingElementsManager
 	{

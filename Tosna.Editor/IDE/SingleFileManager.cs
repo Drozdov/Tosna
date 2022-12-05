@@ -5,7 +5,6 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using Tosna.Core.Common;
-using Tosna.Core.Common.Attributes;
 using Tosna.Core.Common.Imprints;
 using Tosna.Core.Common.Problems;
 using Tosna.Editor.IDE.FieldsConfigurator;

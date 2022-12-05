@@ -7,6 +7,8 @@ using Tosna.Core.IO;
 using Tosna.Core.SerializationInterfaces;
 using Tosna.Editor.Wpf.Demo.Domain.Common;
 using Tosna.Editor.Wpf.Demo.Domain.Devices;
+using Tosna.Extensions;
+using Tosna.Extensions.Serialization;
 
 namespace Tosna.Editor.Wpf.Demo.Domain;
 
@@ -58,7 +60,7 @@ public static class EnvironmentIo
 			"Environment1");
 
 		var serializingElementsManager = new SerializingElementsManager();
-		var signaturesSerializingTypeResolver = new SignaturesSerializingTypeResolver(serializingElementsManager);
+		var signaturesSerializingTypeResolver = new SerializingTypesResolver(serializingElementsManager);
 		var constructor =
 			new StampsCollectionConstructor(serializingElementsManager, signaturesSerializingTypeResolver);
 
@@ -141,7 +143,7 @@ public static class EnvironmentIo
 	public static bool TryReadEnvironment(IEnumerable<string> files, out WeatherStationsEnvironment environment)
 	{
 		var serializingElementsManager = new SerializingElementsManager();
-		var signaturesSerializingTypeResolver = new SignaturesSerializingTypeResolver(serializingElementsManager);
+		var signaturesSerializingTypeResolver = new SerializingTypesResolver(serializingElementsManager);
 		var imprintsSerializer = new ImprintsSerializer(serializingElementsManager, signaturesSerializingTypeResolver);
 
 		var imprints = ImprintsEnvironmentReader.Read(imprintsSerializer, files.ToArray());

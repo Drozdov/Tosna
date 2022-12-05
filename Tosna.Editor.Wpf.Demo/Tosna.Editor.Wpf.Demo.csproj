@@ -111,6 +111,10 @@
         <Project>{603a11ca-2763-4753-94f2-acafa8802b7e}</Project>
         <Name>Tosna.Editor</Name>
       </ProjectReference>
+      <ProjectReference Include="..\Tosna.Extensions\Tosna.Extensions.csproj">
+        <Project>{216ec3a3-e667-4e4c-ac07-5d8f8260041c}</Project>
+        <Name>Tosna.Extensions</Name>
+      </ProjectReference>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
