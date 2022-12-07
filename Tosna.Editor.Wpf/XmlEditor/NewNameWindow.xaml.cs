@@ -1,3 +1,6 @@
+using System.Windows;
+using System.Windows.Input;
+
 namespace Tosna.Editor.Wpf.XmlEditor
 {
 	public partial class NewNameWindow
@@ -6,12 +9,44 @@ namespace Tosna.Editor.Wpf.XmlEditor
 		{
 			InitializeComponent();
 
-			//this.SetSizeOrMaximize(300, 120);
+			Height = 120;
+			Width = 340;
+
+			TextBox.Focus();
+		}
+		
+		private void OnApplyButtonClicked(object sender, RoutedEventArgs e)
+		{
+			ApplyImpl();
 		}
 
-		// TODO
-		/*protected override void OnApply()
+		private void OnCancelButtonClicked(object sender, RoutedEventArgs e)
 		{
-		}*/
+			CancelImpl();
+		}
+
+		private void OnKeyUp(object sender, KeyEventArgs e)
+		{
+			switch (e.Key)
+			{
+				case Key.Enter:
+					ApplyImpl();
+					return;
+				
+				case Key.Escape:
+					CancelImpl();
+					return;
+			}
+		}
+
+		private void ApplyImpl()
+		{
+			DialogResult = true;
+			Close();
+		}
+		private void CancelImpl()
+		{
+			Close();
+		}
 	}
 }

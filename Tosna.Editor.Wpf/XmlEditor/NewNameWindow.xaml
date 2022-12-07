@@ -8,9 +8,64 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
         d:DataContext="{d:DesignInstance d:Type=vm:RenameImprintVmEventArgs, d:IsDesignTimeCreatable=false}">
-    <Grid>
-
-                <TextBox Text="{Binding ImprintId}" TextWrapping="NoWrap" Height="20" VerticalAlignment="Top"/>
+    
+    <Window.Resources>
+        <ResourceDictionary Source="/Tosna.Editor.Wpf;component/Common/CommonResources.xaml"/>
+    </Window.Resources>
+    
+    <Grid
+        Margin="{StaticResource AllMargin}"
+        KeyUp="OnKeyUp"
+        >
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <TextBlock
+            Grid.Column="0"
+            Grid.Row="0"
+            Margin="{StaticResource RightMargin}"
+            Text="New identifier:"/>
+        
+        <TextBox
+            Grid.Row = "0" 
+            Grid.Column="1"
+            Text="{Binding ImprintId}"
+            TextWrapping="NoWrap"
+            Height="20"
+            VerticalAlignment="Top"
+            x:Name="TextBox"
+            />
+        
+        <StackPanel
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Orientation="Horizontal">
+        
+            <Button
+                Content="Apply"
+                Click="OnApplyButtonClicked"
+                Width="100"
+                Margin="{StaticResource RightMargin}"
+                />
+            
+            <Button
+                Content="Cancel"
+                Click="OnCancelButtonClicked"
+                Width="100"
+            />
+            
+        </StackPanel>
 
     </Grid>
 </Window>
