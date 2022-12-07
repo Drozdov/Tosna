@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Tosna.Core.SerializationInterfaces;
 
-namespace Tosna.Core.Common.Stamps
+namespace Tosna.Core.Stamps
 {
 	public class StampsCollectionConstructor
 	{

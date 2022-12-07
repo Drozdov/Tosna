@@ -1,6 +1,6 @@
 using System;
 
-namespace Tosna.Core.Common.Problems
+namespace Tosna.Core.Problems
 {
 	public class InvalidCastProblem : IComplexSerializerProblem
 	{

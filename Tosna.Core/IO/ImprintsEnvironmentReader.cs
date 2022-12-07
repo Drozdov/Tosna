@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using Tosna.Core.Common;
-using Tosna.Core.Common.Imprints;
-using Tosna.Core.Common.Problems;
+using Tosna.Core.Imprints;
+using Tosna.Core.Problems;
 
 namespace Tosna.Core.IO
 {

@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Tosna.Core.Imprints.Fields;
 
-namespace Tosna.Core.Common.Imprints
+namespace Tosna.Core.Imprints
 {
 	public static class ImprintsExtensions
 	{

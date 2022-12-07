@@ -1,7 +1,8 @@
 using System;
 using System.Runtime.Serialization;
+using Tosna.Core.Imprints.Fields;
 
-namespace Tosna.Core.Common.Imprints.Generation
+namespace Tosna.Core.Imprints.Generation
 {
 	public class ObjectFactory : IImprintVisitor, IImprintFieldVisitor
 	{

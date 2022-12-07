@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using Tosna.Core.Common.Imprints;
+using Tosna.Core.Imprints;
+using Tosna.Core.Imprints.Fields;
 
 namespace Tosna.Editor.IDE
 {

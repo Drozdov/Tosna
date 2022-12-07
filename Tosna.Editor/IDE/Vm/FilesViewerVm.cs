@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
-using Tosna.Core.Common;
+using Tosna.Core;
 using Tosna.Editor.Common;
 using Tosna.Editor.IDE.FieldsConfigurator;
 using Tosna.Editor.IDE.Interfaces;

@@ -1,4 +1,4 @@
-namespace Tosna.Core.Common.Imprints.Generation
+namespace Tosna.Core.Imprints.Generation
 {
 	public interface IObjectResolver
 	{

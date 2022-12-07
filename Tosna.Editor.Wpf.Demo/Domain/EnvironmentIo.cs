@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Tosna.Core.Common;
-using Tosna.Core.Common.Stamps;
+using Tosna.Core;
 using Tosna.Core.IO;
 using Tosna.Core.SerializationInterfaces;
+using Tosna.Core.Stamps;
 using Tosna.Editor.Wpf.Demo.Domain.Common;
 using Tosna.Editor.Wpf.Demo.Domain.Devices;
 using Tosna.Extensions;

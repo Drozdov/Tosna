@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
-using Tosna.Core.Common.Stamps;
+using Tosna.Core.Stamps;
 
 namespace Tosna.Core.IO
 {

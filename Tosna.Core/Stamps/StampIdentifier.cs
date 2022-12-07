@@ -1,6 +1,6 @@
 using System;
 
-namespace Tosna.Core.Common.Stamps
+namespace Tosna.Core.Stamps
 {
 	[Serializable]
 	public class StampIdentifier

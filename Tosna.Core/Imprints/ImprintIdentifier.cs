@@ -1,6 +1,6 @@
 using System;
 
-namespace Tosna.Core.Common.Imprints
+namespace Tosna.Core.Imprints
 {
 	[Serializable]
 	public class ImprintIdentifier

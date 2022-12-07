@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
-using Tosna.Core.Common;
-using Tosna.Core.Common.Imprints;
-using Tosna.Core.Common.Problems;
+using Tosna.Core;
+using Tosna.Core.Imprints;
+using Tosna.Core.Problems;
 using Tosna.Core.SerializationInterfaces;
 using Tosna.Editor.IDE.Verification;
 

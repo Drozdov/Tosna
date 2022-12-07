@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
-using Tosna.Core.Common;
-using Tosna.Core.Common.Imprints;
-using Tosna.Core.Common.Stamps;
+using Tosna.Core.Imprints;
+using Tosna.Core.Stamps;
 
 namespace Tosna.Core.IO
 {

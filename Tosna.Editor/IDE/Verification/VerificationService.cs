@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Tosna.Core.Common;
+using Tosna.Core;
 
 namespace Tosna.Editor.IDE.Verification
 {

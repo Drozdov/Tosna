@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Tosna.Core.Common.Imprints;
 using Tosna.Core.Helpers;
+using Tosna.Core.Imprints;
+using Tosna.Core.Imprints.Fields;
 using Tosna.Core.IO;
 using Tosna.Core.SerializationInterfaces;
 
-namespace Tosna.Core.Common.Stamps
+namespace Tosna.Core.Stamps
 {
 	public class StampImprintsFactory
 	{

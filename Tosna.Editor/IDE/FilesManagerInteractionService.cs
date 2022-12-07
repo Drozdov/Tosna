@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Tosna.Core.Common.Imprints;
 using Tosna.Core.Helpers.Xml;
+using Tosna.Core.Imprints;
 
 namespace Tosna.Editor.IDE
 {

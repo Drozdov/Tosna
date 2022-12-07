@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ICSharpCode.AvalonEdit.CodeCompletion;
-using Tosna.Core.Common.Problems;
 using Tosna.Core.Helpers;
+using Tosna.Core.Problems;
 using Tosna.Editor.IDE.Verification;
 using Tosna.Editor.IDE.Vm;
 

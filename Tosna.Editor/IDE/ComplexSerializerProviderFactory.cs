@@ -1,4 +1,4 @@
-using Tosna.Core.Common.Problems;
+using Tosna.Core.Problems;
 using Tosna.Editor.IDE.Verification;
 
 namespace Tosna.Editor.IDE

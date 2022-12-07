@@ -1,6 +1,6 @@
 using System;
 
-namespace Tosna.Core.Common
+namespace Tosna.Core
 {
 	public interface ILogger
 	{

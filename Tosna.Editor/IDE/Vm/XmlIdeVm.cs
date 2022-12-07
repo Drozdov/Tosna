@@ -1,5 +1,5 @@
 using System;
-using Tosna.Core.Common;
+using Tosna.Core;
 using Tosna.Editor.IDE.Interfaces;
 using Tosna.Editor.IDE.Verification;
 

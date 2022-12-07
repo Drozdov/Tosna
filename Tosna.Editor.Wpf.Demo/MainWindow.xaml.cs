@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Text;
 using System.Windows;
 using Microsoft.Win32;
-using Tosna.Core.Common;
+using Tosna.Core;
 using Tosna.Core.SerializationInterfaces;
 using Tosna.Editor.IDE;
 using Tosna.Editor.IDE.Interfaces;

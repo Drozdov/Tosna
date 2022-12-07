@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Tosna.Core.Common;
-using Tosna.Core.Common.Imprints;
+using Tosna.Core;
+using Tosna.Core.Imprints;
 using Tosna.Editor.Common;
 using Tosna.Editor.Common.Vm;
 using Tosna.Editor.IDE.FieldsConfigurator;

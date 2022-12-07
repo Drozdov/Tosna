@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Tosna.Core.Common;
+using Tosna.Core;
 using Tosna.Core.Helpers.Xml;
 using Tosna.Core.SerializationInterfaces;
 using Tosna.Editor.IDE.ProblemsDetailing;

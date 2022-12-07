@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace Tosna.Core.Common.Stamps
+namespace Tosna.Core.Stamps
 {
 	public class StampImprint
 	{

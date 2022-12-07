@@ -1,4 +1,4 @@
-using Tosna.Core.Common.Imprints;
+using Tosna.Core.Imprints.Fields;
 
 namespace Tosna.Editor.IDE.FieldsConfigurator.ConfigurableFields
 {

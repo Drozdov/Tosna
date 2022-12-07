@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Tosna.Core.Common.Imprints;
+using Tosna.Core.Imprints;
 
 namespace Tosna.Editor.IDE.Vm
 {

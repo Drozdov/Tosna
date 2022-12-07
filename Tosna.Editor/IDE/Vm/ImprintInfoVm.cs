@@ -1,4 +1,4 @@
-using Tosna.Core.Common.Imprints;
+using Tosna.Core.Imprints;
 
 namespace Tosna.Editor.IDE.Vm
 {

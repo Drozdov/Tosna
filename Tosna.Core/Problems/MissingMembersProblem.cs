@@ -1,7 +1,7 @@
 using System;
 using Tosna.Core.SerializationInterfaces;
 
-namespace Tosna.Core.Common.Problems
+namespace Tosna.Core.Problems
 {
 	public class MissingMembersProblem : IComplexSerializerProblem
 	{

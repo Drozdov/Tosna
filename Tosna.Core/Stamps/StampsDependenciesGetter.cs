@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Tosna.Core.Common.Stamps
+namespace Tosna.Core.Stamps
 {
 	public class StampsDependenciesGetter : IStampPropertyVisitor
 	{

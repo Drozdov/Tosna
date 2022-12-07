@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Tosna.Core.Common.Imprints.Generation;
 using Tosna.Core.Helpers;
 
-namespace Tosna.Core.Common.Imprints
+namespace Tosna.Core.Imprints.Generation
 {
 	public class ImprintsResolver : IObjectResolver
 	{

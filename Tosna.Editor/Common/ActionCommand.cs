@@ -1,6 +1,6 @@
 using System;
 using System.Windows.Input;
-using Tosna.Core.Common;
+using Tosna.Core;
 
 namespace Tosna.Editor.Common
 {

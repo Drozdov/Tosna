@@ -1,7 +1,7 @@
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
-using Tosna.Core.Common.Problems;
 using Tosna.Core.Helpers.Xml;
+using Tosna.Core.Problems;
 using Tosna.Editor.IDE.Verification;
 
 namespace Tosna.Editor.Wpf.XmlEditor
