@@ -18,14 +18,14 @@ namespace Tosna.Core.Imprints.Generation
 		public static object Create(Imprint imprint, IObjectResolver resolver)
 		{
 			var visitor = new ObjectFactory(resolver);
-			imprint.Visit(visitor);
+			imprint.Accept(visitor);
 			return visitor.result;
 		}
 
 		public static object Create(ImprintField imprintField, IObjectResolver resolver)
 		{
 			var visitor = new ObjectFactory(resolver);
-			imprintField.Visit(visitor);
+			imprintField.Accept(visitor);
 			return visitor.result;
 		}
 

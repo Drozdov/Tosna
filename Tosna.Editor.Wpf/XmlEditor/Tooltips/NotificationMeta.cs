@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Tosna.Editor.Common;
+using Tosna.Editor.Helpers;
 using Tosna.Editor.IDE.Verification;
 
 namespace Tosna.Editor.Wpf.XmlEditor.Tooltips

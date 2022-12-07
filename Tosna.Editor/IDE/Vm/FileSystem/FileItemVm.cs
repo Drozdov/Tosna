@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Tosna.Editor.Common;
+using Tosna.Editor.Helpers;
 using Tosna.Editor.IDE.FieldsConfigurator;
 using Tosna.Editor.IDE.Verification;
 

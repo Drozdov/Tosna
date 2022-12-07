@@ -51,7 +51,7 @@ namespace Tosna.Editor.IDE
 			}
 
 			var processor = new RefactorImprintProcessor(refactoredImprint, newId, newFilePath, moveToTop);
-			imprint.Visit(processor);
+			imprint.Accept(processor);
 			return processor.resultImprint;
 		}
 
@@ -108,7 +108,7 @@ namespace Tosna.Editor.IDE
 			public static ImprintField UpdateImprintField(ImprintField imprintField, Imprint refactoredImprint, string newId, string newFilePath, bool moveToTop)
 			{
 				var processor = new MoveImprintFieldProcessor(refactoredImprint, newId, newFilePath, moveToTop);
-				imprintField.Visit(processor);
+				imprintField.Accept(processor);
 				return processor.resultImprintField;
 			}
 

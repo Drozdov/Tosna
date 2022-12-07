@@ -1,5 +1,6 @@
 using Tosna.Core.Problems;
 using Tosna.Editor.IDE.Verification;
+using Tosna.Editor.IDE.Verification.CompletionDataProviders;
 
 namespace Tosna.Editor.IDE
 {
@@ -14,7 +15,7 @@ namespace Tosna.Editor.IDE
 		public static ICompletionDataProvider GetProvider(IComplexSerializerProblem problem)
 		{
 			var visitor = new ComplexSerializerProviderFactory();
-			problem.Visit(visitor);
+			problem.Accept(visitor);
 			return visitor.completionDataProvider;
 		}
 

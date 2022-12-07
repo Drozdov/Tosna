@@ -12,7 +12,7 @@ namespace Tosna.Core.Problems
 			Line = line;
 		}
 
-		public void Visit(IComplexSerializerProblemVisitor visitor)
+		public void Accept(IComplexSerializerProblemVisitor visitor)
 		{
 			visitor.Visit(this);
 		}

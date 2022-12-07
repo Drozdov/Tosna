@@ -4,6 +4,7 @@ using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
 using Tosna.Editor.IDE.Verification;
+using Tosna.Editor.IDE.Verification.CompletionDataProviders;
 
 namespace Tosna.Editor.Wpf.XmlEditor.AutoCompletion
 {

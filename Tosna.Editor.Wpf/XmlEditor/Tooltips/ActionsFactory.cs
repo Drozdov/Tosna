@@ -1,6 +1,7 @@
 using ICSharpCode.AvalonEdit.Editing;
-using Tosna.Editor.Common;
+using Tosna.Editor.Helpers;
 using Tosna.Editor.IDE.Verification;
+using Tosna.Editor.IDE.Verification.CompletionDataProviders;
 
 namespace Tosna.Editor.Wpf.XmlEditor.Tooltips
 {
@@ -19,7 +20,7 @@ namespace Tosna.Editor.Wpf.XmlEditor.Tooltips
 			out ActionCommand command)
 		{
 			var visitor = new ActionsFactory(textArea);
-			completionDataProvider.Visit(visitor);
+			completionDataProvider.Accept(visitor);
 			command = visitor.command;
 			return command != null;
 		}

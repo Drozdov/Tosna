@@ -55,7 +55,7 @@ namespace Tosna.Core.Imprints
 			return info != null;
 		}
 
-		public abstract void Visit(IImprintVisitor visitor);
+		public abstract void Accept(IImprintVisitor visitor);
 	}
 
 	public interface IImprintVisitor

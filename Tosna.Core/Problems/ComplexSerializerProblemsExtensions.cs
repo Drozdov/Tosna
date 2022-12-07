@@ -37,21 +37,21 @@ namespace Tosna.Core.Problems
 			public static string GetMessage(IComplexSerializerProblem problem)
 			{
 				var visitor = new ComplexSerializerProblemMessageGetter();
-				problem.Visit(visitor);
+				problem.Accept(visitor);
 				return visitor.errorMessage;
 			}
 
 			public static string GetMessageWithLocation(IComplexSerializerProblem problem)
 			{
 				var visitor = new ComplexSerializerProblemMessageGetter();
-				problem.Visit(visitor);
+				problem.Accept(visitor);
 				return $"{visitor.errorMessage}, {visitor.location}";
 			}
 
 			public static int GetLineNumber(IComplexSerializerProblem problem)
 			{
 				var visitor = new ComplexSerializerProblemMessageGetter();
-				problem.Visit(visitor);
+				problem.Accept(visitor);
 				return visitor.lineNumber;
 			}
 
@@ -95,7 +95,7 @@ namespace Tosna.Core.Problems
 			public static bool IsProblemCriticalImpl(IComplexSerializerProblem problem)
 			{
 				var warningLevelGetter = new CriticalLevelChecker();
-				problem.Visit(warningLevelGetter);
+				problem.Accept(warningLevelGetter);
 				return warningLevelGetter.isError;
 			}
 

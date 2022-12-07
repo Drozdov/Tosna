@@ -1,3 +1,5 @@
+using Tosna.Editor.IDE.Verification.CompletionDataProviders;
+
 namespace Tosna.Editor.IDE.Verification
 {
 	public class VerificationError : VerificationNotification

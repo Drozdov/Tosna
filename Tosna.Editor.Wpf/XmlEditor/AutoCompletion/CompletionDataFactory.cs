@@ -5,6 +5,7 @@ using ICSharpCode.AvalonEdit.CodeCompletion;
 using Tosna.Core.Helpers;
 using Tosna.Core.Problems;
 using Tosna.Editor.IDE.Verification;
+using Tosna.Editor.IDE.Verification.CompletionDataProviders;
 using Tosna.Editor.IDE.Vm;
 
 namespace Tosna.Editor.Wpf.XmlEditor.AutoCompletion
@@ -23,7 +24,7 @@ namespace Tosna.Editor.Wpf.XmlEditor.AutoCompletion
 		public static IEnumerable<ICompletionData> CreateCompletionDatas(ICompletionDataProvider problem, FilesManagerInteractionVm filesManagerInteractionVm)
 		{
 			var factory = new CompletionDataFactory(filesManagerInteractionVm);
-			problem.Visit(factory);
+			problem.Accept(factory);
 			return factory.result;
 		}
 

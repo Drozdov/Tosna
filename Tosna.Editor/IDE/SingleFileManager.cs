@@ -10,6 +10,7 @@ using Tosna.Core.Problems;
 using Tosna.Editor.IDE.FieldsConfigurator;
 using Tosna.Editor.IDE.ProblemsDetailing;
 using Tosna.Editor.IDE.Verification;
+using Tosna.Editor.IDE.Verification.TextIntervalCoordinates;
 
 namespace Tosna.Editor.IDE
 {

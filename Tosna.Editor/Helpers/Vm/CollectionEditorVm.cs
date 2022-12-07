@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace Tosna.Editor.Common.Vm
+namespace Tosna.Editor.Helpers.Vm
 {
 	public abstract class CollectionEditorVm
 	{

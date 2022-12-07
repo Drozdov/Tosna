@@ -36,7 +36,7 @@ namespace Tosna.Core.Stamps
 				return new Stamp(obj);
 			}
 
-			var properties = new List<IStampProperty>();
+			var properties = new List<IStampField>();
 
 			// TODO  detect cycles to prevent StackOverflow
 			var elements = serializingElementsManager.GetAllElements(obj.GetType());
@@ -45,7 +45,7 @@ namespace Tosna.Core.Stamps
 				var elementValue = element.GetValue(obj);
 				if (serializingTypesResolver.IsSimpleType(element.Type))
 				{
-					properties.Add(new SimpleTypeProperty(element, elementValue));
+					properties.Add(new SimpleTypeField(element, elementValue));
 				}
 				else if (element.Type.IsArray)
 				{
@@ -55,12 +55,12 @@ namespace Tosna.Core.Stamps
 					{
 						arrayStamps.Add(AddObject(item));
 					}
-					properties.Add(new ArrayStampProperty(element, arrayStamps.ToArray()));
+					properties.Add(new ArrayStampField(element, arrayStamps.ToArray()));
 				}
 				else
 				{
 					var elementStamp = AddObject(elementValue);
-					properties.Add(new StampProperty(element, elementStamp));
+					properties.Add(new StampField(element, elementStamp));
 				}
 
 			}

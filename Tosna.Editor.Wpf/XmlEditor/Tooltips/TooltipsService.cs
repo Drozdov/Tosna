@@ -9,7 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using ICSharpCode.AvalonEdit;
-using Tosna.Editor.Common;
+using Tosna.Editor.Helpers;
 using Orientation = System.Windows.Controls.Orientation;
 
 namespace Tosna.Editor.Wpf.XmlEditor.Tooltips

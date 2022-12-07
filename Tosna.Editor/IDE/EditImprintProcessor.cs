@@ -27,7 +27,7 @@ namespace Tosna.Editor.IDE
 		private static Imprint EditImprint(Imprint originalImprint, ImprintField oldImprint, ImprintField newImprint)
 		{
 			var visitor = new EditImprintProcessor(oldImprint, newImprint);
-			originalImprint.Visit(visitor);
+			originalImprint.Accept(visitor);
 			return visitor.editedImprint;
 		}
 
@@ -72,7 +72,7 @@ namespace Tosna.Editor.IDE
 				}
 
 				var visitor = new EditImprintFieldsProcessor(oldImprintField, newImprintField);
-				originalImprintField.Visit(visitor);
+				originalImprintField.Accept(visitor);
 				return visitor.editedImprintField;
 			}
 

@@ -18,7 +18,7 @@ namespace Tosna.Core.Problems
 			Position = position;
 		}
 
-		public void Visit(IComplexSerializerProblemVisitor visitor)
+		public void Accept(IComplexSerializerProblemVisitor visitor)
 		{
 			visitor.Visit(this);
 		}

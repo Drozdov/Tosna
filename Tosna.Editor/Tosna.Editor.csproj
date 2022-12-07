@@ -39,11 +39,11 @@
         <Reference Include="System.Xml.Linq" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="Common\ActionCommand.cs" />
-        <Compile Include="Common\Vm\CollectionEditorVm.cs" />
-        <Compile Include="Common\ItemEventArgs.cs" />
-        <Compile Include="Common\NotifyPropertyChanged.cs" />
-        <Compile Include="Common\OrderedObservableCollection.cs" />
+        <Compile Include="Helpers\ActionCommand.cs" />
+        <Compile Include="Helpers\Vm\CollectionEditorVm.cs" />
+        <Compile Include="Helpers\ItemEventArgs.cs" />
+        <Compile Include="Helpers\NotifyPropertyChanged.cs" />
+        <Compile Include="Helpers\OrderedObservableCollection.cs" />
         <Compile Include="IDE\ComplexSerializerProviderFactory.cs" />
         <Compile Include="IDE\FieldsConfigurator\ConfigurableField.cs" />
         <Compile Include="IDE\FieldsConfigurator\ConfigurableFieldFactory.cs" />
@@ -62,9 +62,17 @@
         <Compile Include="IDE\ProblemsDetailing\Empty.cs" />
         <Compile Include="IDE\ProblemsDetailing\PatchedToReservedResolver.cs" />
         <Compile Include="IDE\SingleFileManager.cs" />
+        <Compile Include="IDE\Verification\CompletionDataProviders\MissingMembersCompletionDataProvider.cs" />
+        <Compile Include="IDE\Verification\CompletionDataProviders\NoneCompletionDataProvider.cs" />
+        <Compile Include="IDE\Verification\CompletionDataProviders\UnfinishedTypeCompletionDataProvider.cs" />
+        <Compile Include="IDE\Verification\ICompletionDataProvider.cs" />
         <Compile Include="IDE\Verification\ITextIntervalCoordinates.cs" />
+        <Compile Include="IDE\Verification\TextIntervalCoordinates\FullDocumentCoordinates.cs" />
+        <Compile Include="IDE\Verification\TextIntervalCoordinates\FullLineCoordinates.cs" />
+        <Compile Include="IDE\Verification\TextIntervalCoordinates\StartEndCoordinates.cs" />
         <Compile Include="IDE\Verification\VerificationError.cs" />
         <Compile Include="IDE\Verification\VerificationNotification.cs" />
+        <Compile Include="IDE\Verification\VerificationNotificationType.cs" />
         <Compile Include="IDE\Verification\VerificationService.cs" />
         <Compile Include="IDE\Verification\VerificationWarning.cs" />
         <Compile Include="IDE\Vm\FilesHierarchyVm.cs" />

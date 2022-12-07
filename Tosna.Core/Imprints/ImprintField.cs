@@ -12,7 +12,7 @@ namespace Tosna.Core.Imprints
 
 		public SerializingElement Info { get; }
 
-		public abstract void Visit(IImprintFieldVisitor visitor);
+		public abstract void Accept(IImprintFieldVisitor visitor);
 	}
 	
 	public interface IImprintFieldVisitor

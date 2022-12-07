@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using Tosna.Core.Helpers;
-using Tosna.Editor.Common;
+using Tosna.Editor.Helpers;
 
 namespace Tosna.Editor.IDE.Vm.FileSystem
 {

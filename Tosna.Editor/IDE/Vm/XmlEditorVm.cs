@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Tosna.Core;
 using Tosna.Core.Imprints;
-using Tosna.Editor.Common;
+using Tosna.Editor.Helpers;
 using Tosna.Editor.IDE.Verification;
 
 namespace Tosna.Editor.IDE.Vm

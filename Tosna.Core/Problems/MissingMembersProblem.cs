@@ -27,7 +27,7 @@ namespace Tosna.Core.Problems
 			TypesResolver = serializingTypesResolver;
 		}
 
-		public void Visit(IComplexSerializerProblemVisitor visitor)
+		public void Accept(IComplexSerializerProblemVisitor visitor)
 		{
 			visitor.Visit(this);
 		}

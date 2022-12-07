@@ -2,7 +2,7 @@ namespace Tosna.Core.Problems
 {
 	public interface IComplexSerializerProblem
 	{
-		void Visit(IComplexSerializerProblemVisitor visitor);
+		void Accept(IComplexSerializerProblemVisitor visitor);
 	}
 
 	public interface IComplexSerializerProblemVisitor

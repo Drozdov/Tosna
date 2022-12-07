@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 
-namespace Tosna.Editor.Common
+namespace Tosna.Editor.Helpers
 {
 	public class OrderedObservableCollection<T> : ObservableCollection<T> where T : IComparable<T>
 	{

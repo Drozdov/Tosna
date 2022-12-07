@@ -1,6 +1,6 @@
 using System.Linq;
 using System.Windows.Controls;
-using Tosna.Editor.Common.Vm;
+using Tosna.Editor.Helpers.Vm;
 
 namespace Tosna.Editor.Wpf.Common
 {

@@ -1,6 +1,6 @@
 using System;
 
-namespace Tosna.Editor.Common
+namespace Tosna.Editor.Helpers
 {
 	public class ItemEventArgs<T> : EventArgs
 	{

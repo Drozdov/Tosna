@@ -137,7 +137,7 @@ namespace Tosna.Core.Stamps
 		}
 
 
-		private class ImprintFieldsFactory : IStampPropertyVisitor
+		private class ImprintFieldsFactory : IStampFieldVisitor
 		{
 			private ImprintField field;
 
@@ -152,26 +152,26 @@ namespace Tosna.Core.Stamps
 				this.factory = factory;
 			}
 
-			public static ImprintField GetField(Stamp owner, IStampProperty property, SerializingElement serializingElement, StampImprintsFactory factory)
+			public static ImprintField GetField(Stamp owner, IStampField field, SerializingElement serializingElement, StampImprintsFactory factory)
 			{
 				var visitor = new ImprintFieldsFactory(owner, serializingElement, factory);
-				property.Visit(visitor);
+				field.Accept(visitor);
 				return visitor.field;
 			}
 
-			void IStampPropertyVisitor.Visit(SimpleTypeProperty simpleTypeProperty)
+			void IStampFieldVisitor.Visit(SimpleTypeField simpleTypeField)
 			{
-				field = new SimpleTypeImprintField(serializingElement, simpleTypeProperty.Value);
+				field = new SimpleTypeImprintField(serializingElement, simpleTypeField.Value);
 			}
 
-			void IStampPropertyVisitor.Visit(StampProperty stampProperty)
+			void IStampFieldVisitor.Visit(StampField stampField)
 			{
-				field = new NestedImprintField(serializingElement, factory.Get(stampProperty.Value, owner));
+				field = new NestedImprintField(serializingElement, factory.Get(stampField.Value, owner));
 			}
 
-			void IStampPropertyVisitor.Visit(ArrayStampProperty arrayStampProperty)
+			void IStampFieldVisitor.Visit(ArrayStampField arrayStampField)
 			{
-				field = new ArrayImprintField(serializingElement, arrayStampProperty.Values.Select(val => factory.Get(val, owner)).ToArray());
+				field = new ArrayImprintField(serializingElement, arrayStampField.Values.Select(val => factory.Get(val, owner)).ToArray());
 			}
 		}
 	}

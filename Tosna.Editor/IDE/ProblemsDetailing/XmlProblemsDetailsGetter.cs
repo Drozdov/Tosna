@@ -9,6 +9,8 @@ using Tosna.Core.Imprints;
 using Tosna.Core.Problems;
 using Tosna.Core.SerializationInterfaces;
 using Tosna.Editor.IDE.Verification;
+using Tosna.Editor.IDE.Verification.CompletionDataProviders;
+using Tosna.Editor.IDE.Verification.TextIntervalCoordinates;
 
 namespace Tosna.Editor.IDE.ProblemsDetailing
 {

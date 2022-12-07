@@ -9,7 +9,7 @@ using System.Windows.Media;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Search;
 using Tosna.Core.Helpers.Xml;
-using Tosna.Editor.Common;
+using Tosna.Editor.Helpers;
 using Tosna.Editor.IDE.Verification;
 using Tosna.Editor.IDE.Vm;
 using Tosna.Editor.Wpf.XmlEditor.TextMarkers;

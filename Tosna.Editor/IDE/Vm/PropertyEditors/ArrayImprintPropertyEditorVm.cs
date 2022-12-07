@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Tosna.Editor.Common.Vm;
+using Tosna.Editor.Helpers.Vm;
 using Tosna.Editor.IDE.FieldsConfigurator;
 using Tosna.Editor.IDE.FieldsConfigurator.ConfigurableFields;
 

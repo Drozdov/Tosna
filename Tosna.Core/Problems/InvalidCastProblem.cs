@@ -17,7 +17,7 @@ namespace Tosna.Core.Problems
 			LineNumber = lineNumber;
 		}
 
-		public void Visit(IComplexSerializerProblemVisitor visitor)
+		public void Accept(IComplexSerializerProblemVisitor visitor)
 		{
 			visitor.Visit(this);
 		}

@@ -4,7 +4,7 @@ using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using Tosna.Core;
-using Tosna.Editor.Common;
+using Tosna.Editor.Helpers;
 using Tosna.Editor.IDE.FieldsConfigurator;
 using Tosna.Editor.IDE.Interfaces;
 using Tosna.Editor.IDE.Verification;

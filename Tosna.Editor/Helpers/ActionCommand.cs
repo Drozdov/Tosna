@@ -2,7 +2,7 @@ using System;
 using System.Windows.Input;
 using Tosna.Core;
 
-namespace Tosna.Editor.Common
+namespace Tosna.Editor.Helpers
 {
 	public class ActionCommand : ICommand
 	{

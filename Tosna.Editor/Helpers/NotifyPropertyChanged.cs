@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace Tosna.Editor.Common
+namespace Tosna.Editor.Helpers
 {
 	public class NotifyPropertyChanged : INotifyPropertyChanged
 	{

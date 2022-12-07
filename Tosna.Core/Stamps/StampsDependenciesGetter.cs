@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Tosna.Core.Stamps
 {
-	public class StampsDependenciesGetter : IStampPropertyVisitor
+	public class StampsDependenciesGetter : IStampFieldVisitor
 	{
 		private IReadOnlyCollection<Stamp> dependencies;
 
@@ -10,26 +10,26 @@ namespace Tosna.Core.Stamps
 		{
 		}
 
-		public static IReadOnlyCollection<Stamp> GetDependencies(IStampProperty property)
+		public static IReadOnlyCollection<Stamp> GetDependencies(IStampField field)
 		{
 			var visitor = new StampsDependenciesGetter();
-			property.Visit(visitor);
+			field.Accept(visitor);
 			return visitor.dependencies;
 		}
 
-		void IStampPropertyVisitor.Visit(SimpleTypeProperty simpleTypeProperty)
+		void IStampFieldVisitor.Visit(SimpleTypeField simpleTypeField)
 		{
 			dependencies = new Stamp[] { };
 		}
 
-		void IStampPropertyVisitor.Visit(StampProperty stampProperty)
+		void IStampFieldVisitor.Visit(StampField stampField)
 		{
-			dependencies = new[] {stampProperty.Value};
+			dependencies = new[] {stampField.Value};
 		}
 
-		void IStampPropertyVisitor.Visit(ArrayStampProperty arrayStampProperty)
+		void IStampFieldVisitor.Visit(ArrayStampField arrayStampField)
 		{
-			dependencies = arrayStampProperty.Values;
+			dependencies = arrayStampField.Values;
 		}
 	}
 }

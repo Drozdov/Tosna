@@ -12,7 +12,7 @@ namespace Tosna.Core.Imprints.Fields
 			Items = items;
 		}
 
-		public override void Visit(IImprintFieldVisitor visitor)
+		public override void Accept(IImprintFieldVisitor visitor)
 		{
 			visitor.Visit(this);
 		}

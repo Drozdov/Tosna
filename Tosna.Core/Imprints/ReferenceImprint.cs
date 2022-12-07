@@ -16,7 +16,7 @@ namespace Tosna.Core.Imprints
 			ReferenceRelativePath = referenceRelativePath;
 		}
 
-		public override void Visit(IImprintVisitor visitor)
+		public override void Accept(IImprintVisitor visitor)
 		{
 			visitor.Visit(this);
 		}

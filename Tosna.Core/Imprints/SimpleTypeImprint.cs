@@ -11,7 +11,7 @@ namespace Tosna.Core.Imprints
 			Value = value;
 		}
 
-		public override void Visit(IImprintVisitor visitor)
+		public override void Accept(IImprintVisitor visitor)
 		{
 			visitor.Visit(this);
 		}

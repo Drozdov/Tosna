@@ -1,11 +1,12 @@
 using ICSharpCode.AvalonEdit.Document;
 using Tosna.Editor.IDE.Verification;
+using Tosna.Editor.IDE.Verification.TextIntervalCoordinates;
 using Tosna.Editor.Wpf.XmlEditor.TextMarkers;
 
 namespace Tosna.Editor.Wpf.XmlEditor
 {
 
-	public class TextMarkerFactory : IVerificationErrorCoordinatesVisitor
+	public class TextMarkerFactory : ITextIntervalCoordinatesVisitor
 	{
 		private readonly ITextMarkerService textMarkerService;
 		private readonly TextDocument textDocument;
@@ -22,7 +23,7 @@ namespace Tosna.Editor.Wpf.XmlEditor
 			TextDocument textDocument)
 		{
 			var factory = new TextMarkerFactory(textMarkerService, textDocument);
-			coordinates.Visit(factory);
+			coordinates.Accept(factory);
 			return factory.marker;
 		}
 
@@ -45,7 +46,7 @@ namespace Tosna.Editor.Wpf.XmlEditor
 		}
 	}
 
-	public class TextIntervalCoordinatesChecker : IVerificationErrorCoordinatesVisitor
+	public class TextIntervalCoordinatesChecker : ITextIntervalCoordinatesVisitor
 	{
 		private readonly TextLocation location;
 
@@ -59,7 +60,7 @@ namespace Tosna.Editor.Wpf.XmlEditor
 		public static bool Contains(ITextIntervalCoordinates coordinates, TextLocation position)
 		{
 			var checker = new TextIntervalCoordinatesChecker(position);
-			coordinates.Visit(checker);
+			coordinates.Accept(checker);
 			return checker.result;
 		}
 

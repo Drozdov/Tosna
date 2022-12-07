@@ -22,7 +22,7 @@ namespace Tosna.Editor.IDE.FieldsConfigurator
 		public static ConfigurableField GetConfigurableField(NamedImprintField field, FieldsConfiguratorManager fieldsConfiguratorManager, FilesManagerInteractionService filesManagerInteractionService)
 		{
 			var visitor = new ConfigurableFieldFactory(fieldsConfiguratorManager, filesManagerInteractionService, field.PublicName);
-			field.Field.Visit(visitor);
+			field.Field.Accept(visitor);
 			return visitor.configurableField;
 		}
 

@@ -76,10 +76,15 @@
         <Compile Include="IO\StampsEnvironment.cs" />
         <Compile Include="IO\StampsEnvironmentWriter.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
+        <Compile Include="Stamps\Fields\ArrayStampField.cs" />
+        <Compile Include="Stamps\Fields\SimpleTypeField.cs" />
+        <Compile Include="Stamps\Fields\StampField.cs" />
+        <Compile Include="Stamps\IStampField.cs" />
         <Compile Include="Stamps\Stamp.cs" />
         <Compile Include="Stamps\StampIdentifier.cs" />
         <Compile Include="Stamps\StampImprint.cs" />
         <Compile Include="Stamps\StampImprintsFactory.cs" />
+        <Compile Include="Stamps\StampInlinePolicy.cs" />
         <Compile Include="Stamps\StampsCollectionConstructor.cs" />
         <Compile Include="Stamps\StampsDependenciesGetter.cs" />
     </ItemGroup>

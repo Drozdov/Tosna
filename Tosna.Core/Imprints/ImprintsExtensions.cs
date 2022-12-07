@@ -90,7 +90,7 @@ namespace Tosna.Core.Imprints
 		public static IEnumerable<ImprintIdentifier> GetExternalDependencies(Imprint imprint)
 		{
 			var visitor = new ImprintsDependenciesGetter();
-			imprint.Visit(visitor);
+			imprint.Accept(visitor);
 			return visitor.dependencies;
 		}
 
@@ -121,14 +121,14 @@ namespace Tosna.Core.Imprints
 		public static IEnumerable<Imprint> GetNested(Imprint imprint)
 		{
 			var visitor = new NestedImprintsGetter();
-			imprint.Visit(visitor);
+			imprint.Accept(visitor);
 			return visitor.dependencies;
 		}
 
 		public static IEnumerable<Imprint> GetNested(ImprintField field)
 		{
 			var visitor = new NestedImprintsGetter();
-			field.Visit(visitor);
+			field.Accept(visitor);
 			return visitor.dependencies;
 		}
 

@@ -95,7 +95,7 @@ namespace Tosna.Core
 				}
 
 				var visitor = new XElementFactory(xElement, serializingTypesResolver);
-				imprint.Visit(visitor);
+				imprint.Accept(visitor);
 
 				return xElement;
 			}
@@ -141,7 +141,7 @@ namespace Tosna.Core
 				var visitor = new AggregateImprintXElementFiller(xElement, serializingTypesResolver, getXElement, baseName);
 				foreach (var field in imprint.Fields)
 				{
-					field.Visit(visitor);
+					field.Accept(visitor);
 				}
 			}
 
