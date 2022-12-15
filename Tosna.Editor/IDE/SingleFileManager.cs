@@ -166,7 +166,7 @@ namespace Tosna.Editor.IDE
 
 			try
 			{
-				var reader = new XmlDocumentReader();
+				var reader = new XmlDocumentReader { IgnoreContent = true };
 				var document = reader.ReadDocument(xDocument, FileName);
 				Imprints = serializer.LoadRootImprints(document).ToArray();
 				Notifications = GetVerificationErrors(Imprints).ToArray();

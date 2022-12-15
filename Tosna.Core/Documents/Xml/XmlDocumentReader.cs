@@ -6,6 +6,11 @@ namespace Tosna.Core.Documents.Xml
 {
 	public class XmlDocumentReader : IDocumentReader
 	{
+		/// <summary>
+		/// If set to true, XElement text content will be ignored. Example: <Some>Ignored content</Some> 
+		/// </summary>
+		public bool IgnoreContent { get; set; }
+		
 		public Document ReadDocument(string fileName)
 		{
 			var xDocument = XDocument.Load(fileName, LoadOptions.SetLineInfo | LoadOptions.SetBaseUri);
@@ -19,12 +24,14 @@ namespace Tosna.Core.Documents.Xml
 			return new Document(rootElement, documentInfo);
 		} 
 
-		private static DocumentElement ReadDocumentElement(XElement xElement)
+		private DocumentElement ReadDocumentElement(XElement xElement)
 		{
-			var documentElement = new DocumentElement(xElement.Name.LocalName)
+			var documentElement = new DocumentElement(xElement.Name.LocalName);
+
+			if (!IgnoreContent)
 			{
-				Content = xElement.Value
-			};
+				documentElement.Content = xElement.Value;
+			}
 			
 			documentElement.Children.AddRange(xElement.Elements().Select(ReadDocumentElement));
 			documentElement.Children.AddRange(xElement.Attributes().Select(ReadDocumentElement));

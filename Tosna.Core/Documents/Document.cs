@@ -1,5 +1,3 @@
-using System.Linq;
-
 namespace Tosna.Core.Documents
 {
 	public class Document

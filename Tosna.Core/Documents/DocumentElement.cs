@@ -9,9 +9,13 @@ namespace Tosna.Core.Documents
 		
 		public string Content { get; set; }
 
+		public bool HasContent => Content != null;
+
 		public DocumentElementLocation Location { get; set; } = DocumentElementLocation.Unknown;
 
 		public List<DocumentElement> Children { get; } = new List<DocumentElement>();
+
+		public bool HasChildren => Children.Any();
 		
 		public DocumentElementValidationInfo Info { get; set; } = DocumentElementValidationInfo.CreateValid();
 
@@ -20,7 +24,7 @@ namespace Tosna.Core.Documents
 			Name = name;
 		}
 	}
-	
+
 	public static class DocumentElementExtensions
 	{
 		public static string GetContentString(this DocumentElement documentElement, string name)

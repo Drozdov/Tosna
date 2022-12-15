@@ -15,7 +15,7 @@ namespace Tosna.Core.IO
 			var filesToRead = new Queue<string>(rootFilesToRead);
 			var filesAlreadyRead = new HashSet<string>();
 
-			var reader = new XmlDocumentReader();
+			var reader = new XmlDocumentReader { IgnoreContent = true };
 
 			while (filesToRead.Any())
 			{

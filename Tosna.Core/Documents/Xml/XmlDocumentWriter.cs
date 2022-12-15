@@ -6,6 +6,11 @@ namespace Tosna.Core.Documents.Xml
 {
 	public class XmlDocumentWriter : IDocumentWriter
 	{
+		/// <summary>
+		/// If set to true, element content will be ignored if children and content are both not empty
+		/// </summary>
+		public bool IgnoreContent { get; set; }
+
 		public void WriteDocument(Document document, string fileName)
 		{
 			var xDocument = new XDocument(CreateXElement(document.RootElement));
@@ -19,19 +24,25 @@ namespace Tosna.Core.Documents.Xml
 			xDocument.Save(fileName);
 		}
 
-		private static XElement CreateXElement(DocumentElement documentElement)
+		private XElement CreateXElement(DocumentElement documentElement)
 		{
 			var result = new XElement(documentElement.Name);
 			foreach (var child in documentElement.Children.Select(CreateXObject))
 			{
 				result.Add(child);
 			}
+
+			if (!IgnoreContent)
+			{
+				result.Value = documentElement.Content;
+			}
+			
 			return result;
 		}
 		
-		private static XObject CreateXObject(DocumentElement documentElement)
+		private XObject CreateXObject(DocumentElement documentElement)
 		{
-			if (!documentElement.Children.Any())
+			if (!documentElement.HasChildren)
 			{
 				return new XAttribute(documentElement.Name, documentElement.Content);
 			}

@@ -261,7 +261,7 @@ namespace Tosna.Core
 
 				var fieldType = naturalFieldInfo.Type;
 
-				if (serializingTypesResolver.IsSimpleType(fieldType))
+				if (serializingTypesResolver.IsSimpleType(fieldType) && childDocumentElement.HasContent)
 				{
 					var valueStr = childDocumentElement.Content;
 					try

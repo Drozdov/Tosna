@@ -61,7 +61,7 @@ namespace Tosna.Editor.IDE.ProblemsDetailing
 					lines.Select((l, index) => index == lineNumber - 1 ? replacement : l));
 				
 				var xDocument = XDocument.Parse(correctedContent, LoadOptions.SetLineInfo);
-				var documentReader = new XmlDocumentReader();
+				var documentReader = new XmlDocumentReader { IgnoreContent = true };
 				var document = documentReader.ReadDocument(xDocument, fileName);
 
 				var serializer = new ImprintsSerializer(serializingElementsManager,

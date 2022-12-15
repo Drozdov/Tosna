@@ -37,7 +37,7 @@ namespace Tosna.Core.IO
 					Directory.CreateDirectory(directoryName);
 				}
 
-				var writer = new XmlDocumentWriter();
+				var writer = new XmlDocumentWriter { IgnoreContent = true };
 				writer.WriteDocument(document, file);
 			}
 		}
