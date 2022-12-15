@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
+using Tosna.Core.Documents.Xml;
 using Tosna.Core.Imprints;
 using Tosna.Core.Problems;
 
@@ -15,11 +15,14 @@ namespace Tosna.Core.IO
 			var filesToRead = new Queue<string>(rootFilesToRead);
 			var filesAlreadyRead = new HashSet<string>();
 
+			var reader = new XmlDocumentReader();
+
 			while (filesToRead.Any())
 			{
 				var file = filesToRead.Dequeue();
 
-				var rootImprints = serializer.LoadRootImprints(XDocument.Load(file, LoadOptions.SetLineInfo | LoadOptions.SetBaseUri), file).ToArray();
+				var document = reader.ReadDocument(file);
+				var rootImprints = serializer.LoadRootImprints(document).ToArray();
 
 				var allImprints = rootImprints.GetNestedImprintsRecursively();
 				var dependencies = rootImprints.GetExternalDependenciesRecursively();

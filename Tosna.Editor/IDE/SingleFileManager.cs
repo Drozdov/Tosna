@@ -5,6 +5,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using Tosna.Core;
+using Tosna.Core.Documents.Xml;
 using Tosna.Core.Imprints;
 using Tosna.Core.Problems;
 using Tosna.Editor.IDE.FieldsConfigurator;
@@ -165,7 +166,9 @@ namespace Tosna.Editor.IDE
 
 			try
 			{
-				Imprints = serializer.LoadRootImprints(xDocument, FileName).ToArray();
+				var reader = new XmlDocumentReader();
+				var document = reader.ReadDocument(xDocument, FileName);
+				Imprints = serializer.LoadRootImprints(document).ToArray();
 				Notifications = GetVerificationErrors(Imprints).ToArray();
 				DescriptorFileManagers = GetDescriptedManagers(Imprints).ToArray();
 
@@ -196,7 +199,7 @@ namespace Tosna.Editor.IDE
 				foreach (var dependency in stamp.GetExternalDependencies())
 				{
 					if (knownIdentifiers.Contains(dependency)) continue;
-					var coordinates = stamp.TryGetInfo(out var info) ? (ITextIntervalCoordinates)new FullLineCoordinates(info.Line) : new FullDocumentCoordinates();
+					var coordinates = stamp.TryGetInfo(out var info) ? (ITextIntervalCoordinates)new FullLineCoordinates(info.Location.LineStart) : new FullDocumentCoordinates();
 					dependenciesErrors.Add(new VerificationError(FileName, coordinates,
 						$"Unresolved dependency {dependency.Id} in {dependency.FilePath}"));
 				}
@@ -214,10 +217,10 @@ namespace Tosna.Editor.IDE
 			isRootImprint = false;
 			foreach (var imprint in Imprints.GetNestedImprintsRecursively())
 			{
-				if (imprint.TryGetInfo(out var info) && info.Line == line && foundColumn <= info.Column && info.Column <= column)
+				if (imprint.TryGetInfo(out var info) && info.Location.LineStart == line && foundColumn <= info.Location.ColumnStart && info.Location.ColumnStart <= column)
 				{
 					foundImprint = imprint;
-					foundColumn = info.Column;
+					foundColumn = info.Location.ColumnStart;
 					isRootImprint = Imprints.Contains(foundImprint);
 				}
 			}

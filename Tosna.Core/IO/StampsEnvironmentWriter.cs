@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using Tosna.Core.Documents.Xml;
 using Tosna.Core.Imprints;
 using Tosna.Core.Stamps;
 
@@ -36,7 +37,8 @@ namespace Tosna.Core.IO
 					Directory.CreateDirectory(directoryName);
 				}
 
-				document.Save(file);
+				var writer = new XmlDocumentWriter();
+				writer.WriteDocument(document, file);
 			}
 		}
 

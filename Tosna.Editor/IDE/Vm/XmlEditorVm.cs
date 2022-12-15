@@ -274,7 +274,7 @@ namespace Tosna.Editor.IDE.Vm
 			var editorVm = FilesManagerInteractionVm.TryOpenReferencedImprint(referenceImprint, out var imprint);
 			if (imprint.TryGetInfo(out var info))
 			{
-				editorVm.GoToPosition(new TextPosition(info.Line, info.Column));
+				editorVm.GoToPosition(new TextPosition(info.Location.LineStart, info.Location.ColumnStart));
 			}
 		}
 

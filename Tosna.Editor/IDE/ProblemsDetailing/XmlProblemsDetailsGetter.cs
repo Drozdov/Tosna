@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 using Tosna.Core;
+using Tosna.Core.Documents.Xml;
 using Tosna.Core.Imprints;
 using Tosna.Core.Problems;
 using Tosna.Core.SerializationInterfaces;
@@ -58,11 +59,14 @@ namespace Tosna.Editor.IDE.ProblemsDetailing
 				// and with a patched serializing types resolver
 				var correctedContent = string.Join(Environment.NewLine,
 					lines.Select((l, index) => index == lineNumber - 1 ? replacement : l));
+				
 				var xDocument = XDocument.Parse(correctedContent, LoadOptions.SetLineInfo);
+				var documentReader = new XmlDocumentReader();
+				var document = documentReader.ReadDocument(xDocument, fileName);
 
 				var serializer = new ImprintsSerializer(serializingElementsManager,
 					new PatchedToReservedResolver(serializingTypesResolver));
-				var imprints = serializer.LoadRootImprints(xDocument, fileName).GetNestedImprintsRecursively();
+				var imprints = serializer.LoadRootImprints(document).GetNestedImprintsRecursively();
 
 				var problems = GetAllProblems(imprints).ToArray();
 
