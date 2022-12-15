@@ -33,6 +33,7 @@ public static class EnvironmentIo
 		var yerevanThermometer = new ConstTemperatureThermometerSignature(30f, 0.1f, yerevanPosition);
 		var potsdamThermometer = new ConstTemperatureThermometerSignature(20f, 0.5f, potsdamPosition);
 		var randomizedBarometer = new RandomizedBarometerSignature();
+		var randomizedThermometer = new RandomizedThermometerSignature(new[] { 0.9f, 1.8f });
 		
 		var yerevanStation = new WeatherStationSignature(
 			new IDeviceSignature<IThermometer>[] { device1, yerevanThermometer },
@@ -42,7 +43,7 @@ public static class EnvironmentIo
 			"Yerevan");
 
 		var stPetersburgStation = new WeatherStationSignature(
-			new IDeviceSignature<IThermometer>[] { device2 },
+			new IDeviceSignature<IThermometer>[] { device2, randomizedThermometer },
 			new IDeviceSignature<IBarometer>[] { device2 },
 			new IDeviceSignature<IAnemometer>[] { device2 },
 			stPetersburgPosition,
@@ -123,6 +124,9 @@ public static class EnvironmentIo
 		
 		constructor.GetStamp(randomizedBarometer).UserId = "Barometer";
 		constructor.GetStamp(randomizedBarometer).UserFilePath = devicesFilePath;
+		
+		constructor.GetStamp(randomizedThermometer).UserId = "Thermometer";
+		constructor.GetStamp(randomizedThermometer).UserFilePath = devicesFilePath;
 		
 		constructor.GetStamp(yerevanStation).UserId = "WeatherStation";
 		constructor.GetStamp(yerevanStation).UserPublicName = "Yerevan weather station";

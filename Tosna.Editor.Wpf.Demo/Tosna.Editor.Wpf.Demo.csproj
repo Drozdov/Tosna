@@ -71,6 +71,7 @@
         <Compile Include="Domain\Devices\IThermometer.cs" />
         <Compile Include="Domain\Devices\ModBusNetworkAnemometer.cs" />
         <Compile Include="Domain\Devices\RandomizedBarometer.cs" />
+        <Compile Include="Domain\Devices\RandomizedThermometer.cs" />
         <Compile Include="Domain\Devices\WeatherStation.cs" />
         <Compile Include="Domain\IDeviceSignature.cs" />
         <Compile Include="Domain\EnvironmentIo.cs" />
