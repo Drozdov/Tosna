@@ -177,13 +177,21 @@ namespace Tosna.Core
 
 		private Imprint DeserializeFromXElement(DocumentElement documentElement, string filePath)
 		{
+			var problems = new List<IComplexSerializerProblem>();
+
+			if (documentElement.Info != null && !documentElement.Info.IsValid)
+			{
+				problems.Add(new ParsingProblem(documentElement.Info.Error, documentElement.Location,
+					documentElement.Info.Code));
+			}
+
 			var typeName = documentElement.Name;
 			if (!serializingTypesResolver.TryGetType(typeName, out var implementationType))
 			{
 				var error =
 					$"Cannot deserialize type {typeName}. Make sure proper type exists and satisfies requirements";
-				var imprintInfo = new ImprintInfo(filePath, typeName, documentElement.Location,
-					new CommonProblem(error, documentElement.Location));
+				problems.Add(new CommonProblem(error, documentElement.Location));
+				var imprintInfo = new ImprintInfo(filePath, typeName, documentElement.Location, problems);
 				return new AggregateImprint(typeof(object), null, null, imprintInfo, new SimpleTypeImprintField[] { });
 			}
 
@@ -195,7 +203,7 @@ namespace Tosna.Core
 			{
 				var refFileAttribute = documentElement.GetContentString("Reference.Path");
 				var byRefUnresolvedStamp = new ReferenceImprint(implementationType, publicNameAttribute, idAttribute,
-					new ImprintInfo(filePath, typeName, documentElement.Location),
+					new ImprintInfo(filePath, typeName, documentElement.Location, problems),
 					refIdAttribute, refFileAttribute);
 
 				return byRefUnresolvedStamp;
@@ -206,11 +214,11 @@ namespace Tosna.Core
 				var valueAttribute = documentElement.GetContentString("Value");
 				if (valueAttribute == null)
 				{
+					problems.Add(new CommonProblem(
+						$"Cannot deserialize type {implementationType}: no 'Value' attribute found",
+						documentElement.Location));
 					return new SimpleTypeImprint(implementationType, publicNameAttribute, idAttribute,
-						new ImprintInfo(filePath, typeName, documentElement.Location,
-							new CommonProblem(
-								$"Cannot deserialize type {implementationType}: no 'Value' attribute found",
-								documentElement.Location)),
+						new ImprintInfo(filePath, typeName, documentElement.Location, problems),
 						GetDefault(implementationType));
 				}
 
@@ -218,21 +226,20 @@ namespace Tosna.Core
 				{
 					var simpleTypeUnresolvedStamp = new SimpleTypeImprint(implementationType, publicNameAttribute,
 						idAttribute,
-						new ImprintInfo(filePath, typeName, documentElement.Location),
+						new ImprintInfo(filePath, typeName, documentElement.Location, problems),
 						serializingTypesResolver.DeserializeSimple(valueAttribute, implementationType));
 					return simpleTypeUnresolvedStamp;
 				}
 				catch (Exception e)
 				{
+					problems.Add(new CommonProblem(e.Message, documentElement.Location));
 					return new SimpleTypeImprint(implementationType, publicNameAttribute, idAttribute,
-						new ImprintInfo(filePath, typeName, documentElement.Location,
-							new CommonProblem(e.Message, documentElement.Location)),
+						new ImprintInfo(filePath, typeName, documentElement.Location, problems),
 						GetDefault(implementationType));
 				}
 			}
 
 			var fields = new List<ImprintField>();
-			var problems = new List<IComplexSerializerProblem>();
 
 			var isObsoleteName = serializingTypesResolver.TryGetName(implementationType, out var preferredName) &&
 								preferredName != typeName;
@@ -317,7 +324,7 @@ namespace Tosna.Core
 			}
 
 			return new AggregateImprint(implementationType, publicNameAttribute, idAttribute,
-				new ImprintInfo(filePath, typeName, documentElement.Location, problems.ToArray()), fields);
+				new ImprintInfo(filePath, typeName, documentElement.Location, problems), fields);
 		}
 
 		private static object GetDefault(Type type)

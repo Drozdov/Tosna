@@ -74,6 +74,7 @@
         <Compile Include="Problems\InvalidCastProblem.cs" />
         <Compile Include="Problems\MissingMembersProblem.cs" />
         <Compile Include="Problems\ObsoleteNameProblem.cs" />
+        <Compile Include="Problems\ParsingProblem.cs" />
         <Compile Include="SerializationInterfaces\ISerializingElementsManager.cs" />
         <Compile Include="SerializationInterfaces\ISerializingTypesResolver.cs" />
         <Compile Include="SerializationInterfaces\SerializingElement.cs" />

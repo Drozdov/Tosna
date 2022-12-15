@@ -14,7 +14,8 @@ namespace Tosna.Core.Imprints
 
 		public IReadOnlyCollection<IComplexSerializerProblem> Problems { get; }
 
-		public ImprintInfo(string filePath, string typeName, DocumentElementLocation location, params IComplexSerializerProblem[] problems)
+		public ImprintInfo(string filePath, string typeName, DocumentElementLocation location,
+			IReadOnlyCollection<IComplexSerializerProblem> problems)
 		{
 			FilePath = filePath;
 			TypeName = typeName;
