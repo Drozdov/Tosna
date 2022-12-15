@@ -42,11 +42,12 @@ namespace Tosna.Core.IO
 
 			foreach (var imprint in result)
 			{
-				if (imprint.TryGetInfo(out var info) && info.Problems.Any(problem => problem.IsProblemCritical()))
+				if (imprint.TryGetInfo(out var info) && info.Problems.Any(problem => problem.IsCritical))
 				{
-					var problemMessageWithLocation =
-						info.Problems.First(problem => problem.IsProblemCritical()).GetProblemMessageWithLocation();
-					throw new Exception($"Error in {info.FilePath}:{Environment.NewLine}{problemMessageWithLocation}");
+					var criticalProblem = info.Problems.First(problem => problem.IsCritical);
+					var location = criticalProblem.Location;
+					throw new Exception(
+						$"Error in {info.FilePath}:{Environment.NewLine}{criticalProblem.Description} at {location.LineStart}:{location.ColumnStart}");
 				}
 			}
 

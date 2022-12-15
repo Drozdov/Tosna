@@ -170,7 +170,7 @@ namespace Tosna.Editor.IDE
 				var document = reader.ReadDocument(xDocument, FileName);
 				Imprints = serializer.LoadRootImprints(document).ToArray();
 				Notifications = GetVerificationErrors(Imprints).ToArray();
-				DescriptorFileManagers = GetDescriptedManagers(Imprints).ToArray();
+				DescriptorFileManagers = GetFieldsConfiguratorManagers(Imprints).ToArray();
 
 				DependenciesFiles = Imprints.GetExternalDependenciesRecursively().Select(id => id.FilePath).Distinct()
 					.Except(new[] { FileName }).ToArray();
@@ -253,14 +253,16 @@ namespace Tosna.Editor.IDE
 				if (!imprint.TryGetInfo(out var info)) continue;
 				foreach (var problem in info.Problems)
 				{
-					if (problem.IsProblemCritical())
+					if (problem.IsCritical)
 					{
-						yield return new VerificationError(info.FilePath, new FullLineCoordinates(problem.GetProblemLineNumber()), problem.GetProblemMessage(),
+						yield return new VerificationError(info.FilePath, new StartEndCoordinates(problem.Location),
+							problem.Description,
 							ComplexSerializerProviderFactory.GetProvider(problem));
 					}
 					else
 					{
-						yield return new VerificationWarning(info.FilePath, new FullLineCoordinates(problem.GetProblemLineNumber()), problem.GetProblemMessage(),
+						yield return new VerificationWarning(info.FilePath, new StartEndCoordinates(problem.Location),
+							problem.Description,
 							ComplexSerializerProviderFactory.GetProvider(problem));
 					}
 
@@ -268,7 +270,7 @@ namespace Tosna.Editor.IDE
 			}
 		}
 
-		private IEnumerable<FieldsConfiguratorManager> GetDescriptedManagers(IEnumerable<Imprint> imprints)
+		private IEnumerable<FieldsConfiguratorManager> GetFieldsConfiguratorManagers(IEnumerable<Imprint> imprints)
 		{
 			foreach (var imprint in imprints)
 			{

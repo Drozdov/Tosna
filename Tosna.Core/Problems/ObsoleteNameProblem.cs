@@ -1,3 +1,5 @@
+using Tosna.Core.Documents;
+
 namespace Tosna.Core.Problems
 {
 	public class ObsoleteNameProblem : IComplexSerializerProblem
@@ -5,22 +7,18 @@ namespace Tosna.Core.Problems
 		public string ObsoleteName { get; }
 
 		public string PreferredName { get; }
+		
+		public DocumentElementLocation Location { get; }
+		
+		public string Description => $"Obsolete name {ObsoleteName}. Consider renaming to {PreferredName}";
+		
+		public bool IsCritical => false;
 
-		public int Line { get; }
-
-		public int Position { get; }
-
-		public ObsoleteNameProblem(string obsoleteName, string preferredName, int line, int position)
+		public ObsoleteNameProblem(string obsoleteName, string preferredName, DocumentElementLocation location)
 		{
 			ObsoleteName = obsoleteName;
 			PreferredName = preferredName;
-			Line = line;
-			Position = position;
-		}
-
-		public void Accept(IComplexSerializerProblemVisitor visitor)
-		{
-			visitor.Visit(this);
+			Location = location;
 		}
 	}
 }

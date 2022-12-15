@@ -69,7 +69,6 @@
         <Compile Include="Imprints\ReferenceImprint.cs" />
         <Compile Include="Imprints\SimpleTypeImprint.cs" />
         <Compile Include="Problems\CommonProblem.cs" />
-        <Compile Include="Problems\ComplexSerializerProblemsExtensions.cs" />
         <Compile Include="Problems\ComplexSerializerSolution.cs" />
         <Compile Include="Problems\IComplexSerializerProblem.cs" />
         <Compile Include="Problems\InvalidCastProblem.cs" />

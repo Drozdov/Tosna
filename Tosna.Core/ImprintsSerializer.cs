@@ -104,7 +104,7 @@ namespace Tosna.Core
 			void IImprintVisitor.Visit(AggregateImprint imprint)
 			{
 				AggregateImprintXElementFiller.FillContent(imprint, documentElement, serializingTypesResolver,
-					impr => Create(impr, serializingTypesResolver), documentElement.Name);
+					innerImprint => Create(innerImprint, serializingTypesResolver), documentElement.Name);
 			}
 
 			void IImprintVisitor.Visit(ReferenceImprint imprint)
@@ -183,7 +183,7 @@ namespace Tosna.Core
 				var error =
 					$"Cannot deserialize type {typeName}. Make sure proper type exists and satisfies requirements";
 				var imprintInfo = new ImprintInfo(filePath, typeName, documentElement.Location,
-					new CommonProblem(error, documentElement.Location.LineStart));
+					new CommonProblem(error, documentElement.Location));
 				return new AggregateImprint(typeof(object), null, null, imprintInfo, new SimpleTypeImprintField[] { });
 			}
 
@@ -208,9 +208,12 @@ namespace Tosna.Core
 				{
 					return new SimpleTypeImprint(implementationType, publicNameAttribute, idAttribute,
 						new ImprintInfo(filePath, typeName, documentElement.Location,
-							new CommonProblem($"Cannot deserialize type {implementationType}: no 'Value' attribute found", documentElement.Location.LineStart)),
+							new CommonProblem(
+								$"Cannot deserialize type {implementationType}: no 'Value' attribute found",
+								documentElement.Location)),
 						GetDefault(implementationType));
 				}
+
 				try
 				{
 					var simpleTypeUnresolvedStamp = new SimpleTypeImprint(implementationType, publicNameAttribute,
@@ -223,7 +226,7 @@ namespace Tosna.Core
 				{
 					return new SimpleTypeImprint(implementationType, publicNameAttribute, idAttribute,
 						new ImprintInfo(filePath, typeName, documentElement.Location,
-							new CommonProblem(e.Message, documentElement.Location.LineStart)),
+							new CommonProblem(e.Message, documentElement.Location)),
 						GetDefault(implementationType));
 				}
 			}
@@ -235,8 +238,7 @@ namespace Tosna.Core
 								preferredName != typeName;
 			if (isObsoleteName)
 			{
-				problems.Add(new ObsoleteNameProblem(typeName, preferredName, documentElement.Location.LineStart,
-					documentElement.Location.ColumnStart));
+				problems.Add(new ObsoleteNameProblem(typeName, preferredName, documentElement.Location));
 			}
 
 			foreach (var naturalFieldInfo in serializingElementsManager.GetAllElements(implementationType))
@@ -247,8 +249,9 @@ namespace Tosna.Core
 				{
 					if (naturalFieldInfo.IsMandatory)
 					{
-						problems.Add(new MissingMembersProblem(documentElement.Location.LineStart,
-							documentElement.Location.ColumnStart, naturalFieldInfo.Name, implementationType,
+						problems.Add(new MissingMembersProblem(naturalFieldInfo.Name,
+							implementationType,
+							documentElement.Location,
 							serializingElementsManager,
 							serializingTypesResolver));
 					}
@@ -271,7 +274,7 @@ namespace Tosna.Core
 					}
 					catch (Exception e)
 					{
-						problems.Add(new CommonProblem(e.Message, childDocumentElement.Location.LineStart));
+						problems.Add(new CommonProblem(e.Message, childDocumentElement.Location));
 					}
 				}
 				else if (fieldType.IsArray)
@@ -284,7 +287,7 @@ namespace Tosna.Core
 						var stamp = DeserializeFromXElement(items[i], filePath);
 						if (elementType != null && stamp.Type != null && !elementType.IsAssignableFrom(stamp.Type))
 						{
-							problems.Add(new InvalidCastProblem(elementType, stamp.Type, items[i].Location.LineStart));
+							problems.Add(new InvalidCastProblem(elementType, stamp.Type, items[i].Location));
 						}
 
 						array[i] = stamp;
@@ -300,13 +303,13 @@ namespace Tosna.Core
 					}
 					catch (Exception e)
 					{
-						problems.Add(new CommonProblem(e.Message, childDocumentElement.Location.LineStart));
+						problems.Add(new CommonProblem(e.Message, childDocumentElement.Location));
 						continue;
 					}
 					var stamp = DeserializeFromXElement(element, filePath);
 					if (stamp.Type != null && !fieldType.IsAssignableFrom(stamp.Type))
 					{
-						problems.Add(new InvalidCastProblem(fieldType, stamp.Type, element.Location.LineStart));
+						problems.Add(new InvalidCastProblem(fieldType, stamp.Type, element.Location));
 					}
 
 					fields.Add(new NestedImprintField(naturalFieldInfo, stamp));

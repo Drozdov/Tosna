@@ -1,4 +1,5 @@
 using System;
+using Tosna.Core.Documents;
 
 namespace Tosna.Core.Problems
 {
@@ -7,19 +8,18 @@ namespace Tosna.Core.Problems
 		public Type DestinationType { get; }
 
 		public Type ActualType { get; }
+		
+		public DocumentElementLocation Location { get; }
 
-		public int LineNumber { get; }
+		public string Description => $"Cannot cast {ActualType.FullName} to {DestinationType.FullName}";
+		
+		public bool IsCritical => true;
 
-		public InvalidCastProblem(Type destinationType, Type actualType, int lineNumber)
+		public InvalidCastProblem(Type destinationType, Type actualType, DocumentElementLocation location)
 		{
 			DestinationType = destinationType;
 			ActualType = actualType;
-			LineNumber = lineNumber;
-		}
-
-		public void Accept(IComplexSerializerProblemVisitor visitor)
-		{
-			visitor.Visit(this);
+			Location = location;
 		}
 	}
 }
