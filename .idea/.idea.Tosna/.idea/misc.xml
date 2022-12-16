@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ANTLRGenerationPreferences">
+    <option name="perGrammarGenerationSettings">
+      <list>
+        <PerGrammarGenerationSettings>
+          <option name="fileName" value="$PROJECT_DIR$/Tosna.Parsers.Xml/Grammar/XMLLexer.g4" />
+          <option name="autoGen" value="true" />
+          <option name="outputDir" value="$PROJECT_DIR$/Tosna.Parsers.Xml" />
+          <option name="libDir" value="" />
+          <option name="encoding" value="" />
+          <option name="pkg" value="Grammar" />
+          <option name="language" value="CSharp" />
+        </PerGrammarGenerationSettings>
+        <PerGrammarGenerationSettings>
+          <option name="fileName" value="$PROJECT_DIR$/Tosna.Parsers.Xml/Grammar/XMLParser.g4" />
+          <option name="autoGen" value="true" />
+          <option name="outputDir" value="$PROJECT_DIR$/Tosna.Parsers.Xml" />
+          <option name="libDir" value="$PROJECT_DIR$/Tosna.Parsers.Xml/Grammar" />
+          <option name="encoding" value="utf-8" />
+          <option name="pkg" value="Grammar" />
+          <option name="language" value="CSharp" />
+        </PerGrammarGenerationSettings>
+      </list>
+    </option>
+  </component>
+</project>

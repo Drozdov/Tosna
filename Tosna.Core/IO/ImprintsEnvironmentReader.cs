@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Tosna.Core.Documents;
 using Tosna.Core.Documents.Xml;
 using Tosna.Core.Imprints;
 using Tosna.Core.Problems;
@@ -9,13 +10,11 @@ namespace Tosna.Core.IO
 {
 	public static class ImprintsEnvironmentReader
 	{
-		public static ImprintsEnvironment Read(ImprintsSerializer serializer, string[] rootFilesToRead)
+		public static ImprintsEnvironment Read(ImprintsSerializer serializer, IDocumentReader reader, string[] rootFilesToRead)
 		{
 			var result = new List<Imprint>();
 			var filesToRead = new Queue<string>(rootFilesToRead);
 			var filesAlreadyRead = new HashSet<string>();
-
-			var reader = new XmlDocumentReader { IgnoreContent = true };
 
 			while (filesToRead.Any())
 			{

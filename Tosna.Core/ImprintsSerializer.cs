@@ -175,14 +175,15 @@ namespace Tosna.Core
 
 		#region Deserialization
 
-		private Imprint DeserializeFromXElement(DocumentElement documentElement, string filePath)
+		private Imprint DeserializeFromXElement(DocumentElement documentElement, string filePath, Type expectedType = null)
 		{
 			var problems = new List<IComplexSerializerProblem>();
 
-			if (documentElement.Info != null && !documentElement.Info.IsValid)
+			if (documentElement.ValidationInfo != null && !documentElement.ValidationInfo.IsValid)
 			{
-				problems.Add(new ParsingProblem(documentElement.Info.Error, documentElement.Location,
-					documentElement.Info.Code));
+				problems.Add(new ParsingProblem(documentElement.ValidationInfo.Error, documentElement.Location,
+					documentElement.ValidationInfo.Code, expectedType ?? typeof(object),
+					documentElement.ValidationInfo.ErrorParameters, serializingElementsManager, serializingTypesResolver));
 			}
 
 			var typeName = documentElement.Name;
@@ -291,7 +292,7 @@ namespace Tosna.Core
 					var elementType = fieldType.GetElementType();
 					for (var i = 0; i < items.Count; i++)
 					{
-						var stamp = DeserializeFromXElement(items[i], filePath);
+						var stamp = DeserializeFromXElement(items[i], filePath, elementType);
 						if (elementType != null && stamp.Type != null && !elementType.IsAssignableFrom(stamp.Type))
 						{
 							problems.Add(new InvalidCastProblem(elementType, stamp.Type, items[i].Location));
@@ -313,7 +314,7 @@ namespace Tosna.Core
 						problems.Add(new CommonProblem(e.Message, childDocumentElement.Location));
 						continue;
 					}
-					var stamp = DeserializeFromXElement(element, filePath);
+					var stamp = DeserializeFromXElement(element, filePath, fieldType);
 					if (stamp.Type != null && !fieldType.IsAssignableFrom(stamp.Type))
 					{
 						problems.Add(new InvalidCastProblem(fieldType, stamp.Type, element.Location));

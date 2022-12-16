@@ -10,3 +10,7 @@
 /Tosna.Editor.Wpf.Demo/obj/
 /Tosna.Extensions/bin/
 /Tosna.Extensions/obj/
+/Tosna.Parsers.Xml/bin/
+/Tosna.Parsers.Xml/obj/
+/Tosna.Parsers.Xml/Grammar/*.interp
+/Tosna.Parsers.Xml/Grammar/*.tokens

@@ -4,6 +4,7 @@ using System.Text;
 using System.Windows;
 using Microsoft.Win32;
 using Tosna.Core;
+using Tosna.Core.Documents.Xml;
 using Tosna.Core.SerializationInterfaces;
 using Tosna.Editor.IDE;
 using Tosna.Editor.IDE.Interfaces;
@@ -11,6 +12,7 @@ using Tosna.Editor.IDE.Vm;
 using Tosna.Editor.Wpf.Demo.Domain;
 using Tosna.Extensions;
 using Tosna.Extensions.Serialization;
+using Tosna.Parsers.Xml.DocumentReading;
 
 namespace Tosna.Editor.Wpf.Demo
 {
@@ -31,7 +33,8 @@ namespace Tosna.Editor.Wpf.Demo
 
 			var serializingElementsManager = new SerializingElementsManager();
 			var serializingTypesResolver = new SerializingTypesResolver(serializingElementsManager);
-			filesManager = new FilesManager(serializingElementsManager, serializingTypesResolver);
+			filesManager = new FilesManager(serializingElementsManager, serializingTypesResolver,
+				new ExtendedXmlDocumentReader());
 			xmlIdeVm = new XmlIdeVm(filesManager, filesSelector, new ConfirmationRequester(), new Logger());
 			DataContext = xmlIdeVm;
 		}

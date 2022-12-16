@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using Tosna.Core.Documents;
 using Tosna.Core.Documents.Xml;
 using Tosna.Core.Imprints;
 using Tosna.Core.Stamps;
@@ -8,7 +9,7 @@ namespace Tosna.Core.IO
 {
 	public static class StampsEnvironmentWriter
 	{
-		public static void Save(StampsEnvironment stampsEnvironment, ImprintsSerializer serializer)
+		public static void Save(StampsEnvironment stampsEnvironment, IDocumentWriter writer, ImprintsSerializer serializer)
 		{
 			var factory = new StampImprintsFactory(stampsEnvironment);
 
@@ -36,8 +37,7 @@ namespace Tosna.Core.IO
 				{
 					Directory.CreateDirectory(directoryName);
 				}
-
-				var writer = new XmlDocumentWriter { IgnoreContent = true };
+				
 				writer.WriteDocument(document, file);
 			}
 		}

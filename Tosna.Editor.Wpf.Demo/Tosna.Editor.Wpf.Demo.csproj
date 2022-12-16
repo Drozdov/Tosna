@@ -116,6 +116,10 @@
         <Project>{216ec3a3-e667-4e4c-ac07-5d8f8260041c}</Project>
         <Name>Tosna.Extensions</Name>
       </ProjectReference>
+      <ProjectReference Include="..\Tosna.Parsers.Xml\Tosna.Parsers.Xml.csproj">
+        <Project>{cb4c6581-9ee3-45cc-9173-652b8f51b930}</Project>
+        <Name>Tosna.Parsers.Xml</Name>
+      </ProjectReference>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

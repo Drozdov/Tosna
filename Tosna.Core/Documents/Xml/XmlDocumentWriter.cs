@@ -24,6 +24,12 @@ namespace Tosna.Core.Documents.Xml
 			xDocument.Save(fileName);
 		}
 
+		public string GetContent(Document document)
+		{
+			var xDocument = new XDocument(CreateXElement(document.RootElement));
+			return xDocument.ToString();
+		}
+
 		private XElement CreateXElement(DocumentElement documentElement)
 		{
 			var result = new XElement(documentElement.Name);

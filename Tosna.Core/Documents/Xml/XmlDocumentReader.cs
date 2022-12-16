@@ -7,17 +7,23 @@ namespace Tosna.Core.Documents.Xml
 	public class XmlDocumentReader : IDocumentReader
 	{
 		/// <summary>
-		/// If set to true, XElement text content will be ignored. Example: <Some>Ignored content</Some> 
+		/// If set to true, XElement text content will be ignored. Example: <Some>Ignored content</Some>
 		/// </summary>
 		public bool IgnoreContent { get; set; }
 		
 		public Document ReadDocument(string fileName)
 		{
-			var xDocument = XDocument.Load(fileName, LoadOptions.SetLineInfo | LoadOptions.SetBaseUri);
-			return ReadDocument(xDocument, fileName);
+			var xDocument = XDocument.Load(fileName, LoadOptions.SetLineInfo);
+			return GetDocument(xDocument, fileName);
 		}
 
-		public Document ReadDocument(XDocument xDocument, string fileName)
+		public Document ParseDocument(string content, string fileName)
+		{
+			var xDocument = XDocument.Parse(content, LoadOptions.SetLineInfo);
+			return GetDocument(xDocument, fileName);
+		}
+
+		public Document GetDocument(XDocument xDocument, string fileName)
 		{
 			var documentInfo = new DocumentInfo(fileName, DocumentFormat.Xml);
 			var rootElement = ReadDocumentElement(xDocument.Root);

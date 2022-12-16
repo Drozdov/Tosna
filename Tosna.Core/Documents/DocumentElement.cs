@@ -17,7 +17,7 @@ namespace Tosna.Core.Documents
 
 		public bool HasChildren => Children.Any();
 		
-		public DocumentElementValidationInfo Info { get; set; } = DocumentElementValidationInfo.CreateValid();
+		public DocumentElementValidationInfo ValidationInfo { get; set; } = DocumentElementValidationInfo.CreateValid();
 
 		public DocumentElement(string name)
 		{
