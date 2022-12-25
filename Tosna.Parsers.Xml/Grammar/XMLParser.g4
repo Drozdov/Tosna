@@ -29,7 +29,7 @@ parser grammar XMLParser;
 
 options { tokenVocab=XMLLexer; }
 
-document    :   prolog? misc* element misc* EOF ;
+document    :   prolog? misc* element (misc duplicateElement)* misc* EOF ;
 
 prolog      :   XMLDeclOpen attribute* SPECIAL_CLOSE ;
 
@@ -39,6 +39,8 @@ content     :   chardata?
 element     :  validElement
             |  invalidElement
             ;
+            
+duplicateElement: element;
 
 validElement
             :   OPEN Name attribute* CLOSE content OPEN SLASH Name CLOSE

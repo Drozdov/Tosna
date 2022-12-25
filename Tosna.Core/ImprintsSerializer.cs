@@ -30,7 +30,12 @@ namespace Tosna.Core
 		public IEnumerable<Imprint> LoadRootImprints(Document document)
 		{
 			var filePath = document.HasInfo ? document.Info.FilePath : "<Unknown>";
-			
+
+			if (!document.RootElement.ValidationInfo.IsValid)
+			{
+				throw new Exception("Parse error: " + document.RootElement.ValidationInfo.Error);
+			}
+
 			if (document.RootElement.Name != "Items")
 			{
 				throw new ArgumentException($"Document {filePath} contains no 'Items' top element");

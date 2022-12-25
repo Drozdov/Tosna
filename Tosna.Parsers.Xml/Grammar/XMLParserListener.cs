@@ -72,6 +72,16 @@ public interface IXMLParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitElement([NotNull] XMLParser.ElementContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="XMLParser.duplicateElement"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterDuplicateElement([NotNull] XMLParser.DuplicateElementContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="XMLParser.duplicateElement"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitDuplicateElement([NotNull] XMLParser.DuplicateElementContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="XMLParser.validElement"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

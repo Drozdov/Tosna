@@ -28,16 +28,19 @@ namespace Tosna.Parsers.Xml.DocumentReading
 
 			var parseTreeListener = new Listener();
 
-			try
-			{
-				ParseTreeWalker.Default.Walk(parseTreeListener, parseTree);
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine(e.StackTrace);
-			}
+			ParseTreeWalker.Default.Walk(parseTreeListener, parseTree);
 
-			return new Document(parseTreeListener.TopElement, new DocumentInfo(fileName, DocumentFormat.Xml));
+			return new Document(parseTreeListener.TopElement ?? CreateInvalidTopElement(),
+				new DocumentInfo(fileName, DocumentFormat.Xml));
+		}
+
+		private static DocumentElement CreateInvalidTopElement()
+		{
+			return new DocumentElement("Invalid")
+			{
+				ValidationInfo = DocumentElementValidationInfo.CreateInvalid("Root element not found",
+					DocumentValidationCode.ParsingProblem)
+			};
 		}
 
 		#region Nested
@@ -144,6 +147,19 @@ namespace Tosna.Parsers.Xml.DocumentReading
 					Content = content.Substring(1, content.Length - 2), // removing quotes
 					Location = CreateLocation(context)
 				});
+			}
+
+			public override void EnterDuplicateElement(XMLParser.DuplicateElementContext context)
+			{
+				if (TopElement != null)
+				{
+					TopElement.ValidationInfo =
+						DocumentElementValidationInfo.CreateInvalid(
+							"Only one top element allowed on top of XML document",
+							DocumentValidationCode.ParsingProblem);
+				}
+
+				base.EnterDuplicateElement(context);
 			}
 
 			private static DocumentElementLocation CreateLocation(ParserRuleContext context)

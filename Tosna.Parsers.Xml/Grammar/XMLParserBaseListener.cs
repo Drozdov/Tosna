@@ -85,6 +85,18 @@ public partial class XMLParserBaseListener : IXMLParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitElement([NotNull] XMLParser.ElementContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="XMLParser.duplicateElement"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterDuplicateElement([NotNull] XMLParser.DuplicateElementContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="XMLParser.duplicateElement"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitDuplicateElement([NotNull] XMLParser.DuplicateElementContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="XMLParser.validElement"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
