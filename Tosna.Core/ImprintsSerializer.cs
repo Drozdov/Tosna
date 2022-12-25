@@ -186,7 +186,12 @@ namespace Tosna.Core
 
 			if (documentElement.ValidationInfo != null && !documentElement.ValidationInfo.IsValid)
 			{
-				problems.Add(new ParsingProblem(documentElement.ValidationInfo.Error, documentElement.Location,
+				var problemLocation =
+					documentElement.ValidationInfo.ProblemLocation == DocumentElementLocation.Unknown
+						? documentElement.Location
+						: documentElement.ValidationInfo.ProblemLocation;
+				
+				problems.Add(new ParsingProblem(documentElement.ValidationInfo.Error, problemLocation,
 					documentElement.ValidationInfo.Code, expectedType ?? typeof(object),
 					documentElement.ValidationInfo.ErrorParameters, serializingElementsManager, serializingTypesResolver));
 			}
@@ -273,6 +278,18 @@ namespace Tosna.Core
 						fields.Add(new SimpleTypeImprintField(naturalFieldInfo, naturalFieldInfo.DefaultValue));
 					}
 					continue;
+				}
+
+				if (!childDocumentElement.ValidationInfo.IsValid)
+				{
+					var problemLocation =
+						childDocumentElement.ValidationInfo.ProblemLocation == DocumentElementLocation.Unknown
+							? childDocumentElement.Location
+							: childDocumentElement.ValidationInfo.ProblemLocation;
+				
+					problems.Add(new ParsingProblem(childDocumentElement.ValidationInfo.Error, problemLocation,
+						childDocumentElement.ValidationInfo.Code, expectedType ?? typeof(object),
+						childDocumentElement.ValidationInfo.ErrorParameters, serializingElementsManager, serializingTypesResolver));
 				}
 
 				var fieldType = naturalFieldInfo.Type;

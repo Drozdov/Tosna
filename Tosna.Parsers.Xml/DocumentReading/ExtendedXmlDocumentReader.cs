@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -39,7 +38,7 @@ namespace Tosna.Parsers.Xml.DocumentReading
 			return new DocumentElement("Invalid")
 			{
 				ValidationInfo = DocumentElementValidationInfo.CreateInvalid("Root element not found",
-					DocumentValidationCode.ParsingProblem)
+					DocumentValidationCode.ParsingProblem, DocumentElementLocation.Unknown)
 			};
 		}
 
@@ -57,31 +56,35 @@ namespace Tosna.Parsers.Xml.DocumentReading
 				{
 					elements.Peek().ValidationInfo =
 						DocumentElementValidationInfo.CreateInvalid($"Unexpected input '{node.GetText()}'",
-							DocumentValidationCode.ParsingProblem);
+							DocumentValidationCode.ParsingProblem, DocumentElementLocation.Unknown);
 				}
 			}
 
 			public override void EnterValidElement(XMLParser.ValidElementContext context)
 			{
-				var names = context.Name().Select(n => n.GetText()).ToArray();
-				var newDocumentElement = new DocumentElement(names.FirstOrDefault() ?? "Unknown")
+				var elementLocation = CreateLocation(context);
+
+				var validOpen = context.validOpen();
+				var validClose = context.validClose();
+				var validOpenShort = context.validOpenShort();
+
+				var name = validOpen?.Name().GetText() ?? validOpenShort?.Name().GetText() ?? string.Empty;
+				var newDocumentElement = new DocumentElement(name)
 				{
-					Location = CreateLocation(context)
+					Location = elementLocation
 				};
-
-				switch (names.Length)
+				
+				if (validClose != null)
 				{
-					case 0:
+					var name2 = validClose.Name().GetText();
+					if (name != name2)
+					{
 						newDocumentElement.ValidationInfo = DocumentElementValidationInfo.CreateInvalid(
-							error: "Unknown error",
-							code: DocumentValidationCode.ParsingProblem);
-						break;
-
-					case 2 when names[0] != names[1]:
-						newDocumentElement.ValidationInfo = DocumentElementValidationInfo.CreateInvalid(
-							$"Invalid closing statement {names[1]}. Expected {names[0]}",
-							DocumentValidationCode.XmlOpenCloseTagsMismatch);
-						break;
+							error: $"Invalid closing statement {name2}. Expected {name}",
+							code: DocumentValidationCode.XmlOpenCloseTagsMismatch,
+							problemLocation: CreateLocation(validClose),
+							name, name2);
+					}
 				}
 
 				if (elements.Any())
@@ -104,17 +107,32 @@ namespace Tosna.Parsers.Xml.DocumentReading
 
 			public override void EnterInvalidElement(XMLParser.InvalidElementContext context)
 			{
-				var names = context.Name().Select(n => n.GetText()).ToArray();
-				var name = names.FirstOrDefault() ?? "Unknown";
+				var name = context.validOpen()?.Name()?.GetText() ??
+				           context.invalidOpen()?.Name()?.GetText() ?? string.Empty;
+				
 				var newDocumentElement = new DocumentElement(name)
 				{
 					Location = CreateLocation(context),
-					ValidationInfo = DocumentElementValidationInfo.CreateInvalid(
-						error: $"Unfinished element {name}",
-						code: DocumentValidationCode.XmlUnfinishedElement,
-						errorParameters: name)
 				};
 
+				var invalidClose = context.invalidClose();
+				if (invalidClose != null)
+				{
+					newDocumentElement.ValidationInfo = DocumentElementValidationInfo.CreateInvalid(
+						error: $"Unfinished element {name}",
+						code: DocumentValidationCode.XmlUnfinishedElement,
+						problemLocation: CreateLocation(invalidClose),
+						name, invalidClose.Name()?.GetText() ?? string.Empty);
+				}
+				else
+				{
+					newDocumentElement.ValidationInfo = DocumentElementValidationInfo.CreateInvalid(
+						error: $"Unfinished element {name}",
+						code: DocumentValidationCode.XmlUnfinishedElement,
+						problemLocation: CreateLocation(context),
+						name);
+				}
+				
 				if (elements.Any())
 				{
 					elements.Peek().Children.Add(newDocumentElement);
@@ -156,7 +174,8 @@ namespace Tosna.Parsers.Xml.DocumentReading
 					TopElement.ValidationInfo =
 						DocumentElementValidationInfo.CreateInvalid(
 							"Only one top element allowed on top of XML document",
-							DocumentValidationCode.ParsingProblem);
+							DocumentValidationCode.ParsingProblem,
+							CreateLocation(context));
 				}
 
 				base.EnterDuplicateElement(context);

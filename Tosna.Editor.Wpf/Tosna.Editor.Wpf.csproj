@@ -99,10 +99,11 @@
         <Compile Include="XmlEditor\IdeControl.xaml.cs">
           <DependentUpon>IdeControl.xaml</DependentUpon>
         </Compile>
-        <Compile Include="XmlEditor\MissingMembersResolver.cs" />
+        <Compile Include="XmlEditor\SolutionsGetter.cs" />
         <Compile Include="XmlEditor\NewNameWindow.xaml.cs">
           <DependentUpon>NewNameWindow.xaml</DependentUpon>
         </Compile>
+        <Compile Include="XmlEditor\SolutionsWorker.cs" />
         <Compile Include="XmlEditor\TextEditingService.cs" />
         <Compile Include="XmlEditor\TextMarkers\ITextMarker.cs" />
         <Compile Include="XmlEditor\TextMarkers\TextMarkererService.cs" />

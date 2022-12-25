@@ -59,6 +59,7 @@
         <Compile Include="IDE\Interfaces\IFilesSelector.cs" />
         <Compile Include="IDE\RefactorImprintProcessor.cs" />
         <Compile Include="IDE\SingleFileManager.cs" />
+        <Compile Include="IDE\Verification\CompletionDataProviders\InvalidClosingTagCompletionProvider.cs" />
         <Compile Include="IDE\Verification\CompletionDataProviders\MissingMembersCompletionDataProvider.cs" />
         <Compile Include="IDE\Verification\CompletionDataProviders\NoneCompletionDataProvider.cs" />
         <Compile Include="IDE\Verification\CompletionDataProviders\UnfinishedTypeCompletionDataProvider.cs" />

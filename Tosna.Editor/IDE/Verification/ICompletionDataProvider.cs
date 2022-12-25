@@ -14,5 +14,7 @@ namespace Tosna.Editor.IDE.Verification
 		void Visit(MissingMembersCompletionDataProvider provider);
 
 		void Visit(UnfinishedTypeCompletionDataProvider provider);
+
+		void Visit(InvalidClosingTagCompletionProvider provider);
 	}
 }

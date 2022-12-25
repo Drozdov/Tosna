@@ -43,10 +43,13 @@ public partial class XMLParser : Parser {
 	public const int
 		RULE_document = 0, RULE_prolog = 1, RULE_content = 2, RULE_element = 3, 
 		RULE_duplicateElement = 4, RULE_validElement = 5, RULE_invalidElement = 6, 
-		RULE_reference = 7, RULE_attribute = 8, RULE_chardata = 9, RULE_misc = 10;
+		RULE_validOpen = 7, RULE_validClose = 8, RULE_validOpenShort = 9, RULE_invalidOpen = 10, 
+		RULE_invalidClose = 11, RULE_reference = 12, RULE_attribute = 13, RULE_chardata = 14, 
+		RULE_misc = 15;
 	public static readonly string[] ruleNames = {
 		"document", "prolog", "content", "element", "duplicateElement", "validElement", 
-		"invalidElement", "reference", "attribute", "chardata", "misc"
+		"invalidElement", "validOpen", "validClose", "validOpenShort", "invalidOpen", 
+		"invalidClose", "reference", "attribute", "chardata", "misc"
 	};
 
 	private static readonly string[] _LiteralNames = {
@@ -136,65 +139,65 @@ public partial class XMLParser : Parser {
 			int _alt;
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 23;
+			State = 33;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			if (_la==XMLDeclOpen) {
 				{
-				State = 22;
+				State = 32;
 				prolog();
 				}
 			}
 
-			State = 28;
+			State = 38;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (((_la) & ~0x3f) == 0 && ((1L << _la) & 262210L) != 0) {
 				{
 				{
-				State = 25;
+				State = 35;
 				misc();
 				}
 				}
-				State = 30;
+				State = 40;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
-			State = 31;
+			State = 41;
 			element();
-			State = 37;
+			State = 47;
 			ErrorHandler.Sync(this);
 			_alt = Interpreter.AdaptivePredict(TokenStream,2,Context);
 			while ( _alt!=2 && _alt!=global::Antlr4.Runtime.Atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					{
 					{
-					State = 32;
+					State = 42;
 					misc();
-					State = 33;
+					State = 43;
 					duplicateElement();
 					}
 					} 
 				}
-				State = 39;
+				State = 49;
 				ErrorHandler.Sync(this);
 				_alt = Interpreter.AdaptivePredict(TokenStream,2,Context);
 			}
-			State = 43;
+			State = 53;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (((_la) & ~0x3f) == 0 && ((1L << _la) & 262210L) != 0) {
 				{
 				{
-				State = 40;
+				State = 50;
 				misc();
 				}
 				}
-				State = 45;
+				State = 55;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
-			State = 46;
+			State = 56;
 			Match(Eof);
 			}
 		}
@@ -243,23 +246,23 @@ public partial class XMLParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 48;
+			State = 58;
 			Match(XMLDeclOpen);
-			State = 52;
+			State = 62;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.LA(1);
 			while (_la==Name) {
 				{
 				{
-				State = 49;
+				State = 59;
 				attribute();
 				}
 				}
-				State = 54;
+				State = 64;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 			}
-			State = 55;
+			State = 65;
 			Match(SPECIAL_CLOSE);
 			}
 		}
@@ -330,66 +333,66 @@ public partial class XMLParser : Parser {
 			int _alt;
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 58;
+			State = 68;
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,5,Context) ) {
 			case 1:
 				{
-				State = 57;
+				State = 67;
 				chardata();
 				}
 				break;
 			}
-			State = 72;
+			State = 82;
 			ErrorHandler.Sync(this);
 			_alt = Interpreter.AdaptivePredict(TokenStream,8,Context);
 			while ( _alt!=2 && _alt!=global::Antlr4.Runtime.Atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					{
 					{
-					State = 65;
+					State = 75;
 					ErrorHandler.Sync(this);
 					switch (TokenStream.LA(1)) {
 					case OPEN:
 						{
-						State = 60;
+						State = 70;
 						element();
 						}
 						break;
 					case EntityRef:
 					case CharRef:
 						{
-						State = 61;
+						State = 71;
 						reference();
 						}
 						break;
 					case CDATA:
 						{
-						State = 62;
+						State = 72;
 						Match(CDATA);
 						}
 						break;
 					case PI:
 						{
-						State = 63;
+						State = 73;
 						Match(PI);
 						}
 						break;
 					case COMMENT:
 						{
-						State = 64;
+						State = 74;
 						Match(COMMENT);
 						}
 						break;
 					default:
 						throw new NoViableAltException(this);
 					}
-					State = 68;
+					State = 78;
 					ErrorHandler.Sync(this);
 					switch ( Interpreter.AdaptivePredict(TokenStream,7,Context) ) {
 					case 1:
 						{
-						State = 67;
+						State = 77;
 						chardata();
 						}
 						break;
@@ -397,7 +400,7 @@ public partial class XMLParser : Parser {
 					}
 					} 
 				}
-				State = 74;
+				State = 84;
 				ErrorHandler.Sync(this);
 				_alt = Interpreter.AdaptivePredict(TokenStream,8,Context);
 			}
@@ -443,20 +446,20 @@ public partial class XMLParser : Parser {
 		ElementContext _localctx = new ElementContext(Context, State);
 		EnterRule(_localctx, 6, RULE_element);
 		try {
-			State = 77;
+			State = 87;
 			ErrorHandler.Sync(this);
 			switch ( Interpreter.AdaptivePredict(TokenStream,9,Context) ) {
 			case 1:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 75;
+				State = 85;
 				validElement();
 				}
 				break;
 			case 2:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 76;
+				State = 86;
 				invalidElement();
 				}
 				break;
@@ -501,7 +504,7 @@ public partial class XMLParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 79;
+			State = 89;
 			element();
 			}
 		}
@@ -517,29 +520,18 @@ public partial class XMLParser : Parser {
 	}
 
 	public partial class ValidElementContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] OPEN() { return GetTokens(XMLParser.OPEN); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode OPEN(int i) {
-			return GetToken(XMLParser.OPEN, i);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] Name() { return GetTokens(XMLParser.Name); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Name(int i) {
-			return GetToken(XMLParser.Name, i);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] CLOSE() { return GetTokens(XMLParser.CLOSE); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode CLOSE(int i) {
-			return GetToken(XMLParser.CLOSE, i);
+		[System.Diagnostics.DebuggerNonUserCode] public ValidOpenContext validOpen() {
+			return GetRuleContext<ValidOpenContext>(0);
 		}
 		[System.Diagnostics.DebuggerNonUserCode] public ContentContext content() {
 			return GetRuleContext<ContentContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode SLASH() { return GetToken(XMLParser.SLASH, 0); }
-		[System.Diagnostics.DebuggerNonUserCode] public AttributeContext[] attribute() {
-			return GetRuleContexts<AttributeContext>();
+		[System.Diagnostics.DebuggerNonUserCode] public ValidCloseContext validClose() {
+			return GetRuleContext<ValidCloseContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public AttributeContext attribute(int i) {
-			return GetRuleContext<AttributeContext>(i);
+		[System.Diagnostics.DebuggerNonUserCode] public ValidOpenShortContext validOpenShort() {
+			return GetRuleContext<ValidOpenShortContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode SLASH_CLOSE() { return GetToken(XMLParser.SLASH_CLOSE, 0); }
 		public ValidElementContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -561,69 +553,26 @@ public partial class XMLParser : Parser {
 	public ValidElementContext validElement() {
 		ValidElementContext _localctx = new ValidElementContext(Context, State);
 		EnterRule(_localctx, 10, RULE_validElement);
-		int _la;
 		try {
-			State = 105;
+			State = 96;
 			ErrorHandler.Sync(this);
-			switch ( Interpreter.AdaptivePredict(TokenStream,12,Context) ) {
+			switch ( Interpreter.AdaptivePredict(TokenStream,10,Context) ) {
 			case 1:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 81;
-				Match(OPEN);
-				State = 82;
-				Match(Name);
-				State = 86;
-				ErrorHandler.Sync(this);
-				_la = TokenStream.LA(1);
-				while (_la==Name) {
-					{
-					{
-					State = 83;
-					attribute();
-					}
-					}
-					State = 88;
-					ErrorHandler.Sync(this);
-					_la = TokenStream.LA(1);
-				}
-				State = 89;
-				Match(CLOSE);
-				State = 90;
-				content();
 				State = 91;
-				Match(OPEN);
+				validOpen();
 				State = 92;
-				Match(SLASH);
+				content();
 				State = 93;
-				Match(Name);
-				State = 94;
-				Match(CLOSE);
+				validClose();
 				}
 				break;
 			case 2:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 96;
-				Match(OPEN);
-				State = 97;
-				Match(Name);
-				State = 101;
-				ErrorHandler.Sync(this);
-				_la = TokenStream.LA(1);
-				while (_la==Name) {
-					{
-					{
-					State = 98;
-					attribute();
-					}
-					}
-					State = 103;
-					ErrorHandler.Sync(this);
-					_la = TokenStream.LA(1);
-				}
-				State = 104;
-				Match(SLASH_CLOSE);
+				State = 95;
+				validOpenShort();
 				}
 				break;
 			}
@@ -640,25 +589,18 @@ public partial class XMLParser : Parser {
 	}
 
 	public partial class InvalidElementContext : ParserRuleContext {
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] OPEN() { return GetTokens(XMLParser.OPEN); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode OPEN(int i) {
-			return GetToken(XMLParser.OPEN, i);
+		[System.Diagnostics.DebuggerNonUserCode] public ValidOpenContext validOpen() {
+			return GetRuleContext<ValidOpenContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode[] Name() { return GetTokens(XMLParser.Name); }
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Name(int i) {
-			return GetToken(XMLParser.Name, i);
-		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode CLOSE() { return GetToken(XMLParser.CLOSE, 0); }
 		[System.Diagnostics.DebuggerNonUserCode] public ContentContext content() {
 			return GetRuleContext<ContentContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public AttributeContext[] attribute() {
-			return GetRuleContexts<AttributeContext>();
+		[System.Diagnostics.DebuggerNonUserCode] public InvalidCloseContext invalidClose() {
+			return GetRuleContext<InvalidCloseContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public AttributeContext attribute(int i) {
-			return GetRuleContext<AttributeContext>(i);
+		[System.Diagnostics.DebuggerNonUserCode] public InvalidOpenContext invalidOpen() {
+			return GetRuleContext<InvalidOpenContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode SLASH() { return GetToken(XMLParser.SLASH, 0); }
 		public InvalidElementContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -680,101 +622,339 @@ public partial class XMLParser : Parser {
 	public InvalidElementContext invalidElement() {
 		InvalidElementContext _localctx = new InvalidElementContext(Context, State);
 		EnterRule(_localctx, 12, RULE_invalidElement);
-		int _la;
 		try {
-			State = 137;
+			State = 103;
 			ErrorHandler.Sync(this);
-			switch ( Interpreter.AdaptivePredict(TokenStream,19,Context) ) {
+			switch ( Interpreter.AdaptivePredict(TokenStream,11,Context) ) {
 			case 1:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 107;
-				Match(OPEN);
-				State = 108;
-				Match(Name);
-				State = 112;
-				ErrorHandler.Sync(this);
-				_la = TokenStream.LA(1);
-				while (_la==Name) {
-					{
-					{
-					State = 109;
-					attribute();
-					}
-					}
-					State = 114;
-					ErrorHandler.Sync(this);
-					_la = TokenStream.LA(1);
-				}
-				State = 115;
-				Match(CLOSE);
-				State = 116;
+				State = 98;
+				validOpen();
+				State = 99;
 				content();
-				State = 124;
-				ErrorHandler.Sync(this);
-				switch ( Interpreter.AdaptivePredict(TokenStream,16,Context) ) {
-				case 1:
-					{
-					State = 117;
-					Match(OPEN);
-					State = 122;
-					ErrorHandler.Sync(this);
-					_la = TokenStream.LA(1);
-					if (_la==SLASH) {
-						{
-						State = 118;
-						Match(SLASH);
-						State = 120;
-						ErrorHandler.Sync(this);
-						_la = TokenStream.LA(1);
-						if (_la==Name) {
-							{
-							State = 119;
-							Match(Name);
-							}
-						}
-
-						}
-					}
-
-					}
-					break;
-				}
+				State = 100;
+				invalidClose();
 				}
 				break;
 			case 2:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 126;
-				Match(OPEN);
-				State = 127;
-				Match(Name);
-				State = 131;
+				State = 102;
+				invalidOpen();
+				}
+				break;
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class ValidOpenContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode OPEN() { return GetToken(XMLParser.OPEN, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Name() { return GetToken(XMLParser.Name, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode CLOSE() { return GetToken(XMLParser.CLOSE, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public AttributeContext[] attribute() {
+			return GetRuleContexts<AttributeContext>();
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public AttributeContext attribute(int i) {
+			return GetRuleContext<AttributeContext>(i);
+		}
+		public ValidOpenContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_validOpen; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IXMLParserListener typedListener = listener as IXMLParserListener;
+			if (typedListener != null) typedListener.EnterValidOpen(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IXMLParserListener typedListener = listener as IXMLParserListener;
+			if (typedListener != null) typedListener.ExitValidOpen(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public ValidOpenContext validOpen() {
+		ValidOpenContext _localctx = new ValidOpenContext(Context, State);
+		EnterRule(_localctx, 14, RULE_validOpen);
+		int _la;
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 105;
+			Match(OPEN);
+			State = 106;
+			Match(Name);
+			State = 110;
+			ErrorHandler.Sync(this);
+			_la = TokenStream.LA(1);
+			while (_la==Name) {
+				{
+				{
+				State = 107;
+				attribute();
+				}
+				}
+				State = 112;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
-				while (_la==Name) {
-					{
-					{
-					State = 128;
-					attribute();
-					}
-					}
-					State = 133;
-					ErrorHandler.Sync(this);
-					_la = TokenStream.LA(1);
+			}
+			State = 113;
+			Match(CLOSE);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class ValidCloseContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode OPEN() { return GetToken(XMLParser.OPEN, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode SLASH() { return GetToken(XMLParser.SLASH, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Name() { return GetToken(XMLParser.Name, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode CLOSE() { return GetToken(XMLParser.CLOSE, 0); }
+		public ValidCloseContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_validClose; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IXMLParserListener typedListener = listener as IXMLParserListener;
+			if (typedListener != null) typedListener.EnterValidClose(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IXMLParserListener typedListener = listener as IXMLParserListener;
+			if (typedListener != null) typedListener.ExitValidClose(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public ValidCloseContext validClose() {
+		ValidCloseContext _localctx = new ValidCloseContext(Context, State);
+		EnterRule(_localctx, 16, RULE_validClose);
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 115;
+			Match(OPEN);
+			State = 116;
+			Match(SLASH);
+			State = 117;
+			Match(Name);
+			State = 118;
+			Match(CLOSE);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class ValidOpenShortContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode OPEN() { return GetToken(XMLParser.OPEN, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Name() { return GetToken(XMLParser.Name, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode SLASH_CLOSE() { return GetToken(XMLParser.SLASH_CLOSE, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public AttributeContext[] attribute() {
+			return GetRuleContexts<AttributeContext>();
+		}
+		[System.Diagnostics.DebuggerNonUserCode] public AttributeContext attribute(int i) {
+			return GetRuleContext<AttributeContext>(i);
+		}
+		public ValidOpenShortContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_validOpenShort; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IXMLParserListener typedListener = listener as IXMLParserListener;
+			if (typedListener != null) typedListener.EnterValidOpenShort(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IXMLParserListener typedListener = listener as IXMLParserListener;
+			if (typedListener != null) typedListener.ExitValidOpenShort(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public ValidOpenShortContext validOpenShort() {
+		ValidOpenShortContext _localctx = new ValidOpenShortContext(Context, State);
+		EnterRule(_localctx, 18, RULE_validOpenShort);
+		int _la;
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 120;
+			Match(OPEN);
+			State = 121;
+			Match(Name);
+			State = 125;
+			ErrorHandler.Sync(this);
+			_la = TokenStream.LA(1);
+			while (_la==Name) {
+				{
+				{
+				State = 122;
+				attribute();
 				}
-				State = 135;
+				}
+				State = 127;
+				ErrorHandler.Sync(this);
+				_la = TokenStream.LA(1);
+			}
+			State = 128;
+			Match(SLASH_CLOSE);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class InvalidOpenContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode OPEN() { return GetToken(XMLParser.OPEN, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Name() { return GetToken(XMLParser.Name, 0); }
+		public InvalidOpenContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_invalidOpen; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IXMLParserListener typedListener = listener as IXMLParserListener;
+			if (typedListener != null) typedListener.EnterInvalidOpen(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IXMLParserListener typedListener = listener as IXMLParserListener;
+			if (typedListener != null) typedListener.ExitInvalidOpen(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public InvalidOpenContext invalidOpen() {
+		InvalidOpenContext _localctx = new InvalidOpenContext(Context, State);
+		EnterRule(_localctx, 20, RULE_invalidOpen);
+		int _la;
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 130;
+			Match(OPEN);
+			State = 132;
+			ErrorHandler.Sync(this);
+			_la = TokenStream.LA(1);
+			if (_la==Name) {
+				{
+				State = 131;
+				Match(Name);
+				}
+			}
+
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			ErrorHandler.ReportError(this, re);
+			ErrorHandler.Recover(this, re);
+		}
+		finally {
+			ExitRule();
+		}
+		return _localctx;
+	}
+
+	public partial class InvalidCloseContext : ParserRuleContext {
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode OPEN() { return GetToken(XMLParser.OPEN, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode SLASH() { return GetToken(XMLParser.SLASH, 0); }
+		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode Name() { return GetToken(XMLParser.Name, 0); }
+		public InvalidCloseContext(ParserRuleContext parent, int invokingState)
+			: base(parent, invokingState)
+		{
+		}
+		public override int RuleIndex { get { return RULE_invalidClose; } }
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void EnterRule(IParseTreeListener listener) {
+			IXMLParserListener typedListener = listener as IXMLParserListener;
+			if (typedListener != null) typedListener.EnterInvalidClose(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override void ExitRule(IParseTreeListener listener) {
+			IXMLParserListener typedListener = listener as IXMLParserListener;
+			if (typedListener != null) typedListener.ExitInvalidClose(this);
+		}
+	}
+
+	[RuleVersion(0)]
+	public InvalidCloseContext invalidClose() {
+		InvalidCloseContext _localctx = new InvalidCloseContext(Context, State);
+		EnterRule(_localctx, 22, RULE_invalidClose);
+		int _la;
+		try {
+			EnterOuterAlt(_localctx, 1);
+			{
+			State = 141;
+			ErrorHandler.Sync(this);
+			switch ( Interpreter.AdaptivePredict(TokenStream,17,Context) ) {
+			case 1:
+				{
+				State = 134;
+				Match(OPEN);
+				State = 139;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.LA(1);
 				if (_la==SLASH) {
 					{
-					State = 134;
+					State = 135;
 					Match(SLASH);
+					State = 137;
+					ErrorHandler.Sync(this);
+					_la = TokenStream.LA(1);
+					if (_la==Name) {
+						{
+						State = 136;
+						Match(Name);
+						}
+					}
+
 					}
 				}
 
 				}
 				break;
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -811,12 +991,12 @@ public partial class XMLParser : Parser {
 	[RuleVersion(0)]
 	public ReferenceContext reference() {
 		ReferenceContext _localctx = new ReferenceContext(Context, State);
-		EnterRule(_localctx, 14, RULE_reference);
+		EnterRule(_localctx, 24, RULE_reference);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 139;
+			State = 143;
 			_la = TokenStream.LA(1);
 			if ( !(_la==EntityRef || _la==CharRef) ) {
 			ErrorHandler.RecoverInline(this);
@@ -862,15 +1042,15 @@ public partial class XMLParser : Parser {
 	[RuleVersion(0)]
 	public AttributeContext attribute() {
 		AttributeContext _localctx = new AttributeContext(Context, State);
-		EnterRule(_localctx, 16, RULE_attribute);
+		EnterRule(_localctx, 26, RULE_attribute);
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 141;
+			State = 145;
 			Match(Name);
-			State = 142;
+			State = 146;
 			Match(EQUALS);
-			State = 143;
+			State = 147;
 			Match(STRING);
 			}
 		}
@@ -908,12 +1088,12 @@ public partial class XMLParser : Parser {
 	[RuleVersion(0)]
 	public ChardataContext chardata() {
 		ChardataContext _localctx = new ChardataContext(Context, State);
-		EnterRule(_localctx, 18, RULE_chardata);
+		EnterRule(_localctx, 28, RULE_chardata);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 145;
+			State = 149;
 			_la = TokenStream.LA(1);
 			if ( !(_la==SEA_WS || _la==TEXT) ) {
 			ErrorHandler.RecoverInline(this);
@@ -959,12 +1139,12 @@ public partial class XMLParser : Parser {
 	[RuleVersion(0)]
 	public MiscContext misc() {
 		MiscContext _localctx = new MiscContext(Context, State);
-		EnterRule(_localctx, 20, RULE_misc);
+		EnterRule(_localctx, 30, RULE_misc);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 147;
+			State = 151;
 			_la = TokenStream.LA(1);
 			if ( !(((_la) & ~0x3f) == 0 && ((1L << _la) & 262210L) != 0) ) {
 			ErrorHandler.RecoverInline(this);
@@ -987,53 +1167,53 @@ public partial class XMLParser : Parser {
 	}
 
 	private static int[] _serializedATN = {
-		4,1,18,150,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
-		7,7,2,8,7,8,2,9,7,9,2,10,7,10,1,0,3,0,24,8,0,1,0,5,0,27,8,0,10,0,12,0,
-		30,9,0,1,0,1,0,1,0,1,0,5,0,36,8,0,10,0,12,0,39,9,0,1,0,5,0,42,8,0,10,0,
-		12,0,45,9,0,1,0,1,0,1,1,1,1,5,1,51,8,1,10,1,12,1,54,9,1,1,1,1,1,1,2,3,
-		2,59,8,2,1,2,1,2,1,2,1,2,1,2,3,2,66,8,2,1,2,3,2,69,8,2,5,2,71,8,2,10,2,
-		12,2,74,9,2,1,3,1,3,3,3,78,8,3,1,4,1,4,1,5,1,5,1,5,5,5,85,8,5,10,5,12,
-		5,88,9,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,1,5,5,5,100,8,5,10,5,12,5,
-		103,9,5,1,5,3,5,106,8,5,1,6,1,6,1,6,5,6,111,8,6,10,6,12,6,114,9,6,1,6,
-		1,6,1,6,1,6,1,6,3,6,121,8,6,3,6,123,8,6,3,6,125,8,6,1,6,1,6,1,6,5,6,130,
-		8,6,10,6,12,6,133,9,6,1,6,3,6,136,8,6,3,6,138,8,6,1,7,1,7,1,8,1,8,1,8,
-		1,8,1,9,1,9,1,10,1,10,1,10,0,0,11,0,2,4,6,8,10,12,14,16,18,20,0,3,1,0,
-		4,5,2,0,6,6,9,9,3,0,1,1,6,6,18,18,161,0,23,1,0,0,0,2,48,1,0,0,0,4,58,1,
-		0,0,0,6,77,1,0,0,0,8,79,1,0,0,0,10,105,1,0,0,0,12,137,1,0,0,0,14,139,1,
-		0,0,0,16,141,1,0,0,0,18,145,1,0,0,0,20,147,1,0,0,0,22,24,3,2,1,0,23,22,
-		1,0,0,0,23,24,1,0,0,0,24,28,1,0,0,0,25,27,3,20,10,0,26,25,1,0,0,0,27,30,
-		1,0,0,0,28,26,1,0,0,0,28,29,1,0,0,0,29,31,1,0,0,0,30,28,1,0,0,0,31,37,
-		3,6,3,0,32,33,3,20,10,0,33,34,3,8,4,0,34,36,1,0,0,0,35,32,1,0,0,0,36,39,
-		1,0,0,0,37,35,1,0,0,0,37,38,1,0,0,0,38,43,1,0,0,0,39,37,1,0,0,0,40,42,
-		3,20,10,0,41,40,1,0,0,0,42,45,1,0,0,0,43,41,1,0,0,0,43,44,1,0,0,0,44,46,
-		1,0,0,0,45,43,1,0,0,0,46,47,5,0,0,1,47,1,1,0,0,0,48,52,5,8,0,0,49,51,3,
-		16,8,0,50,49,1,0,0,0,51,54,1,0,0,0,52,50,1,0,0,0,52,53,1,0,0,0,53,55,1,
-		0,0,0,54,52,1,0,0,0,55,56,5,11,0,0,56,3,1,0,0,0,57,59,3,18,9,0,58,57,1,
-		0,0,0,58,59,1,0,0,0,59,72,1,0,0,0,60,66,3,6,3,0,61,66,3,14,7,0,62,66,5,
-		2,0,0,63,66,5,18,0,0,64,66,5,1,0,0,65,60,1,0,0,0,65,61,1,0,0,0,65,62,1,
-		0,0,0,65,63,1,0,0,0,65,64,1,0,0,0,66,68,1,0,0,0,67,69,3,18,9,0,68,67,1,
-		0,0,0,68,69,1,0,0,0,69,71,1,0,0,0,70,65,1,0,0,0,71,74,1,0,0,0,72,70,1,
-		0,0,0,72,73,1,0,0,0,73,5,1,0,0,0,74,72,1,0,0,0,75,78,3,10,5,0,76,78,3,
-		12,6,0,77,75,1,0,0,0,77,76,1,0,0,0,78,7,1,0,0,0,79,80,3,6,3,0,80,9,1,0,
-		0,0,81,82,5,7,0,0,82,86,5,16,0,0,83,85,3,16,8,0,84,83,1,0,0,0,85,88,1,
-		0,0,0,86,84,1,0,0,0,86,87,1,0,0,0,87,89,1,0,0,0,88,86,1,0,0,0,89,90,5,
-		10,0,0,90,91,3,4,2,0,91,92,5,7,0,0,92,93,5,13,0,0,93,94,5,16,0,0,94,95,
-		5,10,0,0,95,106,1,0,0,0,96,97,5,7,0,0,97,101,5,16,0,0,98,100,3,16,8,0,
-		99,98,1,0,0,0,100,103,1,0,0,0,101,99,1,0,0,0,101,102,1,0,0,0,102,104,1,
-		0,0,0,103,101,1,0,0,0,104,106,5,12,0,0,105,81,1,0,0,0,105,96,1,0,0,0,106,
-		11,1,0,0,0,107,108,5,7,0,0,108,112,5,16,0,0,109,111,3,16,8,0,110,109,1,
-		0,0,0,111,114,1,0,0,0,112,110,1,0,0,0,112,113,1,0,0,0,113,115,1,0,0,0,
-		114,112,1,0,0,0,115,116,5,10,0,0,116,124,3,4,2,0,117,122,5,7,0,0,118,120,
-		5,13,0,0,119,121,5,16,0,0,120,119,1,0,0,0,120,121,1,0,0,0,121,123,1,0,
-		0,0,122,118,1,0,0,0,122,123,1,0,0,0,123,125,1,0,0,0,124,117,1,0,0,0,124,
-		125,1,0,0,0,125,138,1,0,0,0,126,127,5,7,0,0,127,131,5,16,0,0,128,130,3,
-		16,8,0,129,128,1,0,0,0,130,133,1,0,0,0,131,129,1,0,0,0,131,132,1,0,0,0,
-		132,135,1,0,0,0,133,131,1,0,0,0,134,136,5,13,0,0,135,134,1,0,0,0,135,136,
-		1,0,0,0,136,138,1,0,0,0,137,107,1,0,0,0,137,126,1,0,0,0,138,13,1,0,0,0,
-		139,140,7,0,0,0,140,15,1,0,0,0,141,142,5,16,0,0,142,143,5,14,0,0,143,144,
-		5,15,0,0,144,17,1,0,0,0,145,146,7,1,0,0,146,19,1,0,0,0,147,148,7,2,0,0,
-		148,21,1,0,0,0,20,23,28,37,43,52,58,65,68,72,77,86,101,105,112,120,122,
-		124,131,135,137
+		4,1,18,154,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
+		7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,2,14,7,14,
+		2,15,7,15,1,0,3,0,34,8,0,1,0,5,0,37,8,0,10,0,12,0,40,9,0,1,0,1,0,1,0,1,
+		0,5,0,46,8,0,10,0,12,0,49,9,0,1,0,5,0,52,8,0,10,0,12,0,55,9,0,1,0,1,0,
+		1,1,1,1,5,1,61,8,1,10,1,12,1,64,9,1,1,1,1,1,1,2,3,2,69,8,2,1,2,1,2,1,2,
+		1,2,1,2,3,2,76,8,2,1,2,3,2,79,8,2,5,2,81,8,2,10,2,12,2,84,9,2,1,3,1,3,
+		3,3,88,8,3,1,4,1,4,1,5,1,5,1,5,1,5,1,5,3,5,97,8,5,1,6,1,6,1,6,1,6,1,6,
+		3,6,104,8,6,1,7,1,7,1,7,5,7,109,8,7,10,7,12,7,112,9,7,1,7,1,7,1,8,1,8,
+		1,8,1,8,1,8,1,9,1,9,1,9,5,9,124,8,9,10,9,12,9,127,9,9,1,9,1,9,1,10,1,10,
+		3,10,133,8,10,1,11,1,11,1,11,3,11,138,8,11,3,11,140,8,11,3,11,142,8,11,
+		1,12,1,12,1,13,1,13,1,13,1,13,1,14,1,14,1,15,1,15,1,15,0,0,16,0,2,4,6,
+		8,10,12,14,16,18,20,22,24,26,28,30,0,3,1,0,4,5,2,0,6,6,9,9,3,0,1,1,6,6,
+		18,18,158,0,33,1,0,0,0,2,58,1,0,0,0,4,68,1,0,0,0,6,87,1,0,0,0,8,89,1,0,
+		0,0,10,96,1,0,0,0,12,103,1,0,0,0,14,105,1,0,0,0,16,115,1,0,0,0,18,120,
+		1,0,0,0,20,130,1,0,0,0,22,141,1,0,0,0,24,143,1,0,0,0,26,145,1,0,0,0,28,
+		149,1,0,0,0,30,151,1,0,0,0,32,34,3,2,1,0,33,32,1,0,0,0,33,34,1,0,0,0,34,
+		38,1,0,0,0,35,37,3,30,15,0,36,35,1,0,0,0,37,40,1,0,0,0,38,36,1,0,0,0,38,
+		39,1,0,0,0,39,41,1,0,0,0,40,38,1,0,0,0,41,47,3,6,3,0,42,43,3,30,15,0,43,
+		44,3,8,4,0,44,46,1,0,0,0,45,42,1,0,0,0,46,49,1,0,0,0,47,45,1,0,0,0,47,
+		48,1,0,0,0,48,53,1,0,0,0,49,47,1,0,0,0,50,52,3,30,15,0,51,50,1,0,0,0,52,
+		55,1,0,0,0,53,51,1,0,0,0,53,54,1,0,0,0,54,56,1,0,0,0,55,53,1,0,0,0,56,
+		57,5,0,0,1,57,1,1,0,0,0,58,62,5,8,0,0,59,61,3,26,13,0,60,59,1,0,0,0,61,
+		64,1,0,0,0,62,60,1,0,0,0,62,63,1,0,0,0,63,65,1,0,0,0,64,62,1,0,0,0,65,
+		66,5,11,0,0,66,3,1,0,0,0,67,69,3,28,14,0,68,67,1,0,0,0,68,69,1,0,0,0,69,
+		82,1,0,0,0,70,76,3,6,3,0,71,76,3,24,12,0,72,76,5,2,0,0,73,76,5,18,0,0,
+		74,76,5,1,0,0,75,70,1,0,0,0,75,71,1,0,0,0,75,72,1,0,0,0,75,73,1,0,0,0,
+		75,74,1,0,0,0,76,78,1,0,0,0,77,79,3,28,14,0,78,77,1,0,0,0,78,79,1,0,0,
+		0,79,81,1,0,0,0,80,75,1,0,0,0,81,84,1,0,0,0,82,80,1,0,0,0,82,83,1,0,0,
+		0,83,5,1,0,0,0,84,82,1,0,0,0,85,88,3,10,5,0,86,88,3,12,6,0,87,85,1,0,0,
+		0,87,86,1,0,0,0,88,7,1,0,0,0,89,90,3,6,3,0,90,9,1,0,0,0,91,92,3,14,7,0,
+		92,93,3,4,2,0,93,94,3,16,8,0,94,97,1,0,0,0,95,97,3,18,9,0,96,91,1,0,0,
+		0,96,95,1,0,0,0,97,11,1,0,0,0,98,99,3,14,7,0,99,100,3,4,2,0,100,101,3,
+		22,11,0,101,104,1,0,0,0,102,104,3,20,10,0,103,98,1,0,0,0,103,102,1,0,0,
+		0,104,13,1,0,0,0,105,106,5,7,0,0,106,110,5,16,0,0,107,109,3,26,13,0,108,
+		107,1,0,0,0,109,112,1,0,0,0,110,108,1,0,0,0,110,111,1,0,0,0,111,113,1,
+		0,0,0,112,110,1,0,0,0,113,114,5,10,0,0,114,15,1,0,0,0,115,116,5,7,0,0,
+		116,117,5,13,0,0,117,118,5,16,0,0,118,119,5,10,0,0,119,17,1,0,0,0,120,
+		121,5,7,0,0,121,125,5,16,0,0,122,124,3,26,13,0,123,122,1,0,0,0,124,127,
+		1,0,0,0,125,123,1,0,0,0,125,126,1,0,0,0,126,128,1,0,0,0,127,125,1,0,0,
+		0,128,129,5,12,0,0,129,19,1,0,0,0,130,132,5,7,0,0,131,133,5,16,0,0,132,
+		131,1,0,0,0,132,133,1,0,0,0,133,21,1,0,0,0,134,139,5,7,0,0,135,137,5,13,
+		0,0,136,138,5,16,0,0,137,136,1,0,0,0,137,138,1,0,0,0,138,140,1,0,0,0,139,
+		135,1,0,0,0,139,140,1,0,0,0,140,142,1,0,0,0,141,134,1,0,0,0,141,142,1,
+		0,0,0,142,23,1,0,0,0,143,144,7,0,0,0,144,25,1,0,0,0,145,146,5,16,0,0,146,
+		147,5,14,0,0,147,148,5,15,0,0,148,27,1,0,0,0,149,150,7,1,0,0,150,29,1,
+		0,0,0,151,152,7,2,0,0,152,31,1,0,0,0,18,33,38,47,53,62,68,75,78,82,87,
+		96,103,110,125,132,137,139,141
 	};
 
 	public static readonly ATN _ATN =

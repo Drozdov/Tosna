@@ -22,22 +22,40 @@ namespace Tosna.Editor.IDE
 				
 				case ParsingProblem parsingProblem:
 
-					var unfinishedToken = parsingProblem.ErrorParameters.FirstOrDefault();
-					if (parsingProblem.Code == DocumentValidationCode.XmlUnfinishedElement && unfinishedToken != null)
+					switch (parsingProblem.Code)
 					{
-						return new UnfinishedTypeCompletionDataProvider(
-							parsingProblem.Location.LineStart,
-							parsingProblem.Location.ColumnStart,
-							parsingProblem.Location.ColumnEnd,
-							unfinishedToken,
-							parsingProblem.ExpectedType,
-							parsingProblem.SerializingElementsManager,
-							parsingProblem.TypesResolver
+						case DocumentValidationCode.XmlUnfinishedElement when parsingProblem.ErrorParameters.Count == 1:
+						{
+							var unfinishedToken = parsingProblem.ErrorParameters[0];
+
+							return new UnfinishedTypeCompletionDataProvider(
+								line: parsingProblem.Location.LineStart,
+								columnStart: parsingProblem.Location.ColumnStart,
+								columnEnd: parsingProblem.Location.ColumnEnd,
+								unfinishedPrefix: unfinishedToken,
+								type: parsingProblem.ExpectedType,
+								serializingElementsManager: parsingProblem.SerializingElementsManager,
+								typesResolver: parsingProblem.TypesResolver
 							);
+						}
+						
+						case DocumentValidationCode.XmlOpenCloseTagsMismatch when parsingProblem.ErrorParameters.Count == 2:
+						{
+							var openTagName = parsingProblem.ErrorParameters[0];
+							var closingTagName = parsingProblem.ErrorParameters[1];
+
+							return new InvalidClosingTagCompletionProvider(
+								line: parsingProblem.Location.LineStart,
+								columnStart: parsingProblem.Location.ColumnStart,
+								columnEnd: parsingProblem.Location.ColumnEnd,
+								openTagName: openTagName,
+								closingTagName: closingTagName);
+						}
+						
+						default:
+							return new NoneCompletionDataProvider();
 					}
 
-					return new NoneCompletionDataProvider();
-				
 				default:
 					return new NoneCompletionDataProvider();
 			}
