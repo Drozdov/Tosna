@@ -8,6 +8,10 @@ using Tosna.Core.Documents;
 
 namespace Tosna.Parsers.Xml.DocumentReading
 {
+	/// <summary>
+	/// Extended XML document reader with more information providing on elements location, problems details
+	/// (may be used for solutions finding)
+	/// </summary>
 	public class ExtendedXmlDocumentReader : IDocumentReader
 	{
 		public Document ReadDocument(string fileName)
@@ -29,6 +33,12 @@ namespace Tosna.Parsers.Xml.DocumentReading
 
 			ParseTreeWalker.Default.Walk(parseTreeListener, parseTree);
 
+			if (parseTreeListener.GlobalErrors.Any() && parseTreeListener.TopElement != null
+			    && parseTreeListener.TopElement.ValidationInfo.IsValid)
+			{
+				parseTreeListener.TopElement.ValidationInfo = parseTreeListener.GlobalErrors.First();
+			}
+
 			return new Document(parseTreeListener.TopElement ?? CreateInvalidTopElement(),
 				new DocumentInfo(fileName, DocumentFormat.Xml));
 		}
@@ -48,137 +58,207 @@ namespace Tosna.Parsers.Xml.DocumentReading
 		{
 			public DocumentElement TopElement;
 
+			public IReadOnlyCollection<DocumentElementValidationInfo> GlobalErrors => globalErrors;
+
 			private readonly Stack<DocumentElement> elements = new Stack<DocumentElement>();
+			private readonly Stack<ParserRuleContext> contexts = new Stack<ParserRuleContext>();
+
+			private readonly List<DocumentElementValidationInfo> globalErrors =
+				new List<DocumentElementValidationInfo>();
+
+			public override void EnterElement(XMLParser.ElementContext context)
+			{
+				base.EnterElement(context);
+				
+				var opening = context.opening().GetText();
+				var closing = context.closing().GetText();
+
+				var name = context.Name()?.GetText() ?? string.Empty;
+
+				if (opening == "") // <SomeElement /> or <SomeElement>
+				{
+					var element = new DocumentElement(name)
+					{
+						Location = CreateLocation(context)
+					};
+					
+					// <SomeUnfinishedElement
+					if (context.CLOSE() == null)
+					{
+						element.ValidationInfo = DocumentElementValidationInfo.CreateInvalid(
+							error: $"Unfinished element '{name}'",
+							code: DocumentValidationCode.XmlUnfinishedElement,
+							problemLocation: CreateLocation(context),
+							name);
+					}
+					// </>
+					else if (name == string.Empty)
+					{
+						element.ValidationInfo = DocumentElementValidationInfo.CreateInvalid(
+							error: "Empty name",
+							code: DocumentValidationCode.ParsingProblem,
+							problemLocation: CreateLocation(context));
+					}
+
+					foreach (var attributeContext in context.attribute() ?? new XMLParser.AttributeContext[]{})
+					{
+						var content = attributeContext.STRING().GetText();
+						content = content.Substring(1, content.Length - 2); // Getting rid of quotes
+						element.Children.Add(new DocumentElement(attributeContext.Name().GetText())
+						{
+							Content = content,
+							Location = CreateLocation(attributeContext)
+						});
+					}
+					
+					PushElement(element);
+
+					switch (closing)
+					{
+						case "/":
+							PopElement(element);
+							break;
+						
+						case "?":
+						case "!":
+							// <SomeElement?>
+							element.ValidationInfo = DocumentElementValidationInfo.CreateInvalid(
+								error: $"Unexpected symbol {closing}",
+								code: DocumentValidationCode.ParsingProblem,
+								problemLocation: CreateLocation(context.closing()));
+							break;
+					}
+				}
+				else if (opening == "/") // </SomeElement>
+				{
+					var element = PeekElement(name);
+					if (element == null)
+					{
+						globalErrors.Add(DocumentElementValidationInfo.CreateInvalid($"No opening tag <{name}> found",
+							DocumentValidationCode.ParsingProblem, CreateLocation(context)));
+						return;
+					}
+
+					if (element.Name != name)
+					{
+						element.ValidationInfo = DocumentElementValidationInfo.CreateInvalid(
+							error: $"Invalid closing statement {name}. Expected {element.Name}",
+							code: DocumentValidationCode.XmlOpenCloseTagsMismatch,
+							problemLocation: CreateLocation(context),
+							element.Name, name);
+					}
+					
+					var attribute = context.attribute().FirstOrDefault();
+					if (attribute != null)
+					{
+						if (element.ValidationInfo.IsValid)
+						{
+							element.ValidationInfo = DocumentElementValidationInfo.CreateInvalid(
+								"Attributes cannot be present in closing tag",
+								DocumentValidationCode.ParsingProblem,
+								CreateLocation(attribute));
+						}
+					}
+					
+					PopElement(element);
+				}
+			}
+
+			public override void EnterEveryRule(ParserRuleContext context)
+			{
+				base.EnterEveryRule(context);
+				contexts.Push(context);
+			}
+
+			public override void ExitEveryRule(ParserRuleContext context)
+			{
+				base.ExitEveryRule(context);
+				contexts.Pop();
+			}
 
 			public override void VisitErrorNode(IErrorNode node)
 			{
-				if (elements.Any() && elements.Peek().ValidationInfo.IsValid)
-				{
-					elements.Peek().ValidationInfo =
-						DocumentElementValidationInfo.CreateInvalid($"Unexpected input '{node.GetText()}'",
-							DocumentValidationCode.ParsingProblem, DocumentElementLocation.Unknown);
-				}
-			}
-
-			public override void EnterValidElement(XMLParser.ValidElementContext context)
-			{
-				var elementLocation = CreateLocation(context);
-
-				var validOpen = context.validOpen();
-				var validClose = context.validClose();
-				var validOpenShort = context.validOpenShort();
-
-				var name = validOpen?.Name().GetText() ?? validOpenShort?.Name().GetText() ?? string.Empty;
-				var newDocumentElement = new DocumentElement(name)
-				{
-					Location = elementLocation
-				};
-				
-				if (validClose != null)
-				{
-					var name2 = validClose.Name().GetText();
-					if (name != name2)
-					{
-						newDocumentElement.ValidationInfo = DocumentElementValidationInfo.CreateInvalid(
-							error: $"Invalid closing statement {name2}. Expected {name}",
-							code: DocumentValidationCode.XmlOpenCloseTagsMismatch,
-							problemLocation: CreateLocation(validClose),
-							name, name2);
-					}
-				}
+				var location = contexts.Any() ? CreateLocation(contexts.Peek()) : DocumentElementLocation.Unknown;
+				var error = DocumentElementValidationInfo.CreateInvalid(node.GetText(),
+					DocumentValidationCode.ParsingProblem, location);
 
 				if (elements.Any())
 				{
-					elements.Peek().Children.Add(newDocumentElement);
-				}
-
-				elements.Push(newDocumentElement);
-
-				if (TopElement == null)
-				{
-					TopElement = newDocumentElement;
-				}
-			}
-
-			public override void ExitValidElement(XMLParser.ValidElementContext context)
-			{
-				elements.Pop();
-			}
-
-			public override void EnterInvalidElement(XMLParser.InvalidElementContext context)
-			{
-				var name = context.validOpen()?.Name()?.GetText() ??
-				           context.invalidOpen()?.Name()?.GetText() ?? string.Empty;
-				
-				var newDocumentElement = new DocumentElement(name)
-				{
-					Location = CreateLocation(context),
-				};
-
-				var invalidClose = context.invalidClose();
-				if (invalidClose != null)
-				{
-					newDocumentElement.ValidationInfo = DocumentElementValidationInfo.CreateInvalid(
-						error: $"Unfinished element {name}",
-						code: DocumentValidationCode.XmlUnfinishedElement,
-						problemLocation: CreateLocation(invalidClose),
-						name, invalidClose.Name()?.GetText() ?? string.Empty);
+					var documentElement = elements.Peek();
+					if (documentElement.ValidationInfo.IsValid)
+					{
+						documentElement.ValidationInfo = error;
+					}
 				}
 				else
 				{
-					newDocumentElement.ValidationInfo = DocumentElementValidationInfo.CreateInvalid(
-						error: $"Unfinished element {name}",
-						code: DocumentValidationCode.XmlUnfinishedElement,
-						problemLocation: CreateLocation(context),
-						name);
-				}
-				
-				if (elements.Any())
-				{
-					elements.Peek().Children.Add(newDocumentElement);
+					globalErrors.Add(error);
 				}
 
-				elements.Push(newDocumentElement);
+				base.VisitErrorNode(node);
+			}
 
+			private void PushElement(DocumentElement documentElement)
+			{
 				if (TopElement == null)
 				{
-					TopElement = newDocumentElement;
+					TopElement = documentElement;
 				}
+				else
+				{
+					var elementOnStack = elements.Peek();
+					if (elementOnStack == null)
+					{
+						globalErrors.Add(DocumentElementValidationInfo.CreateInvalid(
+							$"Multiple items on top level: {TopElement.Name}, {documentElement.Name}",
+							DocumentValidationCode.ParsingProblem, DocumentElementLocation.Unknown));
+					}
+					else
+					{
+						elementOnStack.Children.Add(documentElement);
+					}
+				}
+				
+				elements.Push(documentElement);
 			}
 
-			public override void ExitInvalidElement(XMLParser.InvalidElementContext context)
-			{
-				elements.Pop();
-			}
-
-			public override void EnterAttribute(XMLParser.AttributeContext context)
+			private DocumentElement PeekElement(string name)
 			{
 				if (!elements.Any())
 				{
-					return;
+					return null;
+				}
+				
+				// If top element satisfies condition 
+				var documentElement = elements.Peek();
+				if (documentElement.Name == name)
+				{
+					return documentElement;
 				}
 
-				var content = context.STRING().GetText();
-				
-				elements.Peek().Children.Add(new DocumentElement(context.Name().GetText())
+				if (elements.Count == 1)
 				{
-					Content = content.Substring(1, content.Length - 2), // removing quotes
-					Location = CreateLocation(context)
-				});
+					return null;
+				}
+				elements.Pop();
+				// If second from top element satisfies condition 
+				var secondDocumentElement = elements.Peek();
+				if (secondDocumentElement.Name == name)
+				{
+					return secondDocumentElement;
+				}
+				// else: return all like it was before
+				elements.Push(documentElement);
+				return documentElement;
 			}
 
-			public override void EnterDuplicateElement(XMLParser.DuplicateElementContext context)
+			private void PopElement(DocumentElement element)
 			{
-				if (TopElement != null)
+				DocumentElement lastPop;
+				do
 				{
-					TopElement.ValidationInfo =
-						DocumentElementValidationInfo.CreateInvalid(
-							"Only one top element allowed on top of XML document",
-							DocumentValidationCode.ParsingProblem,
-							CreateLocation(context));
-				}
-
-				base.EnterDuplicateElement(context);
+					lastPop = elements.Pop();
+				} while (lastPop != element);
 			}
 
 			private static DocumentElementLocation CreateLocation(ParserRuleContext context)

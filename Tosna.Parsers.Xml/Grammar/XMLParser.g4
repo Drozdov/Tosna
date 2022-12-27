@@ -1,48 +1,24 @@
+/** Simplified XML parser. Looks for tags. All tags validation (closing slashes, etc) is done
+ when tree analyzing. This grammar just produces tags without location validation */
 parser grammar XMLParser;
 
 options { tokenVocab=XMLLexer; }
 
-document    :   prolog? misc* element (misc duplicateElement)* misc* EOF ;
-
-prolog      :   XMLDeclOpen attribute* SPECIAL_CLOSE ;
+document    :  misc* (element content misc*)* EOF ;
 
 content     :   chardata?
-                ((element | reference | CDATA | PI | COMMENT) chardata?)* ;
+                ((reference | COMMENT) chardata?)* ;
 
-element     :  validElement
-            |  invalidElement
-            ;
-            
-duplicateElement: element;
+element     :   OPEN opening Name? attribute* closing CLOSE?;
 
-validElement
-            :   validOpen content validClose
-            |   validOpenShort
-            ;
-            
-invalidElement // like <SomeUnfinishedElement [without '/>']
-            :   validOpen content invalidClose
-            |   invalidOpen
-            ;
-            
-validOpen   :  OPEN Name attribute* CLOSE;
+opening     :   (SLASH|QUESTION)?;
 
-validClose  :  OPEN SLASH Name CLOSE;
-
-validOpenShort:
-               OPEN Name attribute* SLASH_CLOSE;
-
-invalidOpen :  OPEN Name?;
-
-invalidClose:  (OPEN (SLASH Name?)?)?;
+closing     :   (SLASH|QUESTION)?;
 
 reference   :   EntityRef | CharRef ;
 
 attribute   :   Name '=' STRING ; // Our STRING is AttValue in spec
 
-/** ``All text that is not markup constitutes the character data of
- *  the document.''
- */
 chardata    :   TEXT | SEA_WS ;
 
-misc        :   COMMENT | PI | SEA_WS ;
+misc        :   COMMENT | SEA_WS ;

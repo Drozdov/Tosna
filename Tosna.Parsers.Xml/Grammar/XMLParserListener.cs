@@ -42,16 +42,6 @@ public interface IXMLParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitDocument([NotNull] XMLParser.DocumentContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="XMLParser.prolog"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterProlog([NotNull] XMLParser.PrologContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="XMLParser.prolog"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitProlog([NotNull] XMLParser.PrologContext context);
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="XMLParser.content"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -72,85 +62,25 @@ public interface IXMLParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitElement([NotNull] XMLParser.ElementContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="XMLParser.duplicateElement"/>.
+	/// Enter a parse tree produced by <see cref="XMLParser.opening"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterDuplicateElement([NotNull] XMLParser.DuplicateElementContext context);
+	void EnterOpening([NotNull] XMLParser.OpeningContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="XMLParser.duplicateElement"/>.
+	/// Exit a parse tree produced by <see cref="XMLParser.opening"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitDuplicateElement([NotNull] XMLParser.DuplicateElementContext context);
+	void ExitOpening([NotNull] XMLParser.OpeningContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="XMLParser.validElement"/>.
+	/// Enter a parse tree produced by <see cref="XMLParser.closing"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterValidElement([NotNull] XMLParser.ValidElementContext context);
+	void EnterClosing([NotNull] XMLParser.ClosingContext context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="XMLParser.validElement"/>.
+	/// Exit a parse tree produced by <see cref="XMLParser.closing"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitValidElement([NotNull] XMLParser.ValidElementContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="XMLParser.invalidElement"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterInvalidElement([NotNull] XMLParser.InvalidElementContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="XMLParser.invalidElement"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitInvalidElement([NotNull] XMLParser.InvalidElementContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="XMLParser.validOpen"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterValidOpen([NotNull] XMLParser.ValidOpenContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="XMLParser.validOpen"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitValidOpen([NotNull] XMLParser.ValidOpenContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="XMLParser.validClose"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterValidClose([NotNull] XMLParser.ValidCloseContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="XMLParser.validClose"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitValidClose([NotNull] XMLParser.ValidCloseContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="XMLParser.validOpenShort"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterValidOpenShort([NotNull] XMLParser.ValidOpenShortContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="XMLParser.validOpenShort"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitValidOpenShort([NotNull] XMLParser.ValidOpenShortContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="XMLParser.invalidOpen"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterInvalidOpen([NotNull] XMLParser.InvalidOpenContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="XMLParser.invalidOpen"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitInvalidOpen([NotNull] XMLParser.InvalidOpenContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="XMLParser.invalidClose"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterInvalidClose([NotNull] XMLParser.InvalidCloseContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="XMLParser.invalidClose"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitInvalidClose([NotNull] XMLParser.InvalidCloseContext context);
+	void ExitClosing([NotNull] XMLParser.ClosingContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="XMLParser.reference"/>.
 	/// </summary>
