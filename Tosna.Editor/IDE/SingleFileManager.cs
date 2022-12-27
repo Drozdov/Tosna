@@ -148,10 +148,16 @@ namespace Tosna.Editor.IDE
 				DependenciesFiles = Imprints.GetExternalDependenciesRecursively().Select(id => id.FilePath).Distinct()
 					.Except(new[] { FileName }).ToArray();
 			}
+			catch (ParsingException e)
+			{
+				Imprints = new Imprint[] { };
+				Notifications = new[] { new VerificationError(FileName, new StartEndCoordinates(e.Location), e.Message) };
+				DependenciesFiles = new string[] { };
+			}
 			catch (Exception e)
 			{
 				Imprints = new Imprint[] { };
-				Notifications = new[] {new VerificationError(FileName, new FullDocumentCoordinates(), e.Message)};
+				Notifications = new[] { new VerificationError(FileName, new FullDocumentCoordinates(), e.Message) };
 				DependenciesFiles = new string[] { };
 			}
 

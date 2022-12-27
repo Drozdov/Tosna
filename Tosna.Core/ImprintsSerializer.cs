@@ -33,7 +33,8 @@ namespace Tosna.Core
 
 			if (!document.RootElement.ValidationInfo.IsValid)
 			{
-				throw new Exception("Parse error: " + document.RootElement.ValidationInfo.Error);
+				throw new ParsingException("Parse error: " + document.RootElement.ValidationInfo.Error,
+					document.RootElement.ValidationInfo.ProblemLocation);
 			}
 
 			if (document.RootElement.Name != "Items")
@@ -370,6 +371,19 @@ namespace Tosna.Core
 				where nameInvariant == shortPreferredNameInvariant ||
 				      nameInvariant == preferredNameInvariant
 				select child).FirstOrDefault();
+		}
+	}
+
+	public class ParsingException : Exception
+	{
+		public override string Message { get; }
+		
+		public DocumentElementLocation Location { get; }
+
+		public ParsingException(string message, DocumentElementLocation location)
+		{
+			Message = message;
+			Location = location;
 		}
 	}
 }
