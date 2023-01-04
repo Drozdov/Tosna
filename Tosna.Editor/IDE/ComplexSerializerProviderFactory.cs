@@ -24,7 +24,7 @@ namespace Tosna.Editor.IDE
 
 					switch (parsingProblem.Code)
 					{
-						case DocumentValidationCode.XmlUnfinishedElement when parsingProblem.ErrorParameters.Count == 1:
+						case DocumentErrorCode.XmlUnfinishedElement when parsingProblem.ErrorParameters.Count == 1:
 						{
 							var unfinishedToken = parsingProblem.ErrorParameters[0];
 
@@ -39,7 +39,7 @@ namespace Tosna.Editor.IDE
 							);
 						}
 						
-						case DocumentValidationCode.XmlOpenCloseTagsMismatch when parsingProblem.ErrorParameters.Count == 2:
+						case DocumentErrorCode.XmlOpenCloseTagsMismatch when parsingProblem.ErrorParameters.Count == 2:
 						{
 							var openTagName = parsingProblem.ErrorParameters[0];
 							var closingTagName = parsingProblem.ErrorParameters[1];

@@ -43,7 +43,7 @@
         <Compile Include="Documents\Document.cs" />
         <Compile Include="Documents\DocumentElement.cs" />
         <Compile Include="Documents\DocumentElementLocation.cs" />
-        <Compile Include="Documents\DocumentElementValidationInfo.cs" />
+        <Compile Include="Documents\DocumentError.cs" />
         <Compile Include="Documents\DocumentInfo.cs" />
         <Compile Include="Documents\IDocumentReader.cs" />
         <Compile Include="Documents\IDocumentWriter.cs" />

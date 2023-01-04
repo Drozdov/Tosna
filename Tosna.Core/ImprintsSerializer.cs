@@ -31,10 +31,10 @@ namespace Tosna.Core
 		{
 			var filePath = document.HasInfo ? document.Info.FilePath : "<Unknown>";
 
-			if (!document.RootElement.ValidationInfo.IsValid)
+			if (document.RootElement.Errors.Any())
 			{
-				throw new ParsingException("Parse error: " + document.RootElement.ValidationInfo.Error,
-					document.RootElement.ValidationInfo.ProblemLocation);
+				var error = document.RootElement.Errors.First();
+				throw new ParsingException("Parse error: " + error.Error, error.ProblemLocation);
 			}
 
 			if (document.RootElement.Name != "Items")
@@ -185,18 +185,18 @@ namespace Tosna.Core
 		{
 			var problems = new List<IComplexSerializerProblem>();
 
-			if (documentElement.ValidationInfo != null && !documentElement.ValidationInfo.IsValid)
+			foreach (var error in documentElement.Errors)
 			{
 				var problemLocation =
-					documentElement.ValidationInfo.ProblemLocation == DocumentElementLocation.Unknown
+					error.ProblemLocation == DocumentElementLocation.Unknown
 						? documentElement.Location
-						: documentElement.ValidationInfo.ProblemLocation;
+						: error.ProblemLocation;
 				
-				problems.Add(new ParsingProblem(documentElement.ValidationInfo.Error, problemLocation,
-					documentElement.ValidationInfo.Code, expectedType ?? typeof(object),
-					documentElement.ValidationInfo.ErrorParameters, serializingElementsManager, serializingTypesResolver));
+				problems.Add(new ParsingProblem(error.Error, problemLocation,
+					error.Code, expectedType ?? typeof(object),
+					error.ErrorParameters, serializingElementsManager, serializingTypesResolver));
 			}
-
+			
 			var typeName = documentElement.Name;
 			if (!serializingTypesResolver.TryGetType(typeName, out var implementationType))
 			{
@@ -281,16 +281,17 @@ namespace Tosna.Core
 					continue;
 				}
 
-				if (!childDocumentElement.ValidationInfo.IsValid)
+				foreach (var childError in childDocumentElement.Errors)
 				{
 					var problemLocation =
-						childDocumentElement.ValidationInfo.ProblemLocation == DocumentElementLocation.Unknown
+						childError.ProblemLocation == DocumentElementLocation.Unknown
 							? childDocumentElement.Location
-							: childDocumentElement.ValidationInfo.ProblemLocation;
+							: childError.ProblemLocation;
 				
-					problems.Add(new ParsingProblem(childDocumentElement.ValidationInfo.Error, problemLocation,
-						childDocumentElement.ValidationInfo.Code, expectedType ?? typeof(object),
-						childDocumentElement.ValidationInfo.ErrorParameters, serializingElementsManager, serializingTypesResolver));
+					problems.Add(new ParsingProblem(childError.Error, problemLocation,
+						childError.Code, expectedType ?? typeof(object),
+						childError.ErrorParameters, serializingElementsManager, serializingTypesResolver));
+
 				}
 
 				var fieldType = naturalFieldInfo.Type;

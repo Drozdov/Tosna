@@ -11,7 +11,7 @@ namespace Tosna.Core.Problems
 
 		public DocumentElementLocation Location { get; }
 
-		public DocumentValidationCode Code { get; }
+		public DocumentErrorCode Code { get; }
 
 		public Type ExpectedType { get; }
 
@@ -23,7 +23,7 @@ namespace Tosna.Core.Problems
 
 		public bool IsCritical => true;
 
-		public ParsingProblem(string description, DocumentElementLocation location, DocumentValidationCode code,
+		public ParsingProblem(string description, DocumentElementLocation location, DocumentErrorCode code,
 			Type expectedType, IReadOnlyList<string> errorParameters,
 			ISerializingElementsManager serializingElementsManager, ISerializingTypesResolver typesResolver)
 		{

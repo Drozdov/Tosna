@@ -24,6 +24,8 @@ namespace Tosna.Parsers.Xml.DocumentReading
 		{
 			var stream = CharStreams.fromString(content);
 			var lexer = new XMLLexer(stream);
+			var lexerErrorListener = new LexerErrorListener();
+			lexer.AddErrorListener(lexerErrorListener);
 			var tokens = new CommonTokenStream(lexer);
 			var parser = new XMLParser(tokens) { BuildParseTree = true };
 
@@ -33,10 +35,10 @@ namespace Tosna.Parsers.Xml.DocumentReading
 
 			ParseTreeWalker.Default.Walk(parseTreeListener, parseTree);
 
-			if (parseTreeListener.GlobalErrors.Any() && parseTreeListener.TopElement != null
-			    && parseTreeListener.TopElement.ValidationInfo.IsValid)
+			if (parseTreeListener.TopElement != null)
 			{
-				parseTreeListener.TopElement.ValidationInfo = parseTreeListener.GlobalErrors.First();
+				parseTreeListener.TopElement.Errors.AddRange(lexerErrorListener.lexerErrors);
+				parseTreeListener.TopElement.Errors.AddRange(parseTreeListener.globalErrors);
 			}
 
 			return new Document(parseTreeListener.TopElement ?? CreateInvalidTopElement(),
@@ -45,26 +47,38 @@ namespace Tosna.Parsers.Xml.DocumentReading
 
 		private static DocumentElement CreateInvalidTopElement()
 		{
-			return new DocumentElement("Invalid")
-			{
-				ValidationInfo = DocumentElementValidationInfo.CreateInvalid("Root element not found",
-					DocumentValidationCode.ParsingProblem, DocumentElementLocation.Unknown)
-			};
+			var invalidTopElement = new DocumentElement("Invalid");
+			invalidTopElement.Errors.Add(new DocumentError("Root element not found",
+				DocumentErrorCode.ParsingProblem, DocumentElementLocation.Unknown));
+			return invalidTopElement;
 		}
 
 		#region Nested
 
+		private class LexerErrorListener : IAntlrErrorListener<int>
+		{
+			public readonly IList<DocumentError> lexerErrors = new List<DocumentError>();
+
+			public void SyntaxError(TextWriter output, IRecognizer recognizer, int offendingSymbol, int line,
+				int charPositionInLine,
+				string msg, RecognitionException e)
+			{
+				lexerErrors.Add(new DocumentError(
+					error: msg,
+					code: DocumentErrorCode.LexerProblem,
+					problemLocation: new DocumentElementLocation(lineStart: line, columnStart: charPositionInLine,
+						lineEnd: line, columnEnd: charPositionInLine + 1)));
+			}
+		}
+
 		private class Listener : XMLParserBaseListener
 		{
 			public DocumentElement TopElement;
-
-			public IReadOnlyCollection<DocumentElementValidationInfo> GlobalErrors => globalErrors;
-
+			
+			public readonly List<DocumentError> globalErrors =
+				new List<DocumentError>();
+			
 			private readonly Stack<DocumentElement> elements = new Stack<DocumentElement>();
-			private readonly Stack<ParserRuleContext> contexts = new Stack<ParserRuleContext>();
-
-			private readonly List<DocumentElementValidationInfo> globalErrors =
-				new List<DocumentElementValidationInfo>();
 
 			public override void EnterElement(XMLParser.ElementContext context)
 			{
@@ -85,19 +99,17 @@ namespace Tosna.Parsers.Xml.DocumentReading
 					// <SomeUnfinishedElement
 					if (context.CLOSE() == null)
 					{
-						element.ValidationInfo = DocumentElementValidationInfo.CreateInvalid(
-							error: $"Unfinished element '{name}'",
-							code: DocumentValidationCode.XmlUnfinishedElement,
+						element.Errors.Add(new DocumentError(error: $"Unfinished element '{name}'",
+							code: DocumentErrorCode.XmlUnfinishedElement,
 							problemLocation: CreateLocation(context),
-							name);
+							name));
 					}
 					// </>
 					else if (name == string.Empty)
 					{
-						element.ValidationInfo = DocumentElementValidationInfo.CreateInvalid(
-							error: "Empty name",
-							code: DocumentValidationCode.ParsingProblem,
-							problemLocation: CreateLocation(context));
+						element.Errors.Add(new DocumentError(error: "Empty name",
+							code: DocumentErrorCode.ParsingProblem,
+							problemLocation: CreateLocation(context)));
 					}
 
 					foreach (var attributeContext in context.attribute() ?? new XMLParser.AttributeContext[]{})
@@ -122,10 +134,10 @@ namespace Tosna.Parsers.Xml.DocumentReading
 						case "?":
 						case "!":
 							// <SomeElement?>
-							element.ValidationInfo = DocumentElementValidationInfo.CreateInvalid(
+							element.Errors.Add(new DocumentError(
 								error: $"Unexpected symbol {closing}",
-								code: DocumentValidationCode.ParsingProblem,
-								problemLocation: CreateLocation(context.closing()));
+								code: DocumentErrorCode.ParsingProblem,
+								problemLocation: CreateLocation(context.closing())));
 							break;
 					}
 				}
@@ -134,61 +146,47 @@ namespace Tosna.Parsers.Xml.DocumentReading
 					var element = PeekElement(name);
 					if (element == null)
 					{
-						globalErrors.Add(DocumentElementValidationInfo.CreateInvalid($"No opening tag <{name}> found",
-							DocumentValidationCode.ParsingProblem, CreateLocation(context)));
+						globalErrors.Add(new DocumentError($"No opening tag <{name}> found",
+							DocumentErrorCode.ParsingProblem, CreateLocation(context)));
 						return;
 					}
 
 					if (element.Name != name)
 					{
-						element.ValidationInfo = DocumentElementValidationInfo.CreateInvalid(
+						element.Errors.Add(new DocumentError(
 							error: $"Invalid closing statement {name}. Expected {element.Name}",
-							code: DocumentValidationCode.XmlOpenCloseTagsMismatch,
+							code: DocumentErrorCode.XmlOpenCloseTagsMismatch,
 							problemLocation: CreateLocation(context),
-							element.Name, name);
+							element.Name, name));
 					}
 					
 					var attribute = context.attribute().FirstOrDefault();
 					if (attribute != null)
 					{
-						if (element.ValidationInfo.IsValid)
-						{
-							element.ValidationInfo = DocumentElementValidationInfo.CreateInvalid(
-								"Attributes cannot be present in closing tag",
-								DocumentValidationCode.ParsingProblem,
-								CreateLocation(attribute));
-						}
+						element.Errors.Add(new DocumentError(
+							error: "Attributes cannot be present in closing tag",
+							code: DocumentErrorCode.ParsingProblem,
+							problemLocation: CreateLocation(attribute)));
 					}
 					
 					PopElement(element);
 				}
 			}
 
-			public override void EnterEveryRule(ParserRuleContext context)
-			{
-				base.EnterEveryRule(context);
-				contexts.Push(context);
-			}
-
-			public override void ExitEveryRule(ParserRuleContext context)
-			{
-				base.ExitEveryRule(context);
-				contexts.Pop();
-			}
-
 			public override void VisitErrorNode(IErrorNode node)
 			{
-				var location = contexts.Any() ? CreateLocation(contexts.Peek()) : DocumentElementLocation.Unknown;
-				var error = DocumentElementValidationInfo.CreateInvalid(node.GetText(),
-					DocumentValidationCode.ParsingProblem, location);
+				var location = new DocumentElementLocation(
+					lineStart: node.Symbol.Line,
+					columnStart: node.Symbol.Column,
+					lineEnd: node.Symbol.Line,
+					columnEnd: node.Symbol.Column + node.GetText().Length);
+				var error = new DocumentError(node.GetText(),
+					DocumentErrorCode.ParsingProblem, location);
 
 				if (elements.Any())
 				{
 					var documentElement = elements.Peek();
-					if (documentElement.ValidationInfo.IsValid)
-					{
-						documentElement.ValidationInfo = error;
-					}
+					documentElement.Errors.Add(error);
 				}
 				else
 				{
@@ -209,9 +207,10 @@ namespace Tosna.Parsers.Xml.DocumentReading
 					var elementOnStack = elements.Peek();
 					if (elementOnStack == null)
 					{
-						globalErrors.Add(DocumentElementValidationInfo.CreateInvalid(
-							$"Multiple items on top level: {TopElement.Name}, {documentElement.Name}",
-							DocumentValidationCode.ParsingProblem, DocumentElementLocation.Unknown));
+						globalErrors.Add(new DocumentError(
+							error: $"Multiple items on top level: {TopElement.Name}, {documentElement.Name}",
+							code: DocumentErrorCode.ParsingProblem,
+							problemLocation: DocumentElementLocation.Unknown));
 					}
 					else
 					{
@@ -224,32 +223,12 @@ namespace Tosna.Parsers.Xml.DocumentReading
 
 			private DocumentElement PeekElement(string name)
 			{
-				if (!elements.Any())
-				{
-					return null;
-				}
-				
-				// If top element satisfies condition 
-				var documentElement = elements.Peek();
-				if (documentElement.Name == name)
+				foreach (var documentElement in elements.Where((documentElement, index) => documentElement.Name == name))
 				{
 					return documentElement;
 				}
 
-				if (elements.Count == 1)
-				{
-					return null;
-				}
-				elements.Pop();
-				// If second from top element satisfies condition 
-				var secondDocumentElement = elements.Peek();
-				if (secondDocumentElement.Name == name)
-				{
-					return secondDocumentElement;
-				}
-				// else: return all like it was before
-				elements.Push(documentElement);
-				return documentElement;
+				return elements.FirstOrDefault();
 			}
 
 			private void PopElement(DocumentElement element)
