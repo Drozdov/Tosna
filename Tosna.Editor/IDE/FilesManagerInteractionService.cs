@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Tosna.Core.Helpers.Xml;
+using Tosna.Core.Documents;
 using Tosna.Core.Imprints;
 
 namespace Tosna.Editor.IDE
@@ -54,7 +54,9 @@ namespace Tosna.Editor.IDE
 				{
 					continue;
 				}
-				yield return new SingleFileManagerRefactoring(fileManager, XmlFormatter.FormatText(filesManager.Serializer.SaveRootImprints(refactoredImprints).ToString()));
+
+				var document = filesManager.Serializer.SaveRootImprints(refactoredImprints);
+				yield return new SingleFileManagerRefactoring(fileManager, document);
 			}
 		}
 
@@ -68,12 +70,12 @@ namespace Tosna.Editor.IDE
 	{
 		public SingleFileManager FileManager { get; }
 
-		public string NewTextData { get; }
+		public Document NewDocument { get; }
 
-		public SingleFileManagerRefactoring(SingleFileManager fileManager, string newTextData)
+		public SingleFileManagerRefactoring(SingleFileManager fileManager, Document newDocument)
 		{
 			FileManager = fileManager;
-			NewTextData = newTextData;
+			NewDocument = newDocument;
 		}
 	}
 }

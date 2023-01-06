@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -40,7 +41,7 @@ namespace Tosna.Core.Documents.Xml
 
 			if (!IgnoreContent)
 			{
-				result.Value = documentElement.Content;
+				result.Value = documentElement.Content ?? string.Empty;
 			}
 			
 			return result;

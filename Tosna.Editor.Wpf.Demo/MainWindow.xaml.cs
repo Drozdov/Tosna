@@ -34,7 +34,7 @@ namespace Tosna.Editor.Wpf.Demo
 			var serializingElementsManager = new SerializingElementsManager();
 			var serializingTypesResolver = new SerializingTypesResolver(serializingElementsManager);
 			filesManager = new FilesManager(serializingElementsManager, serializingTypesResolver,
-				new ExtendedXmlDocumentReader());
+				new ExtendedXmlDocumentReader(), new XmlDocumentWriter{IgnoreContent = true});
 			xmlIdeVm = new XmlIdeVm(filesManager, filesSelector, new ConfirmationRequester(), new Logger());
 			DataContext = xmlIdeVm;
 		}

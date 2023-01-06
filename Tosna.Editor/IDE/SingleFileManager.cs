@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Tosna.Core;
 using Tosna.Core.Documents;
+using Tosna.Core.Helpers.Xml;
 using Tosna.Core.Imprints;
 using Tosna.Editor.IDE.FieldsConfigurator;
 using Tosna.Editor.IDE.Verification;
@@ -17,6 +18,7 @@ namespace Tosna.Editor.IDE
 
 		private readonly ImprintsSerializer serializer;
 		private readonly IDocumentReader reader;
+		private readonly IDocumentWriter writer;
 
 		private SingleFileManagerState state;
 
@@ -72,10 +74,11 @@ namespace Tosna.Editor.IDE
 
 		#region Ctor
 
-		public SingleFileManager(string fileName, ImprintsSerializer serializer, IDocumentReader reader)
+		public SingleFileManager(string fileName, ImprintsSerializer serializer, IDocumentReader reader, IDocumentWriter writer)
 		{
 			this.serializer = serializer;
 			this.reader = reader;
+			this.writer = writer;
 			FileName = fileName;
 
 			ReloadFromDisk();
@@ -134,6 +137,11 @@ namespace Tosna.Editor.IDE
 
 			Content = newContent;
 			State = SingleFileManagerState.FileWithUnsavedChanges;
+		}
+
+		public void Edit(Document newDocument)
+		{
+			Edit(XmlFormatter.FormatText(writer.GetContent(newDocument)));
 		}
 
 		public void Verify()

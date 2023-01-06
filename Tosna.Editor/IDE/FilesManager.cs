@@ -10,6 +10,7 @@ namespace Tosna.Editor.IDE
 	public class FilesManager
 	{
 		private readonly IDocumentReader documentReader;
+		private readonly IDocumentWriter documentWriter;
 		private readonly IDictionary<string, SingleFileManager> fileManagers = new Dictionary<string, SingleFileManager>();
 
 		public IReadOnlyCollection<SingleFileManager> FileManagers => fileManagers.Values.ToArray();
@@ -17,9 +18,10 @@ namespace Tosna.Editor.IDE
 		public ImprintsSerializer Serializer { get; }
 
 		public FilesManager(ISerializingElementsManager serializingElementsManager,
-			ISerializingTypesResolver serializingTypesResolver, IDocumentReader documentReader)
+			ISerializingTypesResolver serializingTypesResolver, IDocumentReader documentReader, IDocumentWriter documentWriter)
 		{
 			this.documentReader = documentReader;
+			this.documentWriter = documentWriter;
 			Serializer = new ImprintsSerializer(serializingElementsManager, serializingTypesResolver);
 		}
 
@@ -33,7 +35,7 @@ namespace Tosna.Editor.IDE
 					continue;
 				}
 
-				var singleFileManager = new SingleFileManager(file, Serializer, documentReader);
+				var singleFileManager = new SingleFileManager(file, Serializer, documentReader, documentWriter);
 				fileManagers[file] = singleFileManager;
 				result.Add(singleFileManager);
 			}
@@ -59,7 +61,7 @@ namespace Tosna.Editor.IDE
 					}
 
 					presentFiles.Add(file);
-					var singleFileManager = new SingleFileManager(file, Serializer, documentReader);
+					var singleFileManager = new SingleFileManager(file, Serializer, documentReader, documentWriter);
 					fileManagers[file] = singleFileManager;
 					result.Add(singleFileManager);
 
