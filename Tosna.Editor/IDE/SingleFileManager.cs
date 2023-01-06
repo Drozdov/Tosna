@@ -151,7 +151,10 @@ namespace Tosna.Editor.IDE
 			catch (ParsingException e)
 			{
 				Imprints = new Imprint[] { };
-				Notifications = new[] { new VerificationError(FileName, new StartEndCoordinates(e.Location), e.Message) };
+				var textIntervalCoordinates = e.Location == DocumentElementLocation.Unknown
+					? (ITextIntervalCoordinates)new FullDocumentCoordinates()
+					: new StartEndCoordinates(e.Location);
+				Notifications = new[] { new VerificationError(FileName, textIntervalCoordinates, e.Message) };
 				DependenciesFiles = new string[] { };
 			}
 			catch (Exception e)
