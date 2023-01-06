@@ -34,11 +34,13 @@ namespace Tosna.Parsers.Xml.DocumentReading
 			var parseTreeListener = new Listener();
 
 			ParseTreeWalker.Default.Walk(parseTreeListener, parseTree);
+			
+			parseTreeListener.End();
 
 			if (parseTreeListener.TopElement != null)
 			{
-				parseTreeListener.TopElement.Errors.AddRange(lexerErrorListener.lexerErrors);
-				parseTreeListener.TopElement.Errors.AddRange(parseTreeListener.globalErrors);
+				parseTreeListener.TopElement.Errors.AddRange(lexerErrorListener.LexerErrors);
+				parseTreeListener.TopElement.Errors.AddRange(parseTreeListener.GlobalErrors);
 			}
 
 			return new Document(parseTreeListener.TopElement ?? CreateInvalidTopElement(),
@@ -57,13 +59,13 @@ namespace Tosna.Parsers.Xml.DocumentReading
 
 		private class LexerErrorListener : IAntlrErrorListener<int>
 		{
-			public readonly IList<DocumentError> lexerErrors = new List<DocumentError>();
+			public readonly IList<DocumentError> LexerErrors = new List<DocumentError>();
 
 			public void SyntaxError(TextWriter output, IRecognizer recognizer, int offendingSymbol, int line,
 				int charPositionInLine,
 				string msg, RecognitionException e)
 			{
-				lexerErrors.Add(new DocumentError(
+				LexerErrors.Add(new DocumentError(
 					error: msg,
 					code: DocumentErrorCode.LexerProblem,
 					problemLocation: new DocumentElementLocation(lineStart: line, columnStart: charPositionInLine,
@@ -75,10 +77,15 @@ namespace Tosna.Parsers.Xml.DocumentReading
 		{
 			public DocumentElement TopElement;
 			
-			public readonly List<DocumentError> globalErrors =
+			public readonly List<DocumentError> GlobalErrors =
 				new List<DocumentError>();
 			
 			private readonly Stack<DocumentElement> elements = new Stack<DocumentElement>();
+
+			public void End()
+			{
+				PopElement(null);
+			}
 
 			public override void EnterElement(XMLParser.ElementContext context)
 			{
@@ -146,7 +153,7 @@ namespace Tosna.Parsers.Xml.DocumentReading
 					var element = PeekElement(name);
 					if (element == null)
 					{
-						globalErrors.Add(new DocumentError($"No opening tag <{name}> found",
+						GlobalErrors.Add(new DocumentError($"No opening tag <{name}> found",
 							DocumentErrorCode.ParsingProblem, CreateLocation(context)));
 						return;
 					}
@@ -190,7 +197,7 @@ namespace Tosna.Parsers.Xml.DocumentReading
 				}
 				else
 				{
-					globalErrors.Add(error);
+					GlobalErrors.Add(error);
 				}
 
 				base.VisitErrorNode(node);
@@ -207,7 +214,7 @@ namespace Tosna.Parsers.Xml.DocumentReading
 					var elementOnStack = elements.Peek();
 					if (elementOnStack == null)
 					{
-						globalErrors.Add(new DocumentError(
+						GlobalErrors.Add(new DocumentError(
 							error: $"Multiple items on top level: {TopElement.Name}, {documentElement.Name}",
 							code: DocumentErrorCode.ParsingProblem,
 							problemLocation: DocumentElementLocation.Unknown));
@@ -223,7 +230,7 @@ namespace Tosna.Parsers.Xml.DocumentReading
 
 			private DocumentElement PeekElement(string name)
 			{
-				foreach (var documentElement in elements.Where((documentElement, index) => documentElement.Name == name))
+				foreach (var documentElement in elements.Where(documentElement => documentElement.Name == name))
 				{
 					return documentElement;
 				}
@@ -233,11 +240,19 @@ namespace Tosna.Parsers.Xml.DocumentReading
 
 			private void PopElement(DocumentElement element)
 			{
-				DocumentElement lastPop;
-				do
+				while (elements.Any())
 				{
-					lastPop = elements.Pop();
-				} while (lastPop != element);
+					var pop = elements.Pop();
+					if (pop != element)
+					{
+						pop.Errors.Add(new DocumentError($"Tag <{pop.Name}> not closed",
+							DocumentErrorCode.XmlUnfinishedElement, pop.Location));
+					}
+					else
+					{
+						break;
+					}
+				}
 			}
 
 			private static DocumentElementLocation CreateLocation(ParserRuleContext context)
