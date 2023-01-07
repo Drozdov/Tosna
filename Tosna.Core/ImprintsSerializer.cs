@@ -185,6 +185,10 @@ namespace Tosna.Core
 		{
 			var problems = new List<IComplexSerializerProblem>();
 
+			var reader = new DocumentElementReader(documentElement);
+			
+			#region Checking document errors
+			
 			foreach (var error in documentElement.Errors)
 			{
 				var problemLocation =
@@ -197,6 +201,10 @@ namespace Tosna.Core
 					error.ErrorParameters, serializingElementsManager, serializingTypesResolver));
 			}
 			
+			#endregion
+
+			#region Getting implementation type
+			
 			var typeName = documentElement.Name;
 			if (!serializingTypesResolver.TryGetType(typeName, out var implementationType))
 			{
@@ -206,24 +214,86 @@ namespace Tosna.Core
 				var imprintInfo = new ImprintInfo(filePath, typeName, documentElement.Location, problems);
 				return new AggregateImprint(typeof(object), null, null, imprintInfo, new SimpleTypeImprintField[] { });
 			}
+			
+			#endregion
+			
+			#region Local functions
+			
+			// Validation for unused elements (duplicates or non-existing fields) only
+			void CheckParsingValidationOnly(DocumentElement childDocumentElement)
+			{
+				foreach (var child in childDocumentElement.Children)
+				{
+					CheckParsingValidationOnly(child);
+				}
 
-			var refIdAttribute = documentElement.GetContentString("Reference.Id");
-			var idAttribute = documentElement.GetContentString("Global.Id");
-			var publicNameAttribute = documentElement.GetContentString("Global.PublicName");
+				foreach (var error in childDocumentElement.Errors)
+				{
+					problems.Add(new CommonProblem(error.Error,
+						error.ProblemLocation == DocumentElementLocation.Unknown
+							? error.ProblemLocation
+							: childDocumentElement.Location));
+				}
+			}
+			
+			DocumentElement GetDocumentElement(params string[] keys)
+			{
+				DocumentElement result = null;
+
+				foreach (var element in reader.ExtractDocumentElements(keys))
+				{
+					if (result == null)
+					{
+						result = element;
+					}
+					else
+					{
+						problems.Add(new CommonProblem($"Field duplication: {result.Name}", result.Location));
+						problems.Add(new CommonProblem($"Field duplication: {element.Name}", element.Location));
+						CheckParsingValidationOnly(element);
+					}
+				}
+
+				return result;
+			}
+
+			string GetContentString(params string[] keys)
+			{
+				return GetDocumentElement(keys)?.Content;
+			}
+			
+			DocumentElement GetByFieldInfo(SerializingElement fieldInfo)
+			{
+				var shortName = fieldInfo.Name;
+				var fullName = documentElement.Name + "." + shortName;
+				return GetDocumentElement(fullName, shortName);
+			}
+			
+			#endregion
+
+			#region Special attributes
+			
+			var refIdAttribute = GetContentString("Reference.Id");
+			var idAttribute = GetContentString("Global.Id");
+			var publicNameAttribute = GetContentString("Global.PublicName");
 
 			if (refIdAttribute != null)
 			{
-				var refFileAttribute = documentElement.GetContentString("Reference.Path");
+				var refFileAttribute = GetContentString("Reference.Path");
 				var byRefUnresolvedStamp = new ReferenceImprint(implementationType, publicNameAttribute, idAttribute,
 					new ImprintInfo(filePath, typeName, documentElement.Location, problems),
 					refIdAttribute, refFileAttribute);
 
 				return byRefUnresolvedStamp;
 			}
+			
+			#endregion
 
+			#region Check implementation type on being simple
+			
 			if (serializingTypesResolver.IsSimpleType(implementationType))
 			{
-				var valueAttribute = documentElement.GetContentString("Value");
+				var valueAttribute = GetContentString("Value");
 				if (valueAttribute == null)
 				{
 					problems.Add(new CommonProblem(
@@ -250,19 +320,27 @@ namespace Tosna.Core
 						GetDefault(implementationType));
 				}
 			}
+			
+			#endregion
 
-			var fields = new List<ImprintField>();
-
+			#region Check on obsolete name
+			
 			var isObsoleteName = serializingTypesResolver.TryGetName(implementationType, out var preferredName) &&
 								preferredName != typeName;
 			if (isObsoleteName)
 			{
 				problems.Add(new ObsoleteNameProblem(typeName, preferredName, documentElement.Location));
 			}
+			
+			#endregion
+			
+			#region Initializing fields
+			
+			var fields = new List<ImprintField>();
 
 			foreach (var naturalFieldInfo in serializingElementsManager.GetAllElements(implementationType))
 			{
-				var childDocumentElement = ImprintsSerializerUtils.GetByFieldInfo(documentElement, naturalFieldInfo);
+				var childDocumentElement = GetByFieldInfo(naturalFieldInfo);
 
 				if (childDocumentElement == null)
 				{
@@ -347,6 +425,19 @@ namespace Tosna.Core
 					fields.Add(new NestedImprintField(naturalFieldInfo, stamp));
 				}
 			}
+			
+			#endregion
+			
+			#region Unused elements
+
+			foreach (var unused in reader.ReadRemaining())
+			{
+				CheckParsingValidationOnly(unused);
+				var warning = $"Unknown field {unused.Name} for {documentElement.Name}, will be ignored";
+				problems.Add(new CommonProblem(warning, unused.Location, false));
+			}
+			
+			#endregion
 
 			return new AggregateImprint(implementationType, publicNameAttribute, idAttribute,
 				new ImprintInfo(filePath, typeName, documentElement.Location, problems), fields);
@@ -357,22 +448,45 @@ namespace Tosna.Core
 			return type.IsValueType ? Activator.CreateInstance(type) : null;
 		}
 		
-		#endregion
-	}
-
-	public static class ImprintsSerializerUtils
-	{
-		public static DocumentElement GetByFieldInfo(DocumentElement documentElement, SerializingElement fieldInfo)
+		private class DocumentElementReader
 		{
-			var shortPreferredNameInvariant = fieldInfo.Name.ToLowerInvariant();
-			var preferredNameInvariant = documentElement.Name.ToLowerInvariant() + "." + shortPreferredNameInvariant;
+			private readonly IDictionary<string, IList<DocumentElement>> elementsByNames =
+				new Dictionary<string, IList<DocumentElement>>();
 
-			return (from child in documentElement.Children
-				let nameInvariant = child.Name.ToLowerInvariant()
-				where nameInvariant == shortPreferredNameInvariant ||
-				      nameInvariant == preferredNameInvariant
-				select child).FirstOrDefault();
+			public DocumentElementReader(DocumentElement element)
+			{
+				foreach (var child in element.Children)
+				{
+					if (!elementsByNames.ContainsKey(child.Name))
+					{
+						// In 99.9% of all cases this will be a single element list
+						elementsByNames[child.Name] = new List<DocumentElement>(1);
+					}
+					elementsByNames[child.Name].Add(child);
+				}
+			}
+
+			public IEnumerable<DocumentElement> ExtractDocumentElements(IEnumerable<string> keys)
+			{
+				foreach (var key in keys)
+				{
+					if (!elementsByNames.TryGetValue(key, out var elements)) continue;
+
+					elementsByNames.Remove(key);
+					foreach (var element in elements)
+					{
+						yield return element;
+					}
+				}
+			}
+
+			public IEnumerable<DocumentElement> ReadRemaining()
+			{
+				return elementsByNames.Values.SelectMany(list => list);
+			}
 		}
+
+		#endregion
 	}
 
 	public class ParsingException : Exception

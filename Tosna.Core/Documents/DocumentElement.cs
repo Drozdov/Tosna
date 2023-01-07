@@ -17,19 +17,11 @@ namespace Tosna.Core.Documents
 
 		public bool HasChildren => Children.Any();
 		
-		public List<DocumentError> Errors { get; set; } = new List<DocumentError>();
+		public List<DocumentError> Errors { get; } = new List<DocumentError>();
 
 		public DocumentElement(string name)
 		{
 			Name = name;
-		}
-	}
-
-	public static class DocumentElementExtensions
-	{
-		public static string GetContentString(this DocumentElement documentElement, string name)
-		{
-			return documentElement.Children.FirstOrDefault(child => child.Name == name)?.Content;
 		}
 	}
 }
