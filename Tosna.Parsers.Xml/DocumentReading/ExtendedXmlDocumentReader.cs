@@ -261,7 +261,7 @@ namespace Tosna.Parsers.Xml.DocumentReading
 					lineStart: context.Start.Line,
 					columnStart: context.Start.Column,
 					lineEnd: context.Stop.Line,
-					columnEnd: context.Stop.Column);
+					columnEnd: context.Stop.Column + context.Stop.Text.Length);
 			}
 		}
 

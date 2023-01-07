@@ -40,8 +40,8 @@ namespace Tosna.Editor.Wpf.XmlEditor
 
 		public void Visit(StartEndCoordinates coordinates)
 		{
-			var startOffset = textDocument.GetOffset(coordinates.StartLineNumber, coordinates.StartPosition);
-			var endOffset = textDocument.GetOffset(coordinates.EndLineNumber, coordinates.EndPosition);
+			var startOffset = textDocument.GetOffset(coordinates.StartLineNumber, coordinates.StartPosition + 1);
+			var endOffset = textDocument.GetOffset(coordinates.EndLineNumber, coordinates.EndPosition + 1);
 			marker = textMarkerService.Create(startOffset, endOffset - startOffset);
 		}
 	}
@@ -79,14 +79,15 @@ namespace Tosna.Editor.Wpf.XmlEditor
 			if (coordinates.StartLineNumber == coordinates.EndLineNumber)
 			{
 				result =
-					location.Line == coordinates.StartLineNumber && coordinates.StartPosition <= location.Column && location.Column <= coordinates.EndPosition;
+					location.Line == coordinates.StartLineNumber && coordinates.StartPosition + 1 <= location.Column &&
+					location.Column <= coordinates.EndPosition + 1;
 			}
 			else
 			{
 				result =
-					location.Line == coordinates.StartLineNumber && location.Column >= coordinates.StartPosition ||
+					location.Line == coordinates.StartLineNumber && location.Column >= coordinates.StartPosition + 1 ||
 					coordinates.StartLineNumber < location.Line && location.Line < coordinates.EndLineNumber ||
-					location.Line == coordinates.EndLineNumber && location.Column <= coordinates.EndPosition;
+					location.Line == coordinates.EndLineNumber && location.Column <= coordinates.EndPosition + 1;
 			}
 		}
 	}

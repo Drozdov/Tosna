@@ -228,17 +228,17 @@ namespace Tosna.Editor.IDE
 				if (!imprint.TryGetInfo(out var info)) continue;
 				foreach (var problem in info.Problems)
 				{
-					var fullLineCoordinates = new FullLineCoordinates(problem.Location.LineStart);
+					var lineCoordinates = new StartEndCoordinates(problem.Location);
 					
 					if (problem.IsCritical)
 					{
-						yield return new VerificationError(info.FilePath, fullLineCoordinates,
+						yield return new VerificationError(info.FilePath, lineCoordinates,
 							problem.Description,
 							ComplexSerializerProviderFactory.GetProvider(problem));
 					}
 					else
 					{
-						yield return new VerificationWarning(info.FilePath, fullLineCoordinates,
+						yield return new VerificationWarning(info.FilePath, lineCoordinates,
 							problem.Description,
 							ComplexSerializerProviderFactory.GetProvider(problem));
 					}
