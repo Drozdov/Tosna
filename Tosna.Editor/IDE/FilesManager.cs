@@ -18,10 +18,11 @@ namespace Tosna.Editor.IDE
 		public ImprintsSerializer Serializer { get; }
 
 		public FilesManager(ISerializingElementsManager serializingElementsManager,
-			ISerializingTypesResolver serializingTypesResolver, IDocumentReader documentReader, IDocumentWriter documentWriter)
+			ISerializingTypesResolver serializingTypesResolver, IDocumentReaderFactory readerFactory,
+			IDocumentWriterFactory writerFactory)
 		{
-			this.documentReader = documentReader;
-			this.documentWriter = documentWriter;
+			documentReader = readerFactory.CreateReader();
+			documentWriter = writerFactory.CreateWriter();
 			Serializer = new ImprintsSerializer(serializingElementsManager, serializingTypesResolver);
 		}
 

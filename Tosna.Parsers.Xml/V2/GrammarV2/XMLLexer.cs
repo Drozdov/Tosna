@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from C:/Projects/Tosna/Tosna.Parsers.Xml/Grammar\XMLLexer.g4 by ANTLR 4.11.1
+// Generated from C:/Projects/Tosna/Tosna.Parsers.Xml/V2/GrammarV2\XMLLexer.g4 by ANTLR 4.11.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -19,7 +19,7 @@
 // Ambiguous reference in cref attribute
 #pragma warning disable 419
 
-namespace Grammar {
+namespace GrammarV2 {
 using System;
 using System.IO;
 using System.Text;
@@ -29,7 +29,7 @@ using Antlr4.Runtime.Misc;
 using DFA = Antlr4.Runtime.Dfa.DFA;
 
 [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.11.1")]
-[System.CLSCompliant(false)]
+//[System.CLSCompliant(false)]
 public partial class XMLLexer : Lexer {
 	protected static DFA[] decisionToDFA;
 	protected static PredictionContextCache sharedContextCache = new PredictionContextCache();
@@ -156,4 +156,4 @@ public partial class XMLLexer : Lexer {
 
 
 }
-} // namespace Grammar
+} // namespace GrammarV2

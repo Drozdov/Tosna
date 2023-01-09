@@ -46,9 +46,13 @@
         <Compile Include="Documents\DocumentError.cs" />
         <Compile Include="Documents\DocumentInfo.cs" />
         <Compile Include="Documents\IDocumentReader.cs" />
+        <Compile Include="Documents\IDocumentReaderFactory.cs" />
         <Compile Include="Documents\IDocumentWriter.cs" />
+        <Compile Include="Documents\IDocumentWriterFactory.cs" />
         <Compile Include="Documents\Xml\XmlDocumentReader.cs" />
+        <Compile Include="Documents\Xml\XmlDocumentReaderFactory.cs" />
         <Compile Include="Documents\Xml\XmlDocumentWriter.cs" />
+        <Compile Include="Documents\Xml\XmlDocumentWriterFactory.cs" />
         <Compile Include="Helpers\Xml\XmlCompletor.cs" />
         <Compile Include="Helpers\Xml\XmlFormatter.cs" />
         <Compile Include="Helpers\Xml\XmlUtils.cs" />

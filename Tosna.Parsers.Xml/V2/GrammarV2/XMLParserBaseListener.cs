@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from C:/Projects/Tosna/Tosna.Parsers.Xml/Grammar\XMLParser.g4 by ANTLR 4.11.1
+// Generated from C:/Projects/Tosna/Tosna.Parsers.Xml/V2/GrammarV2\XMLParser.g4 by ANTLR 4.11.1
 
 // Unreachable code detected
 #pragma warning disable 0162
@@ -19,7 +19,7 @@
 // Ambiguous reference in cref attribute
 #pragma warning disable 419
 
-namespace Grammar {
+namespace GrammarV2 {
 
 using Antlr4.Runtime.Misc;
 using IErrorNode = Antlr4.Runtime.Tree.IErrorNode;
@@ -34,7 +34,7 @@ using ParserRuleContext = Antlr4.Runtime.ParserRuleContext;
 /// </summary>
 [System.CodeDom.Compiler.GeneratedCode("ANTLR", "4.11.1")]
 [System.Diagnostics.DebuggerNonUserCode]
-[System.CLSCompliant(false)]
+//[System.CLSCompliant(false)]
 public partial class XMLParserBaseListener : IXMLParserListener {
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="XMLParser.document"/>.
@@ -158,4 +158,4 @@ public partial class XMLParserBaseListener : IXMLParserListener {
 	/// <remarks>The default implementation does nothing.</remarks>
 	public virtual void VisitErrorNode([NotNull] IErrorNode node) { }
 }
-} // namespace Grammar
+} // namespace GrammarV2

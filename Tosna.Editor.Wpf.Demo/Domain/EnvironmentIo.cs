@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Tosna.Core;
+using Tosna.Core.Documents;
 using Tosna.Core.Documents.Xml;
 using Tosna.Core.IO;
 using Tosna.Core.SerializationInterfaces;
@@ -15,6 +16,9 @@ namespace Tosna.Editor.Wpf.Demo.Domain;
 
 public static class EnvironmentIo
 {
+	private static readonly IDocumentReaderFactory ReaderFactory = new XmlDocumentReaderFactory();
+	private static readonly IDocumentWriterFactory WriterFactory = new XmlDocumentWriterFactory();
+	
 	public static void CreateAndSaveDefaultEnvironment(string initialFile)
 	{
 		var entryPointFilePath = new FileInfo(initialFile);
@@ -145,7 +149,7 @@ public static class EnvironmentIo
 		var stampsEnvironment = new StampsEnvironment(constructor.GetCollection(), entryPointFilePath);
 		StampsEnvironmentWriter.Save(
 			stampsEnvironment: stampsEnvironment,
-			writer: new XmlDocumentWriter { IgnoreContent = true },
+			writer: WriterFactory.CreateWriter(),
 			serializer: new ImprintsSerializer(serializingElementsManager, signaturesSerializingTypeResolver));
 	}
 
@@ -157,7 +161,7 @@ public static class EnvironmentIo
 
 		var imprints = ImprintsEnvironmentReader.Read(
 			serializer: imprintsSerializer,
-			reader: new XmlDocumentReader { IgnoreContent = true },
+			reader: ReaderFactory.CreateReader(),
 			rootFilesToRead: files.ToArray());
 		
 		var objects= imprints.GetAll();

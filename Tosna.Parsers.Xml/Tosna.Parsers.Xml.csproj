@@ -41,25 +41,34 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="DocumentReading\ExtendedXmlDocumentReader.cs" />
-        <Compile Include="Grammar\XMLLexer.cs" />
-        <Compile Include="Grammar\XMLParser.cs" />
-        <Compile Include="Grammar\XMLParserBaseListener.cs" />
-        <Compile Include="Grammar\XMLParserListener.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
+        <Compile Include="V1\ExtendedXmlDocumentReaderV1.cs" />
+        <Compile Include="V1\ExtendedXmlDocumentReaderV1Factory.cs" />
+        <Compile Include="V1\GrammarV1\XMLLexer.cs" />
+        <Compile Include="V1\GrammarV1\XMLParser.cs" />
+        <Compile Include="V1\GrammarV1\XMLParserBaseListener.cs" />
+        <Compile Include="V1\GrammarV1\XMLParserListener.cs" />
+        <Compile Include="V2\ExtendedXmlDocumentReaderV2.cs" />
+        <Compile Include="V2\ExtendedXmlDocumentReaderV2Factory.cs" />
+        <Compile Include="V2\GrammarV2\XMLLexer.cs" />
+        <Compile Include="V2\GrammarV2\XMLParser.cs" />
+        <Compile Include="V2\GrammarV2\XMLParserBaseListener.cs" />
+        <Compile Include="V2\GrammarV2\XMLParserListener.cs" />
     </ItemGroup>
     <ItemGroup>
       <None Include="packages.config" />
-    </ItemGroup>
-    <ItemGroup>
-      <Content Include="Grammar\XMLLexer.g4" />
-      <Content Include="Grammar\XMLParser.g4" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Tosna.Core\Tosna.Core.csproj">
         <Project>{59d2f963-550c-40b1-9b8a-165b34ad80b9}</Project>
         <Name>Tosna.Core</Name>
       </ProjectReference>
+    </ItemGroup>
+    <ItemGroup>
+      <Content Include="V1\GrammarV1\XMLLexer.g4" />
+      <Content Include="V1\GrammarV1\XMLParser.g4" />
+      <Content Include="V2\GrammarV2\XMLLexer.g4" />
+      <Content Include="V2\GrammarV2\XMLParser.g4" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

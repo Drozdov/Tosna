@@ -24,7 +24,7 @@ namespace Tosna.Editor.Wpf.XmlEditor
 				.GetFilledContent(xElement, provider.Type, new string(' ', provider.Column))
 				.TrimStart();
 			solution = new ComplexSerializerSolution(newValue, info.LineStart, info.ColumnStart, info.LineEnd,
-				info.ColumnEnd);
+				info.ColumnEnd + 1);
 			return true;
 		}
 		

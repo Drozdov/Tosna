@@ -3,16 +3,16 @@ using System.IO;
 using System.Linq;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
-using Grammar;
+using GrammarV2;
 using Tosna.Core.Documents;
 
-namespace Tosna.Parsers.Xml.DocumentReading
+namespace Tosna.Parsers.Xml.V2
 {
 	/// <summary>
 	/// Extended XML document reader with more information providing on elements location, problems details
 	/// (may be used for solutions finding)
 	/// </summary>
-	public class ExtendedXmlDocumentReader : IDocumentReader
+	public class ExtendedXmlDocumentReaderV2 : IDocumentReader
 	{
 		public Document ReadDocument(string fileName)
 		{
@@ -156,6 +156,15 @@ namespace Tosna.Parsers.Xml.DocumentReading
 						GlobalErrors.Add(new DocumentError($"No opening tag <{name}> found",
 							DocumentErrorCode.ParsingProblem, CreateLocation(context)));
 						return;
+					}
+					
+					// </SomeUnfinishedElement
+					if (context.CLOSE() == null)
+					{
+						element.Errors.Add(new DocumentError(error: $"Unfinished element '{name}'",
+							code: DocumentErrorCode.XmlUnfinishedElement,
+							problemLocation: CreateLocation(context),
+							name));
 					}
 
 					if (element.Name != name)

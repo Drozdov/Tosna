@@ -10,7 +10,7 @@ namespace Tosna.Editor.Wpf.XmlEditor
 		public static void ApplySolution(ComplexSerializerSolution solution, TextArea textArea)
 		{
 			var startOffset = textArea.Document.GetOffset(new TextLocation(solution.LineStart, solution.PositionStart));
-			var endOffset = textArea.Document.GetOffset(new TextLocation(solution.LineEnd, solution.PositionEnd + 1));
+			var endOffset = textArea.Document.GetOffset(new TextLocation(solution.LineEnd, solution.PositionEnd));
 
 			textArea.Document.Replace(new TextSegment
 			{

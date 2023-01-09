@@ -78,6 +78,15 @@ namespace Tosna.Editor.Wpf.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add missing members.
+        /// </summary>
+        public static string AddMissingMembersAction {
+            get {
+                return ResourceManager.GetString("AddMissingMembersAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Create new file.
         /// </summary>
         public static string CreateNewFile {
