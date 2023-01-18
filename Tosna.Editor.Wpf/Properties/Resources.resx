@@ -54,4 +54,7 @@
   <data name="GeoToDefinition" xml:space="preserve">
     <value>Go to definition</value>
   </data>
+  <data name="AddMissingMembersAction" xml:space="preserve">
+    <value>Add missing members</value>
+  </data>
 </root>

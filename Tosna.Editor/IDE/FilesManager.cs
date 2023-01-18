@@ -1,26 +1,29 @@
 using System.Collections.Generic;
 using System.Linq;
 using Tosna.Core;
+using Tosna.Core.Documents;
 using Tosna.Core.Helpers.Xml;
 using Tosna.Core.SerializationInterfaces;
-using Tosna.Editor.IDE.ProblemsDetailing;
 
 namespace Tosna.Editor.IDE
 {
 	public class FilesManager
 	{
+		private readonly IDocumentReader documentReader;
+		private readonly IDocumentWriter documentWriter;
 		private readonly IDictionary<string, SingleFileManager> fileManagers = new Dictionary<string, SingleFileManager>();
-		private readonly XmlProblemsDetailsGetter xmlProblemsDetailsGetter;
 
 		public IReadOnlyCollection<SingleFileManager> FileManagers => fileManagers.Values.ToArray();
 
 		public ImprintsSerializer Serializer { get; }
 
 		public FilesManager(ISerializingElementsManager serializingElementsManager,
-			ISerializingTypesResolver serializingTypesResolver)
+			ISerializingTypesResolver serializingTypesResolver, IDocumentReaderFactory readerFactory,
+			IDocumentWriterFactory writerFactory)
 		{
+			documentReader = readerFactory.CreateReader();
+			documentWriter = writerFactory.CreateWriter();
 			Serializer = new ImprintsSerializer(serializingElementsManager, serializingTypesResolver);
-			xmlProblemsDetailsGetter = new XmlProblemsDetailsGetter(serializingElementsManager, serializingTypesResolver);
 		}
 
 		public IReadOnlyCollection<SingleFileManager> AddFiles(IEnumerable<string> files)
@@ -33,7 +36,7 @@ namespace Tosna.Editor.IDE
 					continue;
 				}
 
-				var singleFileManager = new SingleFileManager(file, Serializer, xmlProblemsDetailsGetter);
+				var singleFileManager = new SingleFileManager(file, Serializer, documentReader, documentWriter);
 				fileManagers[file] = singleFileManager;
 				result.Add(singleFileManager);
 			}
@@ -59,7 +62,7 @@ namespace Tosna.Editor.IDE
 					}
 
 					presentFiles.Add(file);
-					var singleFileManager = new SingleFileManager(file, Serializer, xmlProblemsDetailsGetter);
+					var singleFileManager = new SingleFileManager(file, Serializer, documentReader, documentWriter);
 					fileManagers[file] = singleFileManager;
 					result.Add(singleFileManager);
 

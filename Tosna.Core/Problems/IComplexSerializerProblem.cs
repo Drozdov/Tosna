@@ -1,18 +1,13 @@
+using Tosna.Core.Documents;
+
 namespace Tosna.Core.Problems
 {
 	public interface IComplexSerializerProblem
 	{
-		void Accept(IComplexSerializerProblemVisitor visitor);
-	}
-
-	public interface IComplexSerializerProblemVisitor
-	{
-		void Visit(CommonProblem problem);
-
-		void Visit(MissingMembersProblem problem);
+		string Description { get; }
 		
-		void Visit(InvalidCastProblem problem);
+		DocumentElementLocation Location { get; }
 
-		void Visit(ObsoleteNameProblem problem);
+		bool IsCritical { get; }
 	}
 }

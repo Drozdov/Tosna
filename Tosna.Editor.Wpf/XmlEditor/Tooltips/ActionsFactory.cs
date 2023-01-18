@@ -1,3 +1,4 @@
+using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
 using Tosna.Editor.Helpers;
 using Tosna.Editor.IDE.Verification;
@@ -31,11 +32,28 @@ namespace Tosna.Editor.Wpf.XmlEditor.Tooltips
 
 		public void Visit(MissingMembersCompletionDataProvider provider)
 		{
-			command = new ActionCommand(() => MissingMembersResolver.Complete(provider, textArea), () => true, "Add missing members");
+			command = new ActionCommand(() =>
+			{
+				if (provider.TryGetSolution(textArea, out var solution))
+				{
+					SolutionsWorker.ApplySolution(solution, textArea);
+				}
+			}, () => true, "Add missing members");
 		}
 
 		public void Visit(UnfinishedTypeCompletionDataProvider provider)
 		{
+		}
+
+		public void Visit(InvalidClosingTagCompletionProvider provider)
+		{
+			command = new ActionCommand(() =>
+			{
+				if (provider.TryGetSolution(textArea, out var solution))
+				{
+					SolutionsWorker.ApplySolution(solution, textArea);
+				}
+			}, () => true, "Replace closing tag with valid value");
 		}
 	}
 }

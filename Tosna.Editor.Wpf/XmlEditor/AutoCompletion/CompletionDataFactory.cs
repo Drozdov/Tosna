@@ -83,5 +83,10 @@ namespace Tosna.Editor.Wpf.XmlEditor.AutoCompletion
 			list.Sort((data1, data2) => (int)(data1.Priority - data2.Priority));
 			result = list;
 		}
+
+		public void Visit(InvalidClosingTagCompletionProvider provider)
+		{
+			result = new ICompletionData[] { };
+		}
 	}
 }

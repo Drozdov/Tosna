@@ -1,20 +1,20 @@
+using Tosna.Core.Documents;
+
 namespace Tosna.Core.Problems
 {
 	public class CommonProblem : IComplexSerializerProblem
 	{
-		public string Message { get; }
+		public string Description { get; }
+		
+		public DocumentElementLocation Location { get; }
+		
+		public bool IsCritical { get; }
 
-		public int Line { get; }
-
-		public CommonProblem(string message, int line)
+		public CommonProblem(string description, DocumentElementLocation location, bool isCritical = true)
 		{
-			Message = message;
-			Line = line;
-		}
-
-		public void Accept(IComplexSerializerProblemVisitor visitor)
-		{
-			visitor.Visit(this);
+			Description = description;
+			Location = location;
+			IsCritical = isCritical;
 		}
 	}
 }

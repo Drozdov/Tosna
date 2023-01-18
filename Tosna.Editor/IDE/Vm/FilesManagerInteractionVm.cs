@@ -46,7 +46,7 @@ namespace Tosna.Editor.IDE.Vm
 			foreach (var refactoring in refactorings)
 			{
 				filesViewerVm.OpenDocument(refactoring.FileManager, false);
-				refactoring.FileManager.Edit(refactoring.NewTextData);
+				refactoring.FileManager.Edit(refactoring.NewDocument);
 				refactoring.FileManager.Verify();
 			}
 

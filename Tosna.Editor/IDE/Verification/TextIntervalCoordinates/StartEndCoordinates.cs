@@ -1,3 +1,5 @@
+using Tosna.Core.Documents;
+
 namespace Tosna.Editor.IDE.Verification.TextIntervalCoordinates
 {
 	public class StartEndCoordinates : ITextIntervalCoordinates
@@ -16,6 +18,14 @@ namespace Tosna.Editor.IDE.Verification.TextIntervalCoordinates
 			StartPosition = startPosition;
 			EndLineNumber = endLineNumber;
 			EndPosition = endPosition;
+		}
+
+		public StartEndCoordinates(DocumentElementLocation location)
+		{
+			StartLineNumber = location.LineStart;
+			StartPosition = location.ColumnStart;
+			EndLineNumber = location.LineEnd;
+			EndPosition = location.ColumnEnd;
 		}
 
 		public void Accept(ITextIntervalCoordinatesVisitor visitor)

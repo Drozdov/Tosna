@@ -2,13 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml;
-using System.Xml.Linq;
 using Tosna.Core;
+using Tosna.Core.Documents;
+using Tosna.Core.Helpers.Xml;
 using Tosna.Core.Imprints;
-using Tosna.Core.Problems;
 using Tosna.Editor.IDE.FieldsConfigurator;
-using Tosna.Editor.IDE.ProblemsDetailing;
 using Tosna.Editor.IDE.Verification;
 using Tosna.Editor.IDE.Verification.TextIntervalCoordinates;
 
@@ -19,7 +17,8 @@ namespace Tosna.Editor.IDE
 		#region Fields & Properties
 
 		private readonly ImprintsSerializer serializer;
-		private readonly XmlProblemsDetailsGetter xmlProblemsDetailsGetter;
+		private readonly IDocumentReader reader;
+		private readonly IDocumentWriter writer;
 
 		private SingleFileManagerState state;
 
@@ -75,10 +74,11 @@ namespace Tosna.Editor.IDE
 
 		#region Ctor
 
-		public SingleFileManager(string fileName, ImprintsSerializer serializer, XmlProblemsDetailsGetter xmlProblemsDetailsGetter)
+		public SingleFileManager(string fileName, ImprintsSerializer serializer, IDocumentReader reader, IDocumentWriter writer)
 		{
 			this.serializer = serializer;
-			this.xmlProblemsDetailsGetter = xmlProblemsDetailsGetter;
+			this.reader = reader;
+			this.writer = writer;
 			FileName = fileName;
 
 			ReloadFromDisk();
@@ -139,43 +139,36 @@ namespace Tosna.Editor.IDE
 			State = SingleFileManagerState.FileWithUnsavedChanges;
 		}
 
+		public void Edit(Document newDocument)
+		{
+			Edit(XmlFormatter.FormatText(writer.GetContent(newDocument)));
+		}
+
 		public void Verify()
 		{
-			XDocument xDocument;
-
 			try
 			{
-				xDocument = XDocument.Parse(Content, LoadOptions.SetLineInfo);
-			}
-			catch (XmlException e)
-			{
-				Notifications = CreateVerificationErrors(e).ToArray();
-				DependenciesFiles = new string[] { };
-				DescriptorFileManagers = new FieldsConfiguratorManager[] { };
-				return;
-			}
-			catch (Exception e)
-			{
-				Notifications = new[] {new VerificationError(FileName, new FullDocumentCoordinates(), e.Message)};
-				DependenciesFiles = new string[] { };
-				Imprints = new Imprint[] { };
-				DescriptorFileManagers = new FieldsConfiguratorManager[] { };
-				return;
-			}
-
-			try
-			{
-				Imprints = serializer.LoadRootImprints(xDocument, FileName).ToArray();
+				var document = reader.ParseDocument(Content, FileName);
+				Imprints = serializer.LoadRootImprints(document).ToArray();
 				Notifications = GetVerificationErrors(Imprints).ToArray();
-				DescriptorFileManagers = GetDescriptedManagers(Imprints).ToArray();
+				DescriptorFileManagers = GetFieldsConfiguratorManagers(Imprints).ToArray();
 
 				DependenciesFiles = Imprints.GetExternalDependenciesRecursively().Select(id => id.FilePath).Distinct()
 					.Except(new[] { FileName }).ToArray();
 			}
+			catch (ParsingException e)
+			{
+				Imprints = new Imprint[] { };
+				var textIntervalCoordinates = e.Location == DocumentElementLocation.Unknown
+					? (ITextIntervalCoordinates)new FullDocumentCoordinates()
+					: new StartEndCoordinates(e.Location);
+				Notifications = new[] { new VerificationError(FileName, textIntervalCoordinates, e.Message) };
+				DependenciesFiles = new string[] { };
+			}
 			catch (Exception e)
 			{
 				Imprints = new Imprint[] { };
-				Notifications = new[] {new VerificationError(FileName, new FullDocumentCoordinates(), e.Message)};
+				Notifications = new[] { new VerificationError(FileName, new FullDocumentCoordinates(), e.Message) };
 				DependenciesFiles = new string[] { };
 			}
 
@@ -196,7 +189,7 @@ namespace Tosna.Editor.IDE
 				foreach (var dependency in stamp.GetExternalDependencies())
 				{
 					if (knownIdentifiers.Contains(dependency)) continue;
-					var coordinates = stamp.TryGetInfo(out var info) ? (ITextIntervalCoordinates)new FullLineCoordinates(info.Line) : new FullDocumentCoordinates();
+					var coordinates = stamp.TryGetInfo(out var info) ? (ITextIntervalCoordinates)new FullLineCoordinates(info.Location.LineStart) : new FullDocumentCoordinates();
 					dependenciesErrors.Add(new VerificationError(FileName, coordinates,
 						$"Unresolved dependency {dependency.Id} in {dependency.FilePath}"));
 				}
@@ -214,10 +207,10 @@ namespace Tosna.Editor.IDE
 			isRootImprint = false;
 			foreach (var imprint in Imprints.GetNestedImprintsRecursively())
 			{
-				if (imprint.TryGetInfo(out var info) && info.Line == line && foundColumn <= info.Column && info.Column <= column)
+				if (imprint.TryGetInfo(out var info) && info.Location.LineStart == line && foundColumn <= info.Location.ColumnStart && info.Location.ColumnStart <= column)
 				{
 					foundImprint = imprint;
-					foundColumn = info.Column;
+					foundColumn = info.Location.ColumnStart;
 					isRootImprint = Imprints.Contains(foundImprint);
 				}
 			}
@@ -228,21 +221,6 @@ namespace Tosna.Editor.IDE
 
 		#region Private
 
-		private IEnumerable<VerificationError> CreateVerificationErrors(XmlException e)
-		{
-			yield return new VerificationError(FileName,
-				e.LineNumber > 0
-					? (ITextIntervalCoordinates) new StartEndCoordinates(e.LineNumber, e.LinePosition, e.LineNumber,
-						e.LineNumber + 100)
-					: new FullDocumentCoordinates(), e.Message);
-
-
-			if (xmlProblemsDetailsGetter.TryCreateVerificationError(Content, FileName, e, out var verificationError))
-			{
-				yield return verificationError;
-			}
-		}
-
 		private static IEnumerable<VerificationNotification> GetVerificationErrors(IEnumerable<Imprint> imprints)
 		{
 			foreach (var imprint in imprints.GetNestedImprintsRecursively())
@@ -250,14 +228,18 @@ namespace Tosna.Editor.IDE
 				if (!imprint.TryGetInfo(out var info)) continue;
 				foreach (var problem in info.Problems)
 				{
-					if (problem.IsProblemCritical())
+					var lineCoordinates = new StartEndCoordinates(problem.Location);
+					
+					if (problem.IsCritical)
 					{
-						yield return new VerificationError(info.FilePath, new FullLineCoordinates(problem.GetProblemLineNumber()), problem.GetProblemMessage(),
+						yield return new VerificationError(info.FilePath, lineCoordinates,
+							problem.Description,
 							ComplexSerializerProviderFactory.GetProvider(problem));
 					}
 					else
 					{
-						yield return new VerificationWarning(info.FilePath, new FullLineCoordinates(problem.GetProblemLineNumber()), problem.GetProblemMessage(),
+						yield return new VerificationWarning(info.FilePath, lineCoordinates,
+							problem.Description,
 							ComplexSerializerProviderFactory.GetProvider(problem));
 					}
 
@@ -265,7 +247,7 @@ namespace Tosna.Editor.IDE
 			}
 		}
 
-		private IEnumerable<FieldsConfiguratorManager> GetDescriptedManagers(IEnumerable<Imprint> imprints)
+		private IEnumerable<FieldsConfiguratorManager> GetFieldsConfiguratorManagers(IEnumerable<Imprint> imprints)
 		{
 			foreach (var imprint in imprints)
 			{

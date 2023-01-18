@@ -37,7 +37,7 @@ namespace Tosna.Editor.Wpf.XmlEditor.AutoCompletion
 
 			textArea.Document.Replace(new TextSegment
 			{
-				StartOffset = startOffset,
+				StartOffset = startOffset + 1,
 				EndOffset = endOffset
 			}, newData);
 

@@ -1,43 +1,65 @@
+using System.Linq;
+using Tosna.Core.Documents;
 using Tosna.Core.Problems;
 using Tosna.Editor.IDE.Verification;
 using Tosna.Editor.IDE.Verification.CompletionDataProviders;
 
 namespace Tosna.Editor.IDE
 {
-	public class ComplexSerializerProviderFactory : IComplexSerializerProblemVisitor
+	public static class ComplexSerializerProviderFactory
 	{
-		private ICompletionDataProvider completionDataProvider;
-
-		private ComplexSerializerProviderFactory()
-		{
-		}
-
 		public static ICompletionDataProvider GetProvider(IComplexSerializerProblem problem)
 		{
-			var visitor = new ComplexSerializerProviderFactory();
-			problem.Accept(visitor);
-			return visitor.completionDataProvider;
+			switch (problem)
+			{
+				case MissingMembersProblem missingMembersProblem:
+					return new MissingMembersCompletionDataProvider(
+						missingMembersProblem.Location.LineStart,
+						missingMembersProblem.Location.ColumnStart,
+						missingMembersProblem.Type,
+						missingMembersProblem.SerializingElementsManager,
+						missingMembersProblem.TypesResolver);
+				
+				case ParsingProblem parsingProblem:
+
+					switch (parsingProblem.Code)
+					{
+						case DocumentErrorCode.XmlUnfinishedElement when parsingProblem.ErrorParameters.Count == 1:
+						{
+							var unfinishedToken = parsingProblem.ErrorParameters[0];
+
+							return new UnfinishedTypeCompletionDataProvider(
+								line: parsingProblem.Location.LineStart,
+								columnStart: parsingProblem.Location.ColumnStart,
+								columnEnd: parsingProblem.Location.ColumnEnd,
+								unfinishedPrefix: unfinishedToken,
+								type: parsingProblem.ExpectedType,
+								serializingElementsManager: parsingProblem.SerializingElementsManager,
+								typesResolver: parsingProblem.TypesResolver
+							);
+						}
+						
+						case DocumentErrorCode.XmlOpenCloseTagsMismatch when parsingProblem.ErrorParameters.Count == 2:
+						{
+							var openTagName = parsingProblem.ErrorParameters[0];
+							var closingTagName = parsingProblem.ErrorParameters[1];
+
+							return new InvalidClosingTagCompletionProvider(
+								line: parsingProblem.Location.LineStart,
+								columnStart: parsingProblem.Location.ColumnStart,
+								columnEnd: parsingProblem.Location.ColumnEnd,
+								openTagName: openTagName,
+								closingTagName: closingTagName);
+						}
+						
+						default:
+							return new NoneCompletionDataProvider();
+					}
+
+				default:
+					return new NoneCompletionDataProvider();
+			}
 		}
 
-		void IComplexSerializerProblemVisitor.Visit(CommonProblem problem)
-		{
-			completionDataProvider = new NoneCompletionDataProvider();
-		}
-
-		void IComplexSerializerProblemVisitor.Visit(MissingMembersProblem problem)
-		{
-			completionDataProvider = new MissingMembersCompletionDataProvider(problem.Line, problem.Column, problem.Type,
-				problem.SerializingElementsManager, problem.TypesResolver);
-		}
-
-		void IComplexSerializerProblemVisitor.Visit(InvalidCastProblem problem)
-		{
-			completionDataProvider = new NoneCompletionDataProvider();
-		}
-
-		void IComplexSerializerProblemVisitor.Visit(ObsoleteNameProblem problem)
-		{
-			completionDataProvider = new NoneCompletionDataProvider();
-		}
 	}
 }

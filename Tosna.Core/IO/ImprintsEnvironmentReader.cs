@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
+using Tosna.Core.Documents;
+using Tosna.Core.Documents.Xml;
 using Tosna.Core.Imprints;
 using Tosna.Core.Problems;
 
@@ -9,7 +10,7 @@ namespace Tosna.Core.IO
 {
 	public static class ImprintsEnvironmentReader
 	{
-		public static ImprintsEnvironment Read(ImprintsSerializer serializer, string[] rootFilesToRead)
+		public static ImprintsEnvironment Read(ImprintsSerializer serializer, IDocumentReader reader, string[] rootFilesToRead)
 		{
 			var result = new List<Imprint>();
 			var filesToRead = new Queue<string>(rootFilesToRead);
@@ -19,7 +20,8 @@ namespace Tosna.Core.IO
 			{
 				var file = filesToRead.Dequeue();
 
-				var rootImprints = serializer.LoadRootImprints(XDocument.Load(file, LoadOptions.SetLineInfo | LoadOptions.SetBaseUri), file).ToArray();
+				var document = reader.ReadDocument(file);
+				var rootImprints = serializer.LoadRootImprints(document).ToArray();
 
 				var allImprints = rootImprints.GetNestedImprintsRecursively();
 				var dependencies = rootImprints.GetExternalDependenciesRecursively();
@@ -39,11 +41,12 @@ namespace Tosna.Core.IO
 
 			foreach (var imprint in result)
 			{
-				if (imprint.TryGetInfo(out var info) && info.Problems.Any(problem => problem.IsProblemCritical()))
+				if (imprint.TryGetInfo(out var info) && info.Problems.Any(problem => problem.IsCritical))
 				{
-					var problemMessageWithLocation =
-						info.Problems.First(problem => problem.IsProblemCritical()).GetProblemMessageWithLocation();
-					throw new Exception($"Error in {info.FilePath}:{Environment.NewLine}{problemMessageWithLocation}");
+					var criticalProblem = info.Problems.First(problem => problem.IsCritical);
+					var location = criticalProblem.Location;
+					throw new Exception(
+						$"Error in {info.FilePath}:{Environment.NewLine}{criticalProblem.Description} at {location.LineStart}:{location.ColumnStart}");
 				}
 			}
 

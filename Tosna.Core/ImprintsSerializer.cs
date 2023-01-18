@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
-using System.Xml.Linq;
-using Tosna.Core.Helpers.Xml;
+using Tosna.Core.Documents;
 using Tosna.Core.Imprints;
 using Tosna.Core.Imprints.Fields;
 using Tosna.Core.Problems;
@@ -21,35 +19,30 @@ namespace Tosna.Core
 			this.serializingElementsManager = serializingElementsManager;
 			this.serializingTypesResolver = serializingTypesResolver;
 		}
-
-		public XDocument SaveRootImprints(IEnumerable<Imprint> imprints)
+		
+		public Document SaveRootImprints(IEnumerable<Imprint> imprints)
 		{
-			var xElement = new XElement("Items");
-			foreach (var imprint in imprints)
-			{
-				xElement.Add(SerializeToXElement(imprint));
-			}
-			var xDocument = new XDocument(xElement);
-			return xDocument;
+			var rootElement = new DocumentElement("Items");
+			rootElement.Children.AddRange(imprints.Select(SerializeToXElement));
+			return new Document(rootElement);
 		}
 
-		public IEnumerable<Imprint> LoadRootImprints(XDocument xDocument, string filePath)
+		public IEnumerable<Imprint> LoadRootImprints(Document document)
 		{
-			if (filePath == null)
+			var filePath = document.HasInfo ? document.Info.FilePath : "<Unknown>";
+
+			if (document.RootElement.Errors.Any())
 			{
-				filePath = new Uri(xDocument.BaseUri).LocalPath;
+				var error = document.RootElement.Errors.First();
+				throw new ParsingException("Parse error: " + error.Error, error.ProblemLocation);
 			}
 
-			var xElement = xDocument.Element("Items");
-
-			if (xElement == null)
+			if (document.RootElement.Name != "Items")
 			{
-				throw new ArgumentException($"XML file {filePath} contains no 'Items' property on top level");
+				throw new ArgumentException($"Document {filePath} contains no 'Items' top element");
 			}
 
-			var itemsElements = xElement.Elements();
-
-			foreach (var element in itemsElements)
+			foreach (var element in document.RootElement.Children)
 			{
 				yield return DeserializeFromXElement(element, filePath);
 			}
@@ -57,23 +50,23 @@ namespace Tosna.Core
 
 		#region Serialization
 
-		private XElement SerializeToXElement(Imprint current)
+		private DocumentElement SerializeToXElement(Imprint current)
 		{
-			return XElementFactory.Create(current, serializingTypesResolver);
+			return DocumentElementFactory.Create(current, serializingTypesResolver);
 		}
 
-		private class XElementFactory : IImprintVisitor
+		private class DocumentElementFactory : IImprintVisitor
 		{
-			private readonly XElement xElement;
+			private readonly DocumentElement documentElement;
 			private readonly ISerializingTypesResolver serializingTypesResolver;
 
-			private XElementFactory(XElement xElement, ISerializingTypesResolver serializingTypesResolver)
+			private DocumentElementFactory(DocumentElement documentElement, ISerializingTypesResolver serializingTypesResolver)
 			{
-				this.xElement = xElement;
+				this.documentElement = documentElement;
 				this.serializingTypesResolver = serializingTypesResolver;
 			}
 
-			public static XElement Create(Imprint imprint, ISerializingTypesResolver serializingTypesResolver)
+			public static DocumentElement Create(Imprint imprint, ISerializingTypesResolver serializingTypesResolver)
 			{
 				var itemType = imprint.Type;
 
@@ -82,63 +75,79 @@ namespace Tosna.Core
 					throw new ArgumentException($"Cannot serialize type {itemType}. Make sure type satisfies requirements.");
 				}
 
-				var xElement = new XElement(itemTypeName);
+				var documentElement = new DocumentElement(itemTypeName);
 
 				if (imprint.TryGetPublicName(out var publicName))
 				{
-					xElement.Add(new XAttribute("Global.PublicName", publicName));
+					documentElement.Children.Add( new DocumentElement("Global.PublicName")
+					{
+						Content = publicName
+					});
 				}
 
 				if (imprint.TryGetId(out var id))
 				{
-					xElement.Add(new XAttribute("Global.Id", id));
+					documentElement.Children.Add( new DocumentElement("Global.Id")
+					{
+						Content = id
+					});
 				}
 
-				var visitor = new XElementFactory(xElement, serializingTypesResolver);
+				var visitor = new DocumentElementFactory(documentElement, serializingTypesResolver);
 				imprint.Accept(visitor);
 
-				return xElement;
+				return documentElement;
 			}
 
 			void IImprintVisitor.Visit(SimpleTypeImprint imprint)
 			{
-				xElement.Add(new XAttribute("Value", serializingTypesResolver.SerializeSimple(imprint.Value)));
+				documentElement.Children.Add( new DocumentElement("Value")
+				{
+					Content = serializingTypesResolver.SerializeSimple(imprint.Value)
+				});
 			}
 
 			void IImprintVisitor.Visit(AggregateImprint imprint)
 			{
-				AggregateImprintXElementFiller.FillContent(imprint, xElement, serializingTypesResolver,
-					impr => Create(impr, serializingTypesResolver), xElement.Name.LocalName);
+				AggregateImprintXElementFiller.FillContent(imprint, documentElement, serializingTypesResolver,
+					innerImprint => Create(innerImprint, serializingTypesResolver), documentElement.Name);
 			}
 
 			void IImprintVisitor.Visit(ReferenceImprint imprint)
 			{
-				xElement.Add(new XAttribute("Reference.Id", imprint.ReferenceId));
+				documentElement.Children.Add( new DocumentElement("Reference.Id")
+				{
+					Content = imprint.ReferenceId
+				});
+				
 				if (!string.IsNullOrWhiteSpace(imprint.ReferenceRelativePath))
 				{
-					xElement.Add(new XAttribute("Reference.Path", imprint.ReferenceRelativePath));
+					documentElement.Children.Add( new DocumentElement("Reference.Path")
+					{
+						Content = imprint.ReferenceRelativePath
+					});
 				}
 			}
 		}
 
 		private class AggregateImprintXElementFiller : IImprintFieldVisitor
 		{
-			private readonly XElement xElement;
+			private readonly DocumentElement documentElement;
 			private readonly ISerializingTypesResolver serializingTypesResolver;
-			private readonly Func<Imprint, XElement> getXElement;
+			private readonly Func<Imprint, DocumentElement> getDocumentElement;
 			private readonly string baseTypeName;
 
-			private AggregateImprintXElementFiller(XElement xElement, ISerializingTypesResolver serializingTypesResolver, Func<Imprint, XElement> getXElement, string baseTypeName)
+			private AggregateImprintXElementFiller(DocumentElement documentElement, ISerializingTypesResolver serializingTypesResolver, Func<Imprint, DocumentElement> getDocumentElement, string baseTypeName)
 			{
-				this.xElement = xElement;
+				this.documentElement = documentElement;
 				this.serializingTypesResolver = serializingTypesResolver;
-				this.getXElement = getXElement;
+				this.getDocumentElement = getDocumentElement;
 				this.baseTypeName = baseTypeName;
 			}
 
-			public static void FillContent(AggregateImprint imprint, XElement xElement, ISerializingTypesResolver serializingTypesResolver, Func<Imprint, XElement> getXElement, string baseName)
+			public static void FillContent(AggregateImprint imprint, DocumentElement documentElement, ISerializingTypesResolver serializingTypesResolver, Func<Imprint, DocumentElement> getDocumentElement, string baseName)
 			{
-				var visitor = new AggregateImprintXElementFiller(xElement, serializingTypesResolver, getXElement, baseName);
+				var visitor = new AggregateImprintXElementFiller(documentElement, serializingTypesResolver, getDocumentElement, baseName);
 				foreach (var field in imprint.Fields)
 				{
 					field.Accept(visitor);
@@ -147,19 +156,24 @@ namespace Tosna.Core
 
 			void IImprintFieldVisitor.Visit(SimpleTypeImprintField field)
 			{
-				xElement.Add(new XAttribute(field.Info.Name, serializingTypesResolver.SerializeSimple(field.Value)));
+				documentElement.Children.Add( new DocumentElement(field.Info.Name)
+				{
+					Content = serializingTypesResolver.SerializeSimple(field.Value)
+				});
 			}
 
 			void IImprintFieldVisitor.Visit(NestedImprintField field)
 			{
-				xElement.Add(new XElement(baseTypeName + "." + field.Info.Name, getXElement(field.NestedItem)));
+				var innerElement = new DocumentElement(baseTypeName + "." + field.Info.Name);
+				innerElement.Children.Add(getDocumentElement(field.NestedItem));
+				documentElement.Children.Add(innerElement);
 			}
 
 			void IImprintFieldVisitor.Visit(ArrayImprintField field)
 			{
-				var arrayElement = new XElement(baseTypeName + "." + field.Info.Name);
-				arrayElement.Add(field.Items.Select(getXElement).Cast<object>().ToArray());
-				xElement.Add(arrayElement);
+				var arrayElement = new DocumentElement(baseTypeName + "." + field.Info.Name);
+				arrayElement.Children.AddRange(field.Items.Select(getDocumentElement));
+				documentElement.Children.Add(arrayElement);
 			}
 		}
 
@@ -167,82 +181,174 @@ namespace Tosna.Core
 
 		#region Deserialization
 
-		private Imprint DeserializeFromXElement(XElement xElement, string filePath)
+		private Imprint DeserializeFromXElement(DocumentElement documentElement, string filePath, Type expectedType = null)
 		{
-			var currentLine = ((IXmlLineInfo)xElement).LineNumber;
-			var currentPosition = ((IXmlLineInfo)xElement).LinePosition;
+			var problems = new List<IComplexSerializerProblem>();
 
-			var typeName = xElement.Name.LocalName;
+			var reader = new DocumentElementReader(documentElement);
+			
+			#region Checking document errors
+			
+			foreach (var error in documentElement.Errors)
+			{
+				var problemLocation =
+					error.ProblemLocation == DocumentElementLocation.Unknown
+						? documentElement.Location
+						: error.ProblemLocation;
+				
+				problems.Add(new ParsingProblem(error.Error, problemLocation,
+					error.Code, expectedType ?? typeof(object),
+					error.ErrorParameters, serializingElementsManager, serializingTypesResolver));
+			}
+			
+			#endregion
+
+			#region Getting implementation type
+			
+			var typeName = documentElement.Name;
 			if (!serializingTypesResolver.TryGetType(typeName, out var implementationType))
 			{
 				var error =
 					$"Cannot deserialize type {typeName}. Make sure proper type exists and satisfies requirements";
-				var imprintInfo = new ImprintInfo(filePath, typeName, currentLine, currentPosition, new CommonProblem(error, currentLine));
+				problems.Add(new CommonProblem(error, documentElement.Location));
+				var imprintInfo = new ImprintInfo(filePath, typeName, documentElement.Location, problems);
 				return new AggregateImprint(typeof(object), null, null, imprintInfo, new SimpleTypeImprintField[] { });
 			}
+			
+			#endregion
+			
+			#region Local functions
+			
+			// Validation for unused elements (duplicates or non-existing fields) only
+			void CheckParsingValidationOnly(DocumentElement childDocumentElement)
+			{
+				foreach (var child in childDocumentElement.Children)
+				{
+					CheckParsingValidationOnly(child);
+				}
 
-			var refIdAttribute = xElement.Attribute("Reference.Id");
-			var idAttribute = xElement.Attribute("Global.Id");
-			var publicNameAttribute = xElement.Attribute("Global.PublicName");
+				foreach (var error in childDocumentElement.Errors)
+				{
+					problems.Add(new CommonProblem(error.Error,
+						error.ProblemLocation == DocumentElementLocation.Unknown
+							? error.ProblemLocation
+							: childDocumentElement.Location));
+				}
+			}
+			
+			DocumentElement GetDocumentElement(params string[] keys)
+			{
+				DocumentElement result = null;
+
+				foreach (var element in reader.ExtractDocumentElements(keys))
+				{
+					if (result == null)
+					{
+						result = element;
+					}
+					else
+					{
+						problems.Add(new CommonProblem($"Field duplication: {result.Name}", result.Location));
+						problems.Add(new CommonProblem($"Field duplication: {element.Name}", element.Location));
+						CheckParsingValidationOnly(element);
+					}
+				}
+
+				return result;
+			}
+
+			string GetContentString(params string[] keys)
+			{
+				return GetDocumentElement(keys)?.Content;
+			}
+			
+			DocumentElement GetByFieldInfo(SerializingElement fieldInfo)
+			{
+				var shortName = fieldInfo.Name;
+				var fullName = documentElement.Name + "." + shortName;
+				return GetDocumentElement(fullName, shortName);
+			}
+			
+			#endregion
+
+			#region Special attributes
+			
+			var refIdAttribute = GetContentString("Reference.Id");
+			var idAttribute = GetContentString("Global.Id");
+			var publicNameAttribute = GetContentString("Global.PublicName");
 
 			if (refIdAttribute != null)
 			{
-				var refFileAttribute = xElement.Attribute("Reference.Path");
-				var byRefUnresolvedStamp = new ReferenceImprint(implementationType, publicNameAttribute?.Value, idAttribute?.Value,
-					new ImprintInfo(filePath, typeName, currentLine, currentPosition),
-					refIdAttribute.Value, refFileAttribute?.Value);
+				var refFileAttribute = GetContentString("Reference.Path");
+				var byRefUnresolvedStamp = new ReferenceImprint(implementationType, publicNameAttribute, idAttribute,
+					new ImprintInfo(filePath, typeName, documentElement.Location, problems),
+					refIdAttribute, refFileAttribute);
 
 				return byRefUnresolvedStamp;
 			}
+			
+			#endregion
 
+			#region Check implementation type on being simple
+			
 			if (serializingTypesResolver.IsSimpleType(implementationType))
 			{
-				var valueAttribute = xElement.Attribute("Value");
+				var valueAttribute = GetContentString("Value");
 				if (valueAttribute == null)
 				{
-					return new SimpleTypeImprint(implementationType, publicNameAttribute?.Value, idAttribute?.Value,
-						new ImprintInfo(filePath, typeName, currentLine, currentPosition,
-							new CommonProblem($"Cannot deserialize type {implementationType}: no 'Value' attribute found", currentLine)),
+					problems.Add(new CommonProblem(
+						$"Cannot deserialize type {implementationType}: no 'Value' attribute found",
+						documentElement.Location));
+					return new SimpleTypeImprint(implementationType, publicNameAttribute, idAttribute,
+						new ImprintInfo(filePath, typeName, documentElement.Location, problems),
 						GetDefault(implementationType));
 				}
+
 				try
 				{
-					var simpleTypeUnresolvedStamp = new SimpleTypeImprint(implementationType, publicNameAttribute?.Value,
-						idAttribute?.Value,
-						new ImprintInfo(filePath, typeName, currentLine, currentPosition),
-						serializingTypesResolver.DeserializeSimple(valueAttribute.Value, implementationType));
+					var simpleTypeUnresolvedStamp = new SimpleTypeImprint(implementationType, publicNameAttribute,
+						idAttribute,
+						new ImprintInfo(filePath, typeName, documentElement.Location, problems),
+						serializingTypesResolver.DeserializeSimple(valueAttribute, implementationType));
 					return simpleTypeUnresolvedStamp;
 				}
 				catch (Exception e)
 				{
-					return new SimpleTypeImprint(implementationType, publicNameAttribute?.Value, idAttribute?.Value,
-						new ImprintInfo(filePath, typeName, currentLine, currentPosition,
-							new CommonProblem(e.Message, currentLine)),
+					problems.Add(new CommonProblem(e.Message, documentElement.Location));
+					return new SimpleTypeImprint(implementationType, publicNameAttribute, idAttribute,
+						new ImprintInfo(filePath, typeName, documentElement.Location, problems),
 						GetDefault(implementationType));
 				}
 			}
+			
+			#endregion
 
-			var fields = new List<ImprintField>();
-			var problems = new List<IComplexSerializerProblem>();
-
+			#region Check on obsolete name
+			
 			var isObsoleteName = serializingTypesResolver.TryGetName(implementationType, out var preferredName) &&
 								preferredName != typeName;
 			if (isObsoleteName)
 			{
-				problems.Add(new ObsoleteNameProblem(typeName, preferredName, currentLine, currentPosition));
+				problems.Add(new ObsoleteNameProblem(typeName, preferredName, documentElement.Location));
 			}
+			
+			#endregion
+			
+			#region Initializing fields
+			
+			var fields = new List<ImprintField>();
 
 			foreach (var naturalFieldInfo in serializingElementsManager.GetAllElements(implementationType))
 			{
-				var childObject = XmlUtils.GetByFieldInfo(xElement, naturalFieldInfo);
-				var childAttribute = childObject as XAttribute;
-				var childElement = childObject as XElement;
+				var childDocumentElement = GetByFieldInfo(naturalFieldInfo);
 
-				if (childAttribute == null && childElement == null)
+				if (childDocumentElement == null)
 				{
 					if (naturalFieldInfo.IsMandatory)
 					{
-						problems.Add(new MissingMembersProblem(currentLine, currentPosition, naturalFieldInfo.Name, implementationType,
+						problems.Add(new MissingMembersProblem(naturalFieldInfo.Name,
+							implementationType,
+							documentElement.Location,
 							serializingElementsManager,
 							serializingTypesResolver));
 					}
@@ -253,17 +359,24 @@ namespace Tosna.Core
 					continue;
 				}
 
+				foreach (var childError in childDocumentElement.Errors)
+				{
+					var problemLocation =
+						childError.ProblemLocation == DocumentElementLocation.Unknown
+							? childDocumentElement.Location
+							: childError.ProblemLocation;
+				
+					problems.Add(new ParsingProblem(childError.Error, problemLocation,
+						childError.Code, expectedType ?? typeof(object),
+						childError.ErrorParameters, serializingElementsManager, serializingTypesResolver));
+
+				}
+
 				var fieldType = naturalFieldInfo.Type;
 
-				if (childAttribute != null)
+				if (serializingTypesResolver.IsSimpleType(fieldType) && childDocumentElement.HasContent)
 				{
-					var childAttributeLine = ((IXmlLineInfo)childAttribute).LineNumber;
-					if (!serializingTypesResolver.IsSimpleType(fieldType))
-					{
-						problems.Add(new CommonProblem($"Unknown parse rule for type {fieldType} from string", childAttributeLine));
-						continue;
-					}
-					var valueStr = childAttribute.Value;
+					var valueStr = childDocumentElement.Content;
 					try
 					{
 						var value = serializingTypesResolver.DeserializeSimple(valueStr, fieldType);
@@ -271,20 +384,20 @@ namespace Tosna.Core
 					}
 					catch (Exception e)
 					{
-						problems.Add(new CommonProblem(e.Message, childAttributeLine));
+						problems.Add(new CommonProblem(e.Message, childDocumentElement.Location));
 					}
 				}
 				else if (fieldType.IsArray)
 				{
-					var items = childElement.Elements().ToArray();
-					var array = new Imprint[items.Length];
+					var items = childDocumentElement.Children;
+					var array = new Imprint[items.Count];
 					var elementType = fieldType.GetElementType();
-					for (var i = 0; i < items.Length; i++)
+					for (var i = 0; i < items.Count; i++)
 					{
-						var stamp = DeserializeFromXElement(items[i], filePath);
+						var stamp = DeserializeFromXElement(items[i], filePath, elementType);
 						if (elementType != null && stamp.Type != null && !elementType.IsAssignableFrom(stamp.Type))
 						{
-							problems.Add(new InvalidCastProblem(elementType, stamp.Type, ((IXmlLineInfo)items[i]).LineNumber));
+							problems.Add(new InvalidCastProblem(elementType, stamp.Type, items[i].Location));
 						}
 
 						array[i] = stamp;
@@ -293,28 +406,41 @@ namespace Tosna.Core
 				}
 				else
 				{
-					XElement element;
+					DocumentElement element;
 					try
 					{
-						element = childElement.Elements().Single();
+						element = childDocumentElement.Children.Single();
 					}
 					catch (Exception e)
 					{
-						problems.Add(new CommonProblem(e.Message, ((IXmlLineInfo)childElement).LineNumber));
+						problems.Add(new CommonProblem(e.Message, childDocumentElement.Location));
 						continue;
 					}
-					var stamp = DeserializeFromXElement(element, filePath);
+					var stamp = DeserializeFromXElement(element, filePath, fieldType);
 					if (stamp.Type != null && !fieldType.IsAssignableFrom(stamp.Type))
 					{
-						problems.Add(new InvalidCastProblem(fieldType, stamp.Type, ((IXmlLineInfo)element).LineNumber));
+						problems.Add(new InvalidCastProblem(fieldType, stamp.Type, element.Location));
 					}
 
 					fields.Add(new NestedImprintField(naturalFieldInfo, stamp));
 				}
 			}
+			
+			#endregion
+			
+			#region Unused elements
 
-			return new AggregateImprint(implementationType, publicNameAttribute?.Value, idAttribute?.Value,
-				new ImprintInfo(filePath, typeName, currentLine, currentPosition, problems.ToArray()), fields);
+			foreach (var unused in reader.ReadRemaining())
+			{
+				CheckParsingValidationOnly(unused);
+				var warning = $"Unknown field {unused.Name} for {documentElement.Name}, will be ignored";
+				problems.Add(new CommonProblem(warning, unused.Location, false));
+			}
+			
+			#endregion
+
+			return new AggregateImprint(implementationType, publicNameAttribute, idAttribute,
+				new ImprintInfo(filePath, typeName, documentElement.Location, problems), fields);
 		}
 
 		private static object GetDefault(Type type)
@@ -322,6 +448,57 @@ namespace Tosna.Core
 			return type.IsValueType ? Activator.CreateInstance(type) : null;
 		}
 		
+		private class DocumentElementReader
+		{
+			private readonly IDictionary<string, IList<DocumentElement>> elementsByNames =
+				new Dictionary<string, IList<DocumentElement>>();
+
+			public DocumentElementReader(DocumentElement element)
+			{
+				foreach (var child in element.Children)
+				{
+					if (!elementsByNames.ContainsKey(child.Name))
+					{
+						// In 99.9% of all cases this will be a single element list
+						elementsByNames[child.Name] = new List<DocumentElement>(1);
+					}
+					elementsByNames[child.Name].Add(child);
+				}
+			}
+
+			public IEnumerable<DocumentElement> ExtractDocumentElements(IEnumerable<string> keys)
+			{
+				foreach (var key in keys)
+				{
+					if (!elementsByNames.TryGetValue(key, out var elements)) continue;
+
+					elementsByNames.Remove(key);
+					foreach (var element in elements)
+					{
+						yield return element;
+					}
+				}
+			}
+
+			public IEnumerable<DocumentElement> ReadRemaining()
+			{
+				return elementsByNames.Values.SelectMany(list => list);
+			}
+		}
+
 		#endregion
+	}
+
+	public class ParsingException : Exception
+	{
+		public override string Message { get; }
+		
+		public DocumentElementLocation Location { get; }
+
+		public ParsingException(string message, DocumentElementLocation location)
+		{
+			Message = message;
+			Location = location;
+		}
 	}
 }
