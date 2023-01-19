@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Tosna.Core;
 
@@ -24,19 +23,27 @@ namespace Tosna.Editor.IDE.Verification
 			this.logger = logger;
 		}
 
-		public void EnqueueUpdate(SingleFileManager singleFileManager)
+		public void EnqueueFileChangesVerification(IEnumerable<SingleFileManager> updates)
 		{
 			lock (sync)
 			{
-				updatingQueue.Add(singleFileManager);
+				foreach (var update in updates)
+				{
+					updatingQueue.Add(update);
+				}
 				if (!active)
 				{
-					Task.Factory.StartNew(UpdateAll);
+					Task.Run(UpdateAll);
 				}
 			}
 		}
 
-		private void UpdateAll()
+		public void EnqueueFileChangesVerification(SingleFileManager update)
+		{
+			EnqueueFileChangesVerification(new[] { update });
+		}
+
+		private async Task UpdateAll()
 		{
 			lock (sync)
 			{
@@ -68,19 +75,17 @@ namespace Tosna.Editor.IDE.Verification
 
 					if (tasks.Any())
 					{
-						foreach (var singleFileManager in tasks)
-						{
-							singleFileManager.Verify();
-						}
+						await Task.WhenAll(tasks.Select(singleFileManager =>
+							Task.Run(singleFileManager.Verify)));
 						dependenciesCheckNeeded = true;
 					}
 					else
 					{
-						filesManager.VerifyDependencies();
+						await filesManager.VerifyDependencies();
 						dependenciesCheckNeeded = false;
 					}
 
-					Thread.Sleep(500);
+					await Task.Delay(500);
 				}
 			}
 			catch (Exception e)

@@ -59,11 +59,6 @@ namespace Tosna.Editor.IDE
 				yield return new SingleFileManagerRefactoring(fileManager, document);
 			}
 		}
-
-		public void VerifyDependencies()
-		{
-			filesManager.VerifyDependencies();
-		}
 	}
 
 	public class SingleFileManagerRefactoring

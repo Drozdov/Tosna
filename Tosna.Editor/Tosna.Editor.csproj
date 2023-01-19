@@ -40,6 +40,7 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Helpers\ActionCommand.cs" />
+        <Compile Include="Helpers\TaskCommand.cs" />
         <Compile Include="Helpers\Vm\CollectionEditorVm.cs" />
         <Compile Include="Helpers\ItemEventArgs.cs" />
         <Compile Include="Helpers\NotifyPropertyChanged.cs" />

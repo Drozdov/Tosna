@@ -38,7 +38,8 @@ namespace Tosna.Editor.IDE.Vm
 			State = singleFileManager.State;
 			Content = singleFileManager.Content;
 
-			FilesManagerInteractionVm = new FilesManagerInteractionVm(filesManagerInteractionService, singleFileManager.FileName, filesViewerVm);
+			FilesManagerInteractionVm = new FilesManagerInteractionVm(filesManagerInteractionService,
+				singleFileManager.FileName, filesViewerVm, verificationService);
 
 			Subscribe(true);
 		}
@@ -137,7 +138,7 @@ namespace Tosna.Editor.IDE.Vm
 		{
 			content = newText;
 			singleFileManager.Edit(newText);
-			verificationService.EnqueueUpdate(singleFileManager);
+			verificationService.EnqueueFileChangesVerification(singleFileManager);
 		}
 
 		public void SetTextPosition(TextPosition textPosition)
