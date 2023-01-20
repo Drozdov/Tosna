@@ -8,6 +8,7 @@ using System.Windows.Input;
 using Tosna.Core;
 using Tosna.Editor.Helpers;
 using Tosna.Editor.IDE.Interfaces;
+using Tosna.Editor.IDE.Verification;
 using Tosna.Editor.IDE.Vm.FileSystem;
 using PathUtils = Tosna.Core.Helpers.PathUtils;
 
@@ -18,10 +19,11 @@ namespace Tosna.Editor.IDE.Vm
 		private readonly FilesManager filesManager;
 		private readonly FilesViewerVm filesViewerVm;
 		private readonly IFilesSelector filesSelector;
+		private readonly VerificationService verificationService;
 		private readonly ILogger logger;
 
 		public FilesHierarchyVm(FilesManager filesManager, FilesViewerVm filesViewerVm, IFilesSelector filesSelector,
-			ILogger logger)
+			VerificationService verificationService, ILogger logger)
 		{
 			Contract.Requires(filesManager != null);
 			Contract.Requires(filesViewerVm != null);
@@ -31,16 +33,17 @@ namespace Tosna.Editor.IDE.Vm
 			this.filesViewerVm = filesViewerVm;
 			this.filesSelector = filesSelector;
 			this.logger = logger;
+			this.verificationService = verificationService;
 
-			AddExistingFilesCommand = new TaskCommand(AddFiles, () => true, logger);
-			AddExistingFilesWithDependenciesCommand = new TaskCommand(AddFilesWithDependencies, () => true, logger);
-			CreateNewFileCommand = new TaskCommand(CreateNewFile, () => true, logger);
+			AddExistingFilesCommand = new ActionCommand(AddFiles, () => true, logger);
+			AddExistingFilesWithDependenciesCommand = new ActionCommand(AddFilesWithDependencies, () => true, logger);
+			CreateNewFileCommand = new ActionCommand(CreateNewFile, () => true, logger);
 			DeleteFilesCommand =
 				new ActionCommand(DeleteFiles, () => SelectedItems != null && SelectedItems.Any(), logger);
 			ExcludeFilesCommand =
-				new TaskCommand(ExcludeFiles, () => SelectedItems != null && SelectedItems.Any(), logger);
+				new ActionCommand(ExcludeFiles, () => SelectedItems != null && SelectedItems.Any(), logger);
 			LaunchEditorCommand = new ActionCommand(LaunchEditor, CanLaunchEditor, logger);
-			ExcludeAllFilesCommand = new TaskCommand(ExcludeAllFiles, () => true, logger);
+			ExcludeAllFilesCommand = new ActionCommand(ExcludeAllFiles, () => true, logger);
 
 			ReloadAll();
 		}
@@ -81,7 +84,7 @@ namespace Tosna.Editor.IDE.Vm
 
 		#region Commands implementations
 
-		private async Task AddFiles(bool loadDependencies)
+		private void AddFiles(bool loadDependencies)
 		{
 			if (!filesSelector.SelectFiles(GetInitialDirectory(), out var files))
 			{
@@ -89,38 +92,42 @@ namespace Tosna.Editor.IDE.Vm
 			}
 
 			var newItems = loadDependencies
-				? await filesManager.AddFilesWithDependencies(files)
-				: await filesManager.AddFiles(files);
+				? filesManager.AddFilesWithDependencies(files)
+				: filesManager.AddFiles(files);
 			UpdateTopDirectoryItem();
 			foreach (var newItem in newItems)
 			{
 				TopDirectoryItemVm.Add(newItem);
 			}
+			
+			verificationService.EnqueueDependenciesVerification();
 		}
 
-		private async Task AddFiles()
+		private void AddFiles()
 		{
-			await AddFiles(false);
+			AddFiles(false);
 		}
 
-		private async Task AddFilesWithDependencies()
+		private void AddFilesWithDependencies()
 		{
-			await AddFiles(true);
+			AddFiles(true);
 		}
 
-		private async Task CreateNewFile()
+		private void CreateNewFile()
 		{
 			if (!filesSelector.CreateFile(GetInitialDirectory(), out var newFileName))
 			{
 				return;
 			}
 
-			var newItem = await filesManager.AddNewFile(newFileName);
+			var newItem = filesManager.AddNewFile(newFileName);
 			UpdateTopDirectoryItem();
 			
 			TopDirectoryItemVm.Add(newItem);
 
 			filesViewerVm.OpenDocument(newItem);
+			
+			verificationService.EnqueueDependenciesVerification();
 		}
 
 		private void DeleteFiles()
@@ -128,9 +135,9 @@ namespace Tosna.Editor.IDE.Vm
 			// TODO
 		}
 
-		private async Task ExcludeFiles()
+		private void ExcludeFiles()
 		{
-			await filesManager.DeleteFiles(SelectedItems.OfType<FileItemVm>().Select(item => item.FileManager.FileName));
+			filesManager.DeleteFiles(SelectedItems.OfType<FileItemVm>().Select(item => item.FileManager.FileName));
 			UpdateTopDirectoryItem();
 			foreach (var item in SelectedItems.OfType<FileItemVm>())
 			{
@@ -138,10 +145,11 @@ namespace Tosna.Editor.IDE.Vm
 			}
 		}
 
-		private async Task ExcludeAllFiles()
+		private void ExcludeAllFiles()
 		{
-			await filesManager.Clear();
+			filesManager.Clear();
 			ReloadAll();
+			verificationService.EnqueueDependenciesVerification();
 		}
 
 		private void LaunchEditor()

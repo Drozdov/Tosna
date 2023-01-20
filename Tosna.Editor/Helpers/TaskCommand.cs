@@ -27,8 +27,7 @@ namespace Tosna.Editor.Helpers
 		{
 			try
 			{
-				var task = taskFunc.Invoke();
-				await task;
+				await taskFunc.Invoke();
 			}
 			catch (Exception e)
 			{

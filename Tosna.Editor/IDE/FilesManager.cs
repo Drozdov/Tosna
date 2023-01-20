@@ -12,6 +12,7 @@ namespace Tosna.Editor.IDE
 	{
 		private readonly IDocumentReader documentReader;
 		private readonly IDocumentWriter documentWriter;
+		
 		private readonly IDictionary<string, SingleFileManager> fileManagers = new Dictionary<string, SingleFileManager>();
 
 		public IReadOnlyCollection<SingleFileManager> FileManagers => fileManagers.Values.ToArray();
@@ -27,7 +28,7 @@ namespace Tosna.Editor.IDE
 			Serializer = new ImprintsSerializer(serializingElementsManager, serializingTypesResolver);
 		}
 
-		public async Task<IReadOnlyCollection<SingleFileManager>> AddFiles(IEnumerable<string> files)
+		public IReadOnlyCollection<SingleFileManager> AddFiles(IEnumerable<string> files)
 		{
 			var result = new List<SingleFileManager>();
 			foreach (var file in files)
@@ -41,11 +42,10 @@ namespace Tosna.Editor.IDE
 				fileManagers[file] = singleFileManager;
 				result.Add(singleFileManager);
 			}
-			await VerifyDependencies();
 			return result;
 		}
 
-		public async Task<IReadOnlyCollection<SingleFileManager>> AddFilesWithDependencies(IEnumerable<string> files)
+		public IReadOnlyCollection<SingleFileManager> AddFilesWithDependencies(IEnumerable<string> files)
 		{
 			var result = new List<SingleFileManager>();
 			var presentFiles = new HashSet<string>(fileManagers.Keys);
@@ -73,42 +73,47 @@ namespace Tosna.Editor.IDE
 				filesToAdd = newDependencies;
 			}
 			
-			await VerifyDependencies();
-			
 			return result;
 		}
+		
+		public SingleFileManager AddNewFile(string newFileName)
+		{
+			var document = XmlCompletor.GetEmptyDocument();
+			document.Save(newFileName);
+			var newFiles = AddFiles(new[] {newFileName});
+			return newFiles.Single();
+		}
 
-		public async Task DeleteFiles(IEnumerable<string> files)
+		public void DeleteFiles(IEnumerable<string> files)
 		{
 			foreach (var file in files)
 			{
 				fileManagers.Remove(file);
 			}
-			await VerifyDependencies();
 		}
 
-		public async Task Clear()
+		public void Clear()
 		{
 			fileManagers.Clear();
-			await VerifyDependencies();
 		}
 
-		public async Task VerifyDependencies()
+		public void VerifyDependencies()
 		{
-			var singleFileManagers = FileManagers;
+			var imprints = FileManagers.SelectMany(fileManager => fileManager.Imprints).ToArray();
 
-			var imprints = singleFileManagers.SelectMany(fileManager => fileManager.Imprints).ToArray();
+			foreach (var singleFileManager in FileManagers)
+			{
+				singleFileManager.VerifyDependencies(imprints);
+			}
+		}
+		
+		public async Task VerifyDependenciesAsync()
+		{
+			var imprints = FileManagers.SelectMany(fileManager => fileManager.Imprints).ToArray();
 
-			await Task.WhenAll(singleFileManagers.Select(singleFileManager =>
+			await Task.WhenAll(FileManagers.Select(singleFileManager =>
 				Task.Run(() => singleFileManager.VerifyDependencies(imprints))));
 		}
 
-		public async Task<SingleFileManager> AddNewFile(string newFileName)
-		{
-			var document = XmlCompletor.GetEmptyDocument();
-			document.Save(newFileName);
-			var newFiles = await AddFiles(new[] {newFileName});
-			return newFiles.Single();
-		}
 	}
 }

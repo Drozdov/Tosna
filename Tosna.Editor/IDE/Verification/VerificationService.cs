@@ -42,6 +42,11 @@ namespace Tosna.Editor.IDE.Verification
 		{
 			EnqueueFileChangesVerification(new[] { update });
 		}
+		
+		public void EnqueueDependenciesVerification()
+		{
+			EnqueueFileChangesVerification(new SingleFileManager[] { });
+		}
 
 		private async Task UpdateAll()
 		{
@@ -81,7 +86,7 @@ namespace Tosna.Editor.IDE.Verification
 					}
 					else
 					{
-						await filesManager.VerifyDependencies();
+						await filesManager.VerifyDependenciesAsync();
 						dependenciesCheckNeeded = false;
 					}
 
@@ -91,7 +96,7 @@ namespace Tosna.Editor.IDE.Verification
 			catch (Exception e)
 			{
 				active = false;
-				logger.LogError("Configurator", e);
+				logger.LogError("Verification failure", e);
 			}
 		}
 	}

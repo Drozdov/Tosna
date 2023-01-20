@@ -45,13 +45,13 @@ namespace Tosna.Editor.Wpf.Demo
 			base.OnClosing(e);
 		}
 
-		private async void OnCreateNewEnvironmentRequest(object sender, RoutedEventArgs args)
+		private void OnCreateNewEnvironmentRequest(object sender, RoutedEventArgs args)
 		{
 			try
 			{
 				if (!filesSelector.CreateFile(null, out var fileName)) return;
 				EnvironmentIo.CreateAndSaveDefaultEnvironment(fileName);
-				await filesManager.AddFilesWithDependencies(new[] { fileName });
+				filesManager.AddFilesWithDependencies(new[] { fileName });
 				xmlIdeVm.HierarchyVm.RefreshAll();
 			}
 			catch (Exception e)
