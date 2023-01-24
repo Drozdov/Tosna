@@ -10,7 +10,6 @@ using Tosna.Editor.IDE.Interfaces;
 using Tosna.Editor.IDE.Vm;
 using Tosna.Editor.Wpf.Demo.Domain;
 using Tosna.Extensions.Serialization;
-using Tosna.Parsers.Xml.V1;
 using Tosna.Parsers.Xml.V2;
 
 namespace Tosna.Editor.Wpf.Demo
@@ -23,6 +22,7 @@ namespace Tosna.Editor.Wpf.Demo
 		private readonly IFilesSelector filesSelector = new FilesSelector();
 		private readonly FilesManager filesManager;
 		private readonly XmlIdeVm xmlIdeVm;
+		private readonly ILogger logger;
 
 		public MainWindow()
 		{
@@ -34,7 +34,8 @@ namespace Tosna.Editor.Wpf.Demo
 			var serializingTypesResolver = new SerializingTypesResolver(serializingElementsManager);
 			filesManager = new FilesManager(serializingElementsManager, serializingTypesResolver,
 				new ExtendedXmlDocumentReaderV2Factory(), new XmlDocumentWriterFactory());
-			xmlIdeVm = new XmlIdeVm(filesManager, filesSelector, new ConfirmationRequester(), new Logger());
+			logger = new Logger();
+			xmlIdeVm = new XmlIdeVm(filesManager, filesSelector, new ConfirmationRequester(), logger);
 			DataContext = xmlIdeVm;
 		}
 		
@@ -44,12 +45,19 @@ namespace Tosna.Editor.Wpf.Demo
 			base.OnClosing(e);
 		}
 
-		private void OnCreateNewEnvironmentRequest(object sender, RoutedEventArgs e)
+		private void OnCreateNewEnvironmentRequest(object sender, RoutedEventArgs args)
 		{
-			if (!filesSelector.CreateFile(null, out var fileName)) return;
-			EnvironmentIo.CreateAndSaveDefaultEnvironment(fileName);
-			filesManager.AddFilesWithDependencies(new[] { fileName });
-			xmlIdeVm.HierarchyVm.RefreshAll();
+			try
+			{
+				if (!filesSelector.CreateFile(null, out var fileName)) return;
+				EnvironmentIo.CreateAndSaveDefaultEnvironment(fileName);
+				filesManager.AddFilesWithDependencies(new[] { fileName });
+				xmlIdeVm.HierarchyVm.RefreshAll();
+			}
+			catch (Exception e)
+			{
+				logger.LogError(e.Message, e);
+			}
 		}
 
 		private void OnWeatherForecastRequest(object sender, RoutedEventArgs args)

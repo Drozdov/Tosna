@@ -2,7 +2,7 @@ using System.IO;
 using System.Text;
 using System.Xml.Linq;
 
-namespace Tosna.Core.Helpers.Xml
+namespace Tosna.Editor.Helpers.Xml
 {
 	public static class XmlFormatter
 	{

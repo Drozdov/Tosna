@@ -7,7 +7,7 @@ using System.Windows.Media;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
-using Tosna.Core.Helpers.Xml;
+using Tosna.Editor.Helpers.Xml;
 using Tosna.Editor.IDE.Verification;
 using Tosna.Editor.IDE.Verification.CompletionDataProviders;
 

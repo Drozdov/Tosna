@@ -13,8 +13,9 @@ namespace Tosna.Editor.IDE.Vm
 
 		public XmlIdeVm(FilesManager filesManager, IFilesSelector filesSelector, IConfirmationRequester confirmationRequester, ILogger logger)
 		{
-			ViewerVm = new FilesViewerVm(new VerificationService(filesManager, logger), confirmationRequester, new FilesManagerInteractionService(filesManager), logger);
-			HierarchyVm = new FilesHierarchyVm(filesManager, ViewerVm, filesSelector, logger);
+			var verificationService = new VerificationService(filesManager, logger);
+			ViewerVm = new FilesViewerVm(verificationService, confirmationRequester, new FilesManagerInteractionService(filesManager), logger);
+			HierarchyVm = new FilesHierarchyVm(filesManager, ViewerVm, filesSelector, verificationService, logger);
 		}
 
 		public void Dispose()

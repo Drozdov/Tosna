@@ -3,7 +3,7 @@ using System.Xml;
 using System.Xml.Linq;
 using Tosna.Core.SerializationInterfaces;
 
-namespace Tosna.Core.Helpers.Xml
+namespace Tosna.Editor.Helpers.Xml
 {
 	public static class XmlUtils
 	{

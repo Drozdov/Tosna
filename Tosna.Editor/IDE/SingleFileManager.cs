@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using Tosna.Core;
 using Tosna.Core.Documents;
-using Tosna.Core.Helpers.Xml;
 using Tosna.Core.Imprints;
+using Tosna.Editor.Helpers.Xml;
 using Tosna.Editor.IDE.FieldsConfigurator;
 using Tosna.Editor.IDE.Verification;
 using Tosna.Editor.IDE.Verification.TextIntervalCoordinates;
@@ -159,7 +159,7 @@ namespace Tosna.Editor.IDE
 			catch (ParsingException e)
 			{
 				Imprints = new Imprint[] { };
-				var textIntervalCoordinates = e.Location == DocumentElementLocation.Unknown
+				var textIntervalCoordinates = e.Location.IsUnknown
 					? (ITextIntervalCoordinates)new FullDocumentCoordinates()
 					: new StartEndCoordinates(e.Location);
 				Notifications = new[] { new VerificationError(FileName, textIntervalCoordinates, e.Message) };

@@ -19,15 +19,7 @@ namespace Tosna.Core.Documents
 		}
 
 		public static DocumentElementLocation Unknown = new DocumentElementLocation(-1, -1, -1, -1);
-		
-		public static bool operator ==(DocumentElementLocation location1, DocumentElementLocation location2)
-		{
-			return Equals(location1, location2);
-		}
 
-		public static bool operator !=(DocumentElementLocation location1, DocumentElementLocation location2)
-		{
-			return !(location1 == location2);
-		}
+		public bool IsUnknown => LineStart < 0 || LineEnd < 0 || ColumnStart < 0 || ColumnEnd < 0;
 	}
 }

@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Tosna.Core;
 using Tosna.Core.Documents;
-using Tosna.Core.Helpers.Xml;
 using Tosna.Core.SerializationInterfaces;
+using Tosna.Editor.Helpers.Xml;
 
 namespace Tosna.Editor.IDE
 {
@@ -11,6 +12,7 @@ namespace Tosna.Editor.IDE
 	{
 		private readonly IDocumentReader documentReader;
 		private readonly IDocumentWriter documentWriter;
+		
 		private readonly IDictionary<string, SingleFileManager> fileManagers = new Dictionary<string, SingleFileManager>();
 
 		public IReadOnlyCollection<SingleFileManager> FileManagers => fileManagers.Values.ToArray();
@@ -40,7 +42,6 @@ namespace Tosna.Editor.IDE
 				fileManagers[file] = singleFileManager;
 				result.Add(singleFileManager);
 			}
-			VerifyDependencies();
 			return result;
 		}
 
@@ -71,8 +72,16 @@ namespace Tosna.Editor.IDE
 
 				filesToAdd = newDependencies;
 			}
-			VerifyDependencies();
+			
 			return result;
+		}
+		
+		public SingleFileManager AddNewFile(string newFileName)
+		{
+			var document = XmlCompletor.GetEmptyDocument();
+			document.Save(newFileName);
+			var newFiles = AddFiles(new[] {newFileName});
+			return newFiles.Single();
 		}
 
 		public void DeleteFiles(IEnumerable<string> files)
@@ -81,7 +90,6 @@ namespace Tosna.Editor.IDE
 			{
 				fileManagers.Remove(file);
 			}
-			VerifyDependencies();
 		}
 
 		public void Clear()
@@ -91,21 +99,21 @@ namespace Tosna.Editor.IDE
 
 		public void VerifyDependencies()
 		{
-			var singleFileManagers = FileManagers;
+			var imprints = FileManagers.SelectMany(fileManager => fileManager.Imprints).ToArray();
 
-			var stamps = singleFileManagers.SelectMany(fileManager => fileManager.Imprints).ToArray();
-
-			foreach (var singleFileManager in singleFileManagers)
+			foreach (var singleFileManager in FileManagers)
 			{
-				singleFileManager.VerifyDependencies(stamps);
+				singleFileManager.VerifyDependencies(imprints);
 			}
 		}
-
-		public SingleFileManager AddNewFile(string newFileName)
+		
+		public async Task VerifyDependenciesAsync()
 		{
-			var document = XmlCompletor.GetEmptyDocument();
-			document.Save(newFileName);
-			return AddFiles(new[] {newFileName}).Single();
+			var imprints = FileManagers.SelectMany(fileManager => fileManager.Imprints).ToArray();
+
+			await Task.WhenAll(FileManagers.Select(singleFileManager =>
+				Task.Run(() => singleFileManager.VerifyDependencies(imprints))));
 		}
+
 	}
 }
