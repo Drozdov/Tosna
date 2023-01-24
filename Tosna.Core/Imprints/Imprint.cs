@@ -3,6 +3,9 @@ using System.Diagnostics.Contracts;
 
 namespace Tosna.Core.Imprints
 {
+	/// <summary>
+	/// Imprint contains information required to instantiate an object.
+	/// </summary>
 	public abstract class Imprint
 	{
 		public Type Type { get; }

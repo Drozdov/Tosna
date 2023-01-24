@@ -3,8 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Tosna.Core;
 using Tosna.Core.Documents;
-using Tosna.Core.Helpers.Xml;
 using Tosna.Core.SerializationInterfaces;
+using Tosna.Editor.Helpers.Xml;
 
 namespace Tosna.Editor.IDE
 {

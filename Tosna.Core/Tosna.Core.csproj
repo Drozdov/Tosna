@@ -53,9 +53,6 @@
         <Compile Include="Documents\Xml\XmlDocumentReaderFactory.cs" />
         <Compile Include="Documents\Xml\XmlDocumentWriter.cs" />
         <Compile Include="Documents\Xml\XmlDocumentWriterFactory.cs" />
-        <Compile Include="Helpers\Xml\XmlCompletor.cs" />
-        <Compile Include="Helpers\Xml\XmlFormatter.cs" />
-        <Compile Include="Helpers\Xml\XmlUtils.cs" />
         <Compile Include="ILogger.cs" />
         <Compile Include="ImprintsSerializer.cs" />
         <Compile Include="Imprints\AggregateImprint.cs" />

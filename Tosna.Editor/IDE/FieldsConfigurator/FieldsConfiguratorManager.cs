@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Tosna.Core;
-using Tosna.Core.Helpers.Xml;
 using Tosna.Core.Imprints;
+using Tosna.Editor.Helpers.Xml;
 
 namespace Tosna.Editor.IDE.FieldsConfigurator
 {

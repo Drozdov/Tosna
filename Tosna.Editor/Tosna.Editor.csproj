@@ -45,6 +45,9 @@
         <Compile Include="Helpers\ItemEventArgs.cs" />
         <Compile Include="Helpers\NotifyPropertyChanged.cs" />
         <Compile Include="Helpers\OrderedObservableCollection.cs" />
+        <Compile Include="Helpers\Xml\XmlCompletor.cs" />
+        <Compile Include="Helpers\Xml\XmlFormatter.cs" />
+        <Compile Include="Helpers\Xml\XmlUtils.cs" />
         <Compile Include="IDE\ComplexSerializerProviderFactory.cs" />
         <Compile Include="IDE\FieldsConfigurator\ConfigurableField.cs" />
         <Compile Include="IDE\FieldsConfigurator\ConfigurableFieldFactory.cs" />

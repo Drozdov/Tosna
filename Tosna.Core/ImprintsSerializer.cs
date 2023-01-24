@@ -9,6 +9,9 @@ using Tosna.Core.SerializationInterfaces;
 
 namespace Tosna.Core
 {
+	/// <summary>
+	/// Main serializer to work with imprints
+	/// </summary>
 	public class ImprintsSerializer
 	{
 		private readonly ISerializingElementsManager serializingElementsManager;
@@ -20,6 +23,11 @@ namespace Tosna.Core
 			this.serializingTypesResolver = serializingTypesResolver;
 		}
 		
+		/// <summary>
+		/// Saves set of imprints to document
+		/// </summary>
+		/// <param name="imprints">Imprints set to save</param>
+		/// <returns>Generated document</returns>
 		public Document SaveRootImprints(IEnumerable<Imprint> imprints)
 		{
 			var rootElement = new DocumentElement("Items");
@@ -27,6 +35,13 @@ namespace Tosna.Core
 			return new Document(rootElement);
 		}
 
+		/// <summary>
+		/// Loads imprint from a document
+		/// </summary>
+		/// <param name="document">Given document</param>
+		/// <returns>A set of imprints</returns>
+		/// <exception cref="ParsingException">If parsing fails</exception>
+		/// <exception cref="ArgumentException">If document is invalid</exception>
 		public IEnumerable<Imprint> LoadRootImprints(Document document)
 		{
 			var filePath = document.HasInfo ? document.Info.FilePath : "<Unknown>";
@@ -192,7 +207,7 @@ namespace Tosna.Core
 			foreach (var error in documentElement.Errors)
 			{
 				var problemLocation =
-					error.ProblemLocation == DocumentElementLocation.Unknown
+					error.ProblemLocation.IsUnknown
 						? documentElement.Location
 						: error.ProblemLocation;
 				
@@ -230,7 +245,7 @@ namespace Tosna.Core
 				foreach (var error in childDocumentElement.Errors)
 				{
 					problems.Add(new CommonProblem(error.Error,
-						error.ProblemLocation == DocumentElementLocation.Unknown
+						error.ProblemLocation.IsUnknown
 							? error.ProblemLocation
 							: childDocumentElement.Location));
 				}
@@ -362,7 +377,7 @@ namespace Tosna.Core
 				foreach (var childError in childDocumentElement.Errors)
 				{
 					var problemLocation =
-						childError.ProblemLocation == DocumentElementLocation.Unknown
+						childError.ProblemLocation.IsUnknown
 							? childDocumentElement.Location
 							: childError.ProblemLocation;
 				

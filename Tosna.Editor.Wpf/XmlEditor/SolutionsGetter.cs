@@ -1,6 +1,6 @@
 using ICSharpCode.AvalonEdit.Editing;
-using Tosna.Core.Helpers.Xml;
 using Tosna.Core.Problems;
+using Tosna.Editor.Helpers.Xml;
 using Tosna.Editor.IDE.Verification.CompletionDataProviders;
 
 namespace Tosna.Editor.Wpf.XmlEditor

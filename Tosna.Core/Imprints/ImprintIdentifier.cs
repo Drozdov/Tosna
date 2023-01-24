@@ -1,8 +1,5 @@
-using System;
-
 namespace Tosna.Core.Imprints
 {
-	[Serializable]
 	public class ImprintIdentifier
 	{
 		public string Id { get; }
