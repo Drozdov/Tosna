@@ -48,8 +48,8 @@ namespace Tosna.Core
 
 			if (document.RootElement.Errors.Any())
 			{
-				var error = document.RootElement.Errors.First();
-				throw new ParsingException("Parse error: " + error.Error, error.ProblemLocation);
+				throw new ParsingException("Parse error: " + document.RootElement.Errors.First().Error,
+					document.RootElement.Errors);
 			}
 
 			if (document.RootElement.Name != "Items")
@@ -508,12 +508,12 @@ namespace Tosna.Core
 	{
 		public override string Message { get; }
 		
-		public DocumentElementLocation Location { get; }
+		public IReadOnlyCollection<DocumentError> Errors { get; }
 
-		public ParsingException(string message, DocumentElementLocation location)
+		public ParsingException(string message, IReadOnlyCollection<DocumentError> errors)
 		{
 			Message = message;
-			Location = location;
+			Errors = errors;
 		}
 	}
 }

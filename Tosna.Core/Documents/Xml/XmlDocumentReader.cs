@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
@@ -19,8 +20,28 @@ namespace Tosna.Core.Documents.Xml
 
 		public Document ParseDocument(string content, string fileName)
 		{
-			var xDocument = XDocument.Parse(content, LoadOptions.SetLineInfo);
-			return GetDocument(xDocument, fileName);
+			try
+			{
+
+				var xDocument = XDocument.Parse(content, LoadOptions.SetLineInfo);
+				return GetDocument(xDocument, fileName);
+			}
+			catch (XmlException e)
+			{
+				var documentElementLocation = new DocumentElementLocation(
+					lineStart: e.LineNumber,
+					columnStart: e.LinePosition - 1,
+					lineEnd: e.LineNumber,
+					columnEnd: e.LinePosition + 100);
+				return new Document(new DocumentElement("")
+				{
+					Errors =
+					{
+						new DocumentError(e.Message, DocumentErrorCode.ParsingProblem, documentElementLocation)
+					}
+				}, new DocumentInfo(fileName, DocumentFormat.Xml));
+			}
+
 		}
 
 		public Document GetDocument(XDocument xDocument, string fileName)

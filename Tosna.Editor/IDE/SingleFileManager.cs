@@ -159,10 +159,14 @@ namespace Tosna.Editor.IDE
 			catch (ParsingException e)
 			{
 				Imprints = new Imprint[] { };
-				var textIntervalCoordinates = e.Location.IsUnknown
-					? (ITextIntervalCoordinates)new FullDocumentCoordinates()
-					: new StartEndCoordinates(e.Location);
-				Notifications = new[] { new VerificationError(FileName, textIntervalCoordinates, e.Message) };
+				Notifications = e.Errors.Select(error =>
+				{
+					var textIntervalCoordinates = error.ProblemLocation.IsUnknown
+						? (ITextIntervalCoordinates)new FullDocumentCoordinates()
+						: new StartEndCoordinates(error.ProblemLocation);
+					return new VerificationError(FileName, textIntervalCoordinates, error.Error);
+				}).ToArray();
+				
 				DependenciesFiles = new string[] { };
 			}
 			catch (Exception e)
