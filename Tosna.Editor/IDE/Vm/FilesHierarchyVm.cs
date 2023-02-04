@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Tosna.Core;
 using Tosna.Editor.Helpers;
@@ -20,7 +19,7 @@ namespace Tosna.Editor.IDE.Vm
 		private readonly FilesViewerVm filesViewerVm;
 		private readonly IFilesSelector filesSelector;
 		private readonly VerificationService verificationService;
-		private readonly ILogger logger;
+		private IFileSystemItemVm[] selectedItems;
 
 		public FilesHierarchyVm(FilesManager filesManager, FilesViewerVm filesViewerVm, IFilesSelector filesSelector,
 			VerificationService verificationService, ILogger logger)
@@ -32,7 +31,6 @@ namespace Tosna.Editor.IDE.Vm
 			this.filesManager = filesManager;
 			this.filesViewerVm = filesViewerVm;
 			this.filesSelector = filesSelector;
-			this.logger = logger;
 			this.verificationService = verificationService;
 
 			AddExistingFilesCommand = new ActionCommand(AddFiles, () => true, logger);
@@ -60,7 +58,16 @@ namespace Tosna.Editor.IDE.Vm
 
 		#region Properties
 
-		public IFileSystemItemVm[] SelectedItems { get; set; }
+		public IFileSystemItemVm[] SelectedItems
+		{
+			get => selectedItems;
+			set
+			{
+				selectedItems = value;
+				(ExcludeFilesCommand as ActionCommand)?.RaiseCanExecuteChanged();
+				(DeleteFilesCommand as ActionCommand)?.RaiseCanExecuteChanged();
+			}
+		}
 
 		public ICommand AddExistingFilesCommand { get; }
 
@@ -143,6 +150,7 @@ namespace Tosna.Editor.IDE.Vm
 			{
 				TopDirectoryItemVm.Remove(item.FileManager);
 			}
+			verificationService.EnqueueDependenciesVerification();
 		}
 
 		private void ExcludeAllFiles()
